@@ -10,44 +10,57 @@ const getOpenRouter = () => {
     model: "deepseek/deepseek-chat",
     apiKey: process.env.OPENROUTER_API_KEY || "dummy_key",
     temperature: 0,
-    maxTokens: 2500
+    maxTokens: 2500,
   });
 };
 
 const getGemini = () => {
   return new ChatGoogleGenerativeAI({
     model: "gemini-2.5-flash",
-    apiKey: process.env.GOOGLE_API_KEY || "dummy_key"
+    apiKey: process.env.GOOGLE_API_KEY || "dummy_key",
   });
 };
 
-const getGroq = () => {
+const getGroq = (
+  modelName = process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+) => {
   return new ChatGroq({
-    model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+    model: modelName,
     apiKey: process.env.GROQ_API_KEY || "dummy_key",
     temperature: 0,
     maxTokens: undefined,
-    maxRetries: 2
+    maxRetries: 2,
   });
 };
 
 export const gemini = {
-  invoke: (input, options) => getGemini().invoke(input, options)
+  invoke: (input, options) => getGemini().invoke(input, options),
 };
 
 export const getModel = (agent) => {
   switch (agent) {
     case "coding":
-      return getOpenRouter();
+      if (
+        process.env.OPENROUTER_API_KEY &&
+        !process.env.OPENROUTER_API_KEY.includes("add open router") &&
+        process.env.OPENROUTER_API_KEY.length > 20
+      ) {
+        return getOpenRouter();
+      }
+      return getGroq("openai/gpt-oss-120b");
     case "image":
-      return getGroq();
+      return getGroq("openai/gpt-oss-120b");
     case "search":
-      return getGroq();
+      return getGroq("openai/gpt-oss-120b");
     case "chat":
-      return getGroq();
+      return getGroq("openai/gpt-oss-120b");
     case "vision":
       return getGemini();
+    case "pdf-rag":
+    case "pdf":
+    case "ppt":
+    case "router":
     default:
-      return getGroq();
+      return getGroq("openai/gpt-oss-120b");
   }
 };
