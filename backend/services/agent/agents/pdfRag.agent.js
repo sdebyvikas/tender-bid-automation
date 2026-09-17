@@ -1,84 +1,49 @@
 import fs from "fs";
-import {PDFParse} from "pdf-parse";
+import { PDFParse } from "pdf-parse";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { createVectorStore } from "../utils/vectorStore.js";
-import {
-  HumanMessage,
-  SystemMessage
-} from "@langchain/core/messages";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
-import { getModel }
-from "../utils/model.js";
+import { getModel } from "../utils/model.js";
 import { QdrantVectorStore } from "@langchain/qdrant";
 export const pdfRagAgent = async (state) => {
-
   try {
+    const buffer = fs.readFileSync(state.file.path);
 
-    const buffer =
-      fs.readFileSync(
-        state.file.path
-      );
+    const pdf = new PDFParse({
+      data: buffer,
+    });
 
-    const pdf =
-      new PDFParse({
+    const result = await pdf.getText();
 
-        data: buffer
+    const text = result.text;
 
-      });
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
 
-    const result =
-      await pdf.getText();
+      chunkOverlap: 200,
+    });
 
-    const text =
-      result.text;
+    const docs = await splitter.createDocuments([text]);
 
-    const splitter =
-      new RecursiveCharacterTextSplitter({
+    const collectionName = `pdf-${Date.now()}`;
 
-        chunkSize: 1000,
+    const vectorStore = await createVectorStore(collectionName, docs);
 
-        chunkOverlap: 200
+    const relevantDocs = await vectorStore.similaritySearch(state.prompt, 5);
 
-      });
+    console.log(relevantDocs);
 
-    const docs =
-      await splitter.createDocuments([
+    const context = relevantDocs
 
-        text
+      .map((doc) => doc.pageContent)
 
-      ]);
+      .join("\n\n");
 
-   const collectionName =
-`pdf-${Date.now()}`;
+    const llm = getModel("pdf-rag");
 
-const vectorStore =await createVectorStore(
-
-collectionName,
-
-docs
-
-);
-
-const relevantDocs =
-await vectorStore.similaritySearch(
-
-    state.prompt,
-
-    5
-
-);
-console.log(relevantDocs);
-const context =
-relevantDocs
-
-.map(doc=>doc.pageContent)
-
-.join("\n\n");
-const llm =getModel("pdf-rag");
-
-    const messages=[
-
-new SystemMessage(`
+    const messages = [
+      new SystemMessage(`
 
 You are Bearly PDF Assistant.
 
@@ -96,7 +61,7 @@ Rules:
 
 `),
 
-new HumanMessage(`
+      new HumanMessage(`
 
 Context:
 
@@ -106,54 +71,25 @@ Question:
 
 ${state.prompt}
 
-`)
-];
+`),
+    ];
 
-
-const response =
-await llm.invoke(
-    messages
-);
-
+    const response = await llm.invoke(messages);
 
     return {
-
       ...state,
 
       docs,
 
-      response:
-response.content
+      response: response.content,
     };
+  } finally {
+    try {
+      fs.unlinkSync(state.file.path);
 
-    
-
-
-
+      await QdrantVectorStore.deleteCollection(collectionName);
+    } catch (err) {
+      console.log(err.message);
+    }
   }
-
- finally{
-
-    try{
-
-        fs.unlinkSync(
-            state.file.path
-        );
-
-        await QdrantVectorStore.deleteCollection(
-
-            collectionName
-
-        );
-
-    }
-
-    catch(err){
-
-        console.log(err.message);
-
-    }
-
-}
-
 };

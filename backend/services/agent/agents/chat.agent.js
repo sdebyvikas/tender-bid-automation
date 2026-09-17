@@ -1,54 +1,39 @@
-import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
+import {
+  AIMessage,
+  HumanMessage,
+  SystemMessage,
+} from "@langchain/core/messages";
 import { getMemory } from "../utils/memory.js";
 import { getModel } from "../utils/model.js";
 import { checkAgentLimit } from "../config/agentRateLimit.js";
 import { deductCredits } from "../utils/deductCredits.js";
 
+export const chatAgent = async (state) => {
+  await checkAgentLimit(state.userId, "chat");
 
-export const chatAgent =
-async(state)=>{
-
-await checkAgentLimit(
+  await deductCredits(
     state.userId,
-    "chat"
+
+    "chat",
   );
 
-   await deductCredits(
+  const llm = getModel("chat");
 
-        state.userId,
+  const history = await getMemory(state.conversationId);
 
-        "chat"
-
-    );
-
-
- const llm =
- getModel("chat");
-
- const history =
- await getMemory(
-  state.conversationId
- );
-
- 
-
-const searchContext = state.searchResults
-  ? `
+  const searchContext = state.searchResults
+    ? `
 Web Search Results:
 
 ${state.searchResults}
 
 Answer the user using only the above search results.
 `
-  : ""
+    : "";
 
-
-
-
- const messages = [
-
-  new SystemMessage(
-`
+  const messages = [
+    new SystemMessage(
+      `
 You are Bearly, an intelligent AI assistant.
 
 ${searchContext}
@@ -79,65 +64,30 @@ Formatting:
 
 
 
-`
-  )
+`,
+    ),
+  ];
 
- ];
+  history.forEach((msg) => {
+    if (msg.role === "user") {
+      messages.push(new HumanMessage(msg.content));
+    }
 
- history.forEach((msg)=>{
+    if (msg.role === "assistant") {
+      messages.push(new AIMessage(msg.content));
+    }
+  });
 
-  if(
-   msg.role === "user"
-  ){
+  messages.push(new HumanMessage(state.prompt));
 
-   messages.push(
+  const response = await llm.invoke(messages);
 
-    new HumanMessage(
-     msg.content
-    )
+  const images = state.searchResults?.images || [];
 
-   );
+  return {
+    ...state,
 
-  }
-
-  if(
-   msg.role === "assistant"
-  ){
-
-   messages.push(
-
-    new AIMessage(
-     msg.content
-    )
-
-   );
-
-  }
-
- });
-
- messages.push(
-
-  new HumanMessage(
-   state.prompt
-  )
-
- );
-
- const response = await llm.invoke(messages);
-
-
-
-const images = state.searchResults?.images || [];
-
-
-
-return {
-  ...state,
-
-  response:response.content,
-  images:images
-  
-};
-
+    response: response.content,
+    images: images,
+  };
 };

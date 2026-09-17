@@ -170,7 +170,8 @@ export default function MessageList() {
             {/* Greeting */}
             <div className="flex flex-col items-center text-center gap-1.5 mb-6">
               <h1 className="text-2xl md:text-3xl font-bold text-slate-100 tracking-tight">
-                Hello, {userName} 👋
+                Hello, Vikas 👋
+                 {/* {userName}  */}
               </h1>
               <p className="text-sm text-slate-400 leading-relaxed">
                 How can I help you today?
@@ -213,11 +214,13 @@ export default function MessageList() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
               >
-                <MessageBubble
-                  role={msg.role}
-                  content={msg.content}
-                  images={msg?.images || []}
-                />
+              <MessageBubble
+  role={msg.role}
+  content={msg.content}
+  images={msg?.images || []}
+  artifacts={msg?.artifacts || []}
+/>
+
               </motion.div>
             ))}
 

@@ -16,7 +16,8 @@ const getOpenRouter = () => {
 
 const getGemini = () => {
   return new ChatGoogleGenerativeAI({
-    model: "gemini-2.5-flash",
+    // model: "gemini-2.5-flash",
+    model: "gemini-3.6-flash",
     apiKey: process.env.GOOGLE_API_KEY || "dummy_key",
   });
 };

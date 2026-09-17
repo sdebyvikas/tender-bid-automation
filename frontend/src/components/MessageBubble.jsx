@@ -1,13 +1,27 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setArtifacts } from "../redux/message.slice";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { FiExternalLink, FiX } from "react-icons/fi";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Copy, Check, Volume2, VolumeX, ThumbsUp, ThumbsDown } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Volume2,
+  VolumeX,
+  ThumbsUp,
+  ThumbsDown,
+  Code2,
+  ArrowUpRight,
+  FileCode2
+} from "lucide-react";
 
-export default function MessageBubble({ role, content, images = [] }) {
+export default function MessageBubble({ role, content, images = [], artifacts = [] }) {
+  const dispatch = useDispatch();
   const isUser = role === "user";
+
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [copiedCode, setCopiedCode] = useState("");
   const [copiedFull, setCopiedFull] = useState(false);
@@ -63,9 +77,36 @@ export default function MessageBubble({ role, content, images = [] }) {
 
   // Assistant Message (Clean, Left-aligned, ChatGPT Style with Actions)
   return (
-    <div className="flex flex-col gap-2 w-full text-left group">
+    <div className="flex flex-col gap-2.5 w-full text-left group">
       
-      {/* Generated Images */}
+      {/* 1. Generated Inline Artifact Card (Claude & v0 Style) */}
+      {artifacts?.length > 0 && (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-transparent border border-indigo-500/25 flex items-center justify-between gap-3 shadow-md shadow-indigo-500/5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+              <FileCode2 size={16} />
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-[13px] font-semibold text-slate-100 truncate">
+                {artifacts[0]?.title || "Generated Project Artifact"}
+              </h4>
+              <p className="text-[11px] text-slate-400">
+                {artifacts[0]?.files?.length || 1} project files • Ready to preview & export
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => dispatch(setArtifacts(artifacts))}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[12px] font-semibold shadow-md shadow-indigo-600/20 transition-all border-none cursor-pointer shrink-0"
+          >
+            <span>Open in Studio</span>
+            <ArrowUpRight size={13} />
+          </button>
+        </div>
+      )}
+
+      {/* 2. Generated Images (If any) */}
       {images?.length > 0 && (
         <div className="flex flex-wrap gap-2.5 mb-2">
           {images.map((img, i) => (
@@ -82,7 +123,7 @@ export default function MessageBubble({ role, content, images = [] }) {
         </div>
       )}
 
-      {/* Main Content */}
+      {/* 3. Main Text & Code Content */}
       <div className="text-[14.5px] leading-relaxed text-slate-200 break-words font-normal">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
@@ -200,7 +241,7 @@ export default function MessageBubble({ role, content, images = [] }) {
         </ReactMarkdown>
       </div>
 
-      {/* Action Bar (ChatGPT Style below response) */}
+      {/* 4. Action Bar (ChatGPT Style below response) */}
       <div className="flex items-center gap-2 pt-1 text-slate-500">
         <button
           type="button"
@@ -245,7 +286,7 @@ export default function MessageBubble({ role, content, images = [] }) {
         </button>
       </div>
 
-      {/* Fullscreen Lightbox Modal */}
+      {/* 5. Fullscreen Lightbox Modal */}
       {lightboxSrc && (
         <div
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in"

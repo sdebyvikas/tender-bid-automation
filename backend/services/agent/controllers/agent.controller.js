@@ -9,7 +9,9 @@ export const chat = async (req, res, next) => {
     const userId = req.headers["x-user-id"];
 
     if (!prompt) {
-      return res.status(400).json({ success: false, message: "Prompt is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Prompt is required" });
     }
 
     await addMessage(conversationId, "user", prompt);
@@ -18,7 +20,7 @@ export const chat = async (req, res, next) => {
       await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
         conversationId,
         role: "user",
-        content: prompt
+        content: prompt,
       });
     } catch (e) {
       console.warn("Save user message warning:", e.message);
@@ -31,7 +33,7 @@ export const chat = async (req, res, next) => {
         conversationId,
         userId,
         agent,
-        file: req.file
+        file: req.file,
       });
     } catch (llmErr) {
       console.error("LLM Execution error:", llmErr);
@@ -49,7 +51,7 @@ export const chat = async (req, res, next) => {
       result = {
         response: fallbackMsg,
         images: [],
-        artifacts: []
+        artifacts: [],
       };
     }
 
@@ -65,7 +67,7 @@ export const chat = async (req, res, next) => {
         role: "assistant",
         content: responseText,
         images: images,
-        artifacts: artifacts
+        artifacts: artifacts,
       });
     } catch (e) {
       console.warn("Save assistant message warning:", e.message);
@@ -75,7 +77,7 @@ export const chat = async (req, res, next) => {
       success: true,
       answer: responseText,
       images: images,
-      artifacts: artifacts
+      artifacts: artifacts,
     });
   } catch (error) {
     next(error);

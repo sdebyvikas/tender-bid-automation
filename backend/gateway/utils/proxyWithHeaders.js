@@ -16,8 +16,8 @@ export const proxyWithUser = (serviceUrl, pathPrefix) => {
         if (!contentType.includes("multipart/form-data")) {
           fixRequestBody(proxyReq, req);
         }
-      }
-    }
+      },
+    },
   });
 };
 
@@ -32,7 +32,7 @@ export const createServiceProxy = (serviceUrl, pathPrefix) => {
         if (!contentType.includes("multipart/form-data")) {
           fixRequestBody(proxyReq, req);
         }
-      }
-    }
+      },
+    },
   });
 };
