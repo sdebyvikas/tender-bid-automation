@@ -90,7 +90,7 @@ export default function ArtifactPanel() {
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "-")
         .slice(0, 25);
-      link.download = `${cleanTitle || "cortex-project"}.zip`;
+      link.download = `${cleanTitle || "bearly-project"}.zip`;
 
       document.body.appendChild(link);
       link.click();

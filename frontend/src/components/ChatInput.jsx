@@ -13,22 +13,65 @@ import {
   Mic,
   MicOff,
   Loader2,
-  FileSpreadsheet
+  FileSpreadsheet,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage, setArtifacts, setIsLoading } from "../redux/message.slice";
+import { deductUserCredits } from "../redux/user.slice";
 import { sendPrompt } from "../features/agent.api";
-import { createConversation, updateConversations } from "../features/conversation.api";
-import { addConversation, setConvTitle, setSelectedConversation } from "../redux/conversation.slice";
+import {
+  createConversation,
+  updateConversations,
+} from "../features/conversation.api";
+import {
+  addConversation,
+  setConvTitle,
+  setSelectedConversation,
+} from "../redux/conversation.slice";
 
 const AGENTS = [
-  { id: "auto", icon: Zap, label: "Auto", color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
-  { id: "chat", icon: MessageSquare, label: "Chat", color: "text-blue-400 bg-blue-500/10 border-blue-500/30" },
-  { id: "coding", icon: Code2, label: "Coding", color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/30" },
-  { id: "search", icon: Globe, label: "Search", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
-  { id: "pdf", icon: FileText, label: "PDF", color: "text-rose-400 bg-rose-500/10 border-rose-500/30" },
-  { id: "ppt", icon: Presentation, label: "PPT", color: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
-  { id: "image", icon: ImageIcon, label: "Image", color: "text-pink-400 bg-pink-500/10 border-pink-500/30" },
+  {
+    id: "auto",
+    icon: Zap,
+    label: "Auto",
+    color: "text-amber-400 bg-amber-500/10 border-amber-500/30",
+  },
+  {
+    id: "chat",
+    icon: MessageSquare,
+    label: "Chat",
+    color: "text-blue-400 bg-blue-500/10 border-blue-500/30",
+  },
+  {
+    id: "coding",
+    icon: Code2,
+    label: "Coding",
+    color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/30",
+  },
+  {
+    id: "search",
+    icon: Globe,
+    label: "Search",
+    color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
+  },
+  {
+    id: "pdf",
+    icon: FileText,
+    label: "PDF",
+    color: "text-rose-400 bg-rose-500/10 border-rose-500/30",
+  },
+  {
+    id: "ppt",
+    icon: Presentation,
+    label: "PPT",
+    color: "text-purple-400 bg-purple-500/10 border-purple-500/30",
+  },
+  {
+    id: "image",
+    icon: ImageIcon,
+    label: "Image",
+    color: "text-pink-400 bg-pink-500/10 border-pink-500/30",
+  },
 ];
 
 const PLACEHOLDERS = {
@@ -74,12 +117,14 @@ export default function ChatInput({ setBanner }) {
     };
 
     window.addEventListener("apply-starter-prompt", handleStarterPrompt);
-    return () => window.removeEventListener("apply-starter-prompt", handleStarterPrompt);
+    return () =>
+      window.removeEventListener("apply-starter-prompt", handleStarterPrompt);
   }, []);
 
   // Voice Recognition Setup with Pause Persistence
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
 
     const recognition = new SpeechRecognition();
@@ -121,7 +166,7 @@ export default function ChatInput({ setBanner }) {
       setIsListening(false);
     } else {
       // Set existing input as base text so previous words are never lost
-      baseTextRef.current = value ? (value.trim() + " ") : "";
+      baseTextRef.current = value ? value.trim() + " " : "";
       recognitionRef.current.start();
       setIsListening(true);
     }
@@ -154,7 +199,12 @@ export default function ChatInput({ setBanner }) {
       if (conversation.title === "New Chat" && prompt) {
         const titleSnippet = prompt.slice(0, 32);
         await updateConversations(conversation._id, titleSnippet);
-        dispatch(setConvTitle({ conversationId: conversation._id, title: titleSnippet }));
+        dispatch(
+          setConvTitle({
+            conversationId: conversation._id,
+            title: titleSnippet,
+          }),
+        );
       }
 
       dispatch(addMessage({ role: "user", content: prompt }));
@@ -172,12 +222,24 @@ export default function ChatInput({ setBanner }) {
 
       const data = await sendPrompt(formData);
 
+      const COST_MAP = {
+        chat: 1,
+        search: 5,
+        coding: 10,
+        pdf: 10,
+        ppt: 10,
+        image: 10,
+        auto: 1,
+      };
+
+      dispatch(deductUserCredits(COST_MAP[selectedAgent] || 1));
+      
       dispatch(
         addMessage({
           role: "assistant",
           content: data.answer,
           images: data.images || [],
-        })
+        }),
       );
 
       if (data.artifacts && data.artifacts.length > 0) {
@@ -189,7 +251,10 @@ export default function ChatInput({ setBanner }) {
         setBanner({
           open: true,
           title: error.response?.data?.title || "Agent Execution Warning",
-          message: error.response?.data?.message || error.message || "Failed to get AI response. Please try again.",
+          message:
+            error.response?.data?.message ||
+            error.message ||
+            "Failed to get AI response. Please try again.",
         });
       }
     } finally {
@@ -200,12 +265,13 @@ export default function ChatInput({ setBanner }) {
   return (
     <div className="w-full px-3 md:px-6 pb-4 pt-2 bg-gradient-to-t from-[#090a0f] via-[#090a0f]/90 to-transparent">
       <div className="max-w-3xl mx-auto flex flex-col gap-2.5 p-3 rounded-2xl bg-[#13151f]/80 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-black/60 focus-within:border-indigo-500/40 focus-within:shadow-indigo-500/10 transition-all duration-200">
-        
         {/* Attached File Preview Tag */}
         {selectedFile && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 w-fit text-indigo-300 text-[12px] animate-in fade-in">
             <FileSpreadsheet size={14} className="text-indigo-400" />
-            <span className="max-w-[200px] truncate font-medium">{selectedFile.name}</span>
+            <span className="max-w-[200px] truncate font-medium">
+              {selectedFile.name}
+            </span>
             <button
               onClick={() => setSelectedFile(null)}
               className="p-0.5 rounded-md hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
@@ -254,7 +320,9 @@ export default function ChatInput({ setBanner }) {
                   ? "bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse"
                   : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]"
               }`}
-              title={isListening ? "Listening... Click to stop" : "Voice Typing"}
+              title={
+                isListening ? "Listening... Click to stop" : "Voice Typing"
+              }
             >
               {isListening ? <MicOff size={16} /> : <Mic size={16} />}
             </button>
@@ -301,7 +369,6 @@ export default function ChatInput({ setBanner }) {
             );
           })}
         </div>
-
       </div>
     </div>
   );

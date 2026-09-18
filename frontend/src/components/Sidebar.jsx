@@ -10,13 +10,16 @@ import {
   X,
   Menu,
   CoinsIcon,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../utils/axios";
 import { setUserData } from "../redux/user.slice";
 import { getConversations } from "../features/conversation.api";
-import { setConversations, setSelectedConversation } from "../redux/conversation.slice";
+import {
+  setConversations,
+  setSelectedConversation,
+} from "../redux/conversation.slice";
 import { getMessages } from "../features/message.api";
 import { setArtifacts, setMessages } from "../redux/message.slice";
 import BillingDrawer from "./BillingDrawer";
@@ -29,7 +32,9 @@ export default function Sidebar() {
   const [showBilling, setShowBilling] = useState(false);
 
   const { userData } = useSelector((state) => state.user);
-  const { conversations, selectedConversation } = useSelector((state) => state.conversation);
+  const { conversations, selectedConversation } = useSelector(
+    (state) => state.conversation,
+  );
   const dispatch = useDispatch();
 
   const logout = async () => {
@@ -50,10 +55,11 @@ export default function Sidebar() {
         console.log("Fetch conversations error:", error);
       }
     };
-    if (userData?._id) {
+    const uid = userData?._id || userData?.userId;
+    if (uid) {
       fetchConversations();
     }
-  }, [userData?._id]);
+  }, [userData?._id, userData?.userId]);
 
   const handleCreateConversation = () => {
     dispatch(setSelectedConversation(null));
@@ -70,7 +76,9 @@ export default function Sidebar() {
 
     // ✅ Fix: Messages array mein se last artifact dhoondh kar restore karein
     if (Array.isArray(messages) && messages.length > 0) {
-      const lastMsgWithArtifacts = [...messages].reverse().find(m => m.artifacts && m.artifacts.length > 0);
+      const lastMsgWithArtifacts = [...messages]
+        .reverse()
+        .find((m) => m.artifacts && m.artifacts.length > 0);
       if (lastMsgWithArtifacts?.artifacts) {
         dispatch(setArtifacts(lastMsgWithArtifacts.artifacts));
       } else {
@@ -81,10 +89,9 @@ export default function Sidebar() {
     }
   };
 
-
   // Filter conversations by search query
   const filteredConversations = (conversations || []).filter((c) =>
-    (c.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+    (c.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   /* ── Collapsed Desktop Rail ── */
@@ -149,14 +156,15 @@ export default function Sidebar() {
   /* ── Full Sidebar Content ── */
   const SidebarContent = () => (
     <div className="flex flex-col h-full select-none">
-      
       {/* Header with App Logo & Collapse */}
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/[0.06]">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
             <Sparkles size={14} />
           </div>
-          <span className="text-[15px] font-bold text-slate-100 tracking-tight">Bearly AI</span>
+          <span className="text-[15px] font-bold text-slate-100 tracking-tight">
+            Bearly AI
+          </span>
         </div>
 
         <button
@@ -198,7 +206,10 @@ export default function Sidebar() {
             className="w-full bg-transparent text-[12.5px] text-slate-200 placeholder:text-slate-500 outline-none"
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="text-slate-500 hover:text-slate-300">
+            <button
+              onClick={() => setSearchQuery("")}
+              className="text-slate-500 hover:text-slate-300"
+            >
               <X size={12} />
             </button>
           )}
@@ -214,7 +225,9 @@ export default function Sidebar() {
       <div className="flex-1 overflow-y-auto px-2.5 space-y-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {filteredConversations.length === 0 ? (
           <div className="px-4 py-8 text-center text-[12px] text-slate-500">
-            {searchQuery ? "No matching chats found." : "No previous conversations."}
+            {searchQuery
+              ? "No matching chats found."
+              : "No previous conversations."}
           </div>
         ) : (
           filteredConversations.map((chat) => {
@@ -269,7 +282,9 @@ export default function Sidebar() {
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-slate-200 truncate">{userData.name}</p>
+              <p className="text-[13px] font-semibold text-slate-200 truncate">
+                {userData.name}
+              </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-[10px] uppercase font-bold text-indigo-400 bg-indigo-500/10 px-1.5 py-0.2 rounded border border-indigo-500/20">
                   {userData.plan || "Free"}
@@ -298,10 +313,11 @@ export default function Sidebar() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-2 text-xs text-slate-500">Not logged in</div>
+          <div className="text-center py-2 text-xs text-slate-500">
+            Not logged in
+          </div>
         )}
       </div>
-
     </div>
   );
 

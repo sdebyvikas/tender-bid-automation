@@ -30,13 +30,31 @@ function Home() {
       console.error("Login error:", err);
       setError(
         err.response?.data?.message ||
-        err.message ||
-        "Failed to connect to authentication service. Please ensure the backend is running."
+          err.message ||
+          "Failed to connect to authentication service. Please ensure the backend is running.",
       );
     } finally {
       setLoading(false);
     }
   };
+
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     const token = await result.user.getIdToken();
+  //     await loginWithBackend({ token });
+  //   } catch (err) {
+  //     console.error("Google Auth error:", err);
+  //     if (err.code === "auth/invalid-api-key" || err.code === "auth/configuration-not-found" || err.code === "auth/api-key-not-valid") {
+  //       setError("Firebase API Key is missing or invalid. Use 'Continue as Demo User' below for instant access.");
+  //     } else {
+  //       setError(err.message || "Google Sign-In was cancelled or failed.");
+  //     }
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleGoogleLogin = async () => {
     try {
@@ -44,11 +62,29 @@ function Home() {
       setError(null);
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
-      await loginWithBackend({ token });
+
+      // 👇 demoUser में Google से आई असली Email और UID भेजें
+      await loginWithBackend({
+        token,
+        demoUser: {
+          uid: result.user.uid,
+          email: result.user.email,
+          name: result.user.displayName || "User",
+          picture:
+            result.user.photoURL ||
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+        },
+      });
     } catch (err) {
       console.error("Google Auth error:", err);
-      if (err.code === "auth/invalid-api-key" || err.code === "auth/configuration-not-found" || err.code === "auth/api-key-not-valid") {
-        setError("Firebase API Key is missing or invalid. Use 'Continue as Demo User' below for instant access.");
+      if (
+        err.code === "auth/invalid-api-key" ||
+        err.code === "auth/configuration-not-found" ||
+        err.code === "auth/api-key-not-valid"
+      ) {
+        setError(
+          "Firebase API Key is missing or invalid. Use 'Continue as Demo User' below for instant access.",
+        );
       } else {
         setError(err.message || "Google Sign-In was cancelled or failed.");
       }
@@ -62,8 +98,9 @@ function Home() {
         uid: "demo_user_123",
         email: "demo@bearly.ai",
         name: "Bearly Explorer",
-        picture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-      }
+        picture:
+          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+      },
     });
   };
 
@@ -90,14 +127,18 @@ function Home() {
                 Welcome to Bearly
               </h2>
               <p className="text-[13px] text-slate-400 leading-relaxed">
-                Sign in to collaborate with autonomous AI agents, create code artifacts, and explore intelligent workflows.
+                Sign in to collaborate with autonomous AI agents, create code
+                artifacts, and explore intelligent workflows.
               </p>
             </div>
 
             {/* Error message if any */}
             {error && (
               <div className="flex items-start gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-[12px] leading-snug">
-                <AlertCircle size={16} className="shrink-0 mt-0.5 text-red-400" />
+                <AlertCircle
+                  size={16}
+                  className="shrink-0 mt-0.5 text-red-400"
+                />
                 <span className="flex-1">{error}</span>
               </div>
             )}
@@ -119,7 +160,9 @@ function Home() {
 
               <div className="flex items-center gap-3 my-1">
                 <div className="flex-1 h-[1px] bg-white/[0.08]" />
-                <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">or</span>
+                <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                  or
+                </span>
                 <div className="flex-1 h-[1px] bg-white/[0.08]" />
               </div>
 

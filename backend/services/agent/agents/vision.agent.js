@@ -36,8 +36,7 @@ export const visionAgent = async (state) => {
     const messages = [
 
       new SystemMessage(`
-
-You are CortexAI Vision Agent.
+You are Bearly Vision Agent.
 
 Rules:
 

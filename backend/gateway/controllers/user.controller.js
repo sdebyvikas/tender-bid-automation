@@ -1,26 +1,25 @@
-export const getCurrentUser =
-async(req,res)=>{
+import redis from "../../shared/redis/redis.js";
 
- try{
+export const getCurrentUser = async (req, res) => {
+  try {
+    const sessionId = req?.cookies?.session;
+    let user = req.user;
 
-  return res.status(200).json({
+    if (sessionId) {
+      const sessionStr = await redis.get(`session:${sessionId}`);
+      if (sessionStr) {
+        user = JSON.parse(sessionStr);
+      }
+    }
 
-   success:true,
-
-   user:req.user
-
-  });
-
- }catch(error){
-
-  return res.status(500).json({
-
-   success:false,
-
-   message:error.message
-
-  });
-
- }
-
-}
+    return res.status(200).json({
+      success: true,
+      user: {
+        ...user,
+        _id: user?.userId || user?._id,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
