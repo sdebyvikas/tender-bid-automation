@@ -5,6 +5,11 @@ import redis from "../../../shared/redis/redis.js";
 import { app } from "../config/firebase.js";
 import { createSignedSessionToken } from "../../../shared/session/sessionToken.js";
 
+const getDefaultCredits = () => {
+  const envVal = Number(process.env.DEFAULT_CREDITS);
+  return !isNaN(envVal) && envVal > 0 ? envVal : 99999;
+};
+
 export const login = async (req, res) => {
   try {
     const { token, demoUser } = req.body;
@@ -31,6 +36,8 @@ export const login = async (req, res) => {
 
     console.log("Logged in user:", decoded.email || decoded.uid);
 
+    const defaultCredits = getDefaultCredits();
+
     let user = await User.findOne({
       firebaseUid: decoded.uid,
     });
@@ -42,7 +49,13 @@ export const login = async (req, res) => {
         name: decoded.name,
         avatar: decoded.picture,
         provider: decoded.firebase?.sign_in_provider || "google",
+        credits: defaultCredits,
+        totalCredits: defaultCredits,
       });
+    } else if (!user.credits || user.credits < 1000) {
+      user.credits = defaultCredits;
+      user.totalCredits = defaultCredits;
+      await user.save();
     }
 
     const sessionPayload = {
@@ -147,21 +160,6 @@ export const updatePlan = async (req, res) => {
       totalCredits: user.totalCredits,
     };
 
-    // const newSessionId = createSignedSessionToken(sessionPayload);
-
-    // await redis.set(
-    //   `user-session:${user._id}`,
-    //   newSessionId,
-    //   "EX",
-    //   60 * 60 * 24 * 7,
-    // );
-    // await redis.set(
-    //   `session:${newSessionId}`,
-    //   JSON.stringify(sessionPayload),
-    //   "EX",
-    //   60 * 60 * 24 * 7,
-    // );
-
     const activeSessionId = await redis.get(`user-session:${user._id}`);
     if (activeSessionId) {
       await redis.set(
@@ -184,17 +182,28 @@ export const updatePlan = async (req, res) => {
   }
 };
 
+export const getCreditCosts = () => ({
+  chat: Number(process.env.CREDIT_COST_CHAT) || 1,
+  search: Number(process.env.CREDIT_COST_SEARCH) || 5,
+  coding: Number(process.env.CREDIT_COST_CODING) || 10,
+  pdf: Number(process.env.CREDIT_COST_PDF) || 10,
+  ppt: Number(process.env.CREDIT_COST_PPT) || 10,
+  image: Number(process.env.CREDIT_COST_IMAGE) || 10,
+  vision: Number(process.env.CREDIT_COST_VISION) || 10,
+});
+
+export const getCostsHandler = async (req, res) => {
+  return res.json({
+    success: true,
+    defaultCredits: getDefaultCredits(),
+    costs: getCreditCosts(),
+  });
+};
+
 export const deductCredits = async (req, res) => {
   try {
     const { userId, agent } = req.body;
-    const COST = {
-      chat: 1,
-      search: 5,
-      coding: 10,
-      pdf: 10,
-      ppt: 10,
-      image: 10,
-    };
+    const COST = getCreditCosts();
 
     const user = await User.findById(userId);
     if (!user) {
@@ -204,12 +213,16 @@ export const deductCredits = async (req, res) => {
       });
     }
 
-    const requiredCredits = COST[agent] || 1;
-    if (user.credits < requiredCredits) {
-      return res.status(400).json({
-        success: false,
-        message: "Not enough credits.",
-      });
+    const requiredCredits = COST[agent] !== undefined ? COST[agent] : 1;
+    if (
+      user.credits === undefined ||
+      user.credits === null ||
+      user.credits < requiredCredits
+    ) {
+      const defaultCredits = getDefaultCredits();
+      user.credits = defaultCredits;
+      user.totalCredits = defaultCredits;
+      await user.save();
     }
 
     user.credits -= requiredCredits;
@@ -217,6 +230,7 @@ export const deductCredits = async (req, res) => {
 
     const sessionPayload = {
       userId: user._id.toString(),
+      _id: user._id.toString(),
       email: user.email,
       avatar: user.avatar,
       name: user.name,
@@ -225,19 +239,15 @@ export const deductCredits = async (req, res) => {
       totalCredits: user.totalCredits,
     };
 
-    const newSessionId = createSignedSessionToken(sessionPayload);
-    await redis.set(
-      `user-session:${user._id}`,
-      newSessionId,
-      "EX",
-      60 * 60 * 24 * 7,
-    );
-    await redis.set(
-      `session:${newSessionId}`,
-      JSON.stringify(sessionPayload),
-      "EX",
-      60 * 60 * 24 * 7,
-    );
+    const activeSessionId = await redis.get(`user-session:${user._id}`);
+    if (activeSessionId) {
+      await redis.set(
+        `session:${activeSessionId}`,
+        JSON.stringify(sessionPayload),
+        "EX",
+        60 * 60 * 24 * 7,
+      );
+    }
 
     return res.json({
       success: true,
@@ -249,5 +259,42 @@ export const deductCredits = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const setUserCredits = async (req, res) => {
+  try {
+    const { userId, email, credits } = req.body;
+    const amount = Number(credits) || getDefaultCredits();
+
+    let query = {};
+    if (userId) query._id = userId;
+    else if (email) query.email = email;
+
+    let user;
+    if (Object.keys(query).length > 0) {
+      user = await User.findOne(query);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+      user.credits = amount;
+      user.totalCredits = amount;
+      await user.save();
+    } else {
+      // Update all users if no specific user/email provided
+      await User.updateMany(
+        {},
+        { $set: { credits: amount, totalCredits: amount } },
+      );
+    }
+
+    return res.json({
+      success: true,
+      message: `Credits updated to ${amount} successfully`,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

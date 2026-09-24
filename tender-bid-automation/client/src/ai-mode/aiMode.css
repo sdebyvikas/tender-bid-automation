@@ -1,0 +1,1471 @@
+/* ==========================================================================
+   AI MODE STUDIO - LUXURY CYBER/OBSIDIAN THEME + MS WORD A4 PAGE ENGINE
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+.aimode-root {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  width: 100%;
+  background: #08090d;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 45%);
+  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------
+   TOP NAVIGATION BAR
+   ------------------------------------------------------------- */
+.aimode-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(13, 16, 23, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  z-index: 20;
+}
+
+.aimode-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.aimode-brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+}
+
+.aimode-pulsing-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: aimode-pulse 2s infinite;
+}
+
+/* Stepper Track */
+.aimode-stepper-track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(22, 27, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
+.aimode-step-node {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.aimode-step-node.completed {
+  color: #34d399;
+  font-weight: 600;
+}
+
+.aimode-step-node.active {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.aimode-step-node.pending {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.aimode-step-num {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.aimode-step-node.active .aimode-step-num {
+  background: #38bdf8;
+  color: #082f49;
+}
+
+.aimode-step-node.completed .aimode-step-num {
+  background: #10b981;
+  color: #022c1e;
+}
+
+.aimode-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.aimode-vault-badge {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 12px;
+  border-radius: 8px;
+  color: #cbd5e1;
+}
+
+/* -------------------------------------------------------------
+   SPLIT BODY
+   ------------------------------------------------------------- */
+.aimode-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* -------------------------------------------------------------
+   LEFT PANE: CONVERSATIONAL STREAM
+   ------------------------------------------------------------- */
+.aimode-chat-pane {
+  flex: 0 0 390px;
+  width: 390px;
+  min-width: 350px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  background: #0d1017;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.aimode-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(18, 22, 32, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.aimode-chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* User Message */
+.aimode-msg-user {
+  align-self: flex-end;
+  max-width: 90%;
+  background: linear-gradient(135deg, #1e2638, #182030);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px 16px 4px 16px;
+  padding: 12px 18px;
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.55;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* AI Message */
+.aimode-msg-ai {
+  align-self: flex-start;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Step 0: Upload Hero Box */
+.aimode-upload-hero-box {
+  background: linear-gradient(180deg, rgba(22, 28, 42, 0.8), rgba(16, 20, 30, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.aimode-upload-icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+}
+
+.aimode-sample-tender-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #141824;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.aimode-sample-tender-card:hover {
+  background: #1b2234;
+  border-color: #34d399;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.aimode-sample-tender-card.fail-card:hover {
+  border-color: #f87171;
+}
+
+/* Thinking Accordion */
+.aimode-thought-accordion {
+  background: #121520;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.aimode-thought-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.aimode-thought-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #fbbf24;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.aimode-thinking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.aimode-thinking-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: aimode-bounce 1.4s infinite ease-in-out both;
+}
+
+.aimode-thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+.aimode-thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+.aimode-thought-content {
+  padding: 12px 16px;
+  font-size: 11.5px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  line-height: 1.7;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: #0a0c12;
+}
+
+/* Verdict Cards */
+.aimode-verdict-card {
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aimode-verdict-pass {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05));
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 24px rgba(16, 185, 129, 0.1);
+}
+
+.aimode-verdict-fail {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 24px rgba(239, 68, 68, 0.1);
+}
+
+.aimode-verdict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aimode-verdict-title {
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aimode-verdict-pass .aimode-verdict-title { color: #34d399; }
+.aimode-verdict-fail .aimode-verdict-title { color: #f87171; }
+
+.aimode-score-pill {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #141926;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+}
+
+/* Dates Box */
+.aimode-dates-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: #121622;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 12px;
+}
+
+.aimode-dates-box strong {
+  color: #f8fafc;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Checklist */
+.aimode-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #10141f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.aimode-checklist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.aimode-checklist-row:last-child {
+  border-bottom: none;
+}
+
+.aimode-check-pass {
+  color: #34d399;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.aimode-check-fail {
+  color: #f87171;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* Signatory Radio Cards */
+.aimode-signatory-card {
+  background: #111520;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aimode-sig-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #161b28;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aimode-sig-option:hover {
+  background: #1c2334;
+  border-color: #38bdf8;
+}
+
+.aimode-sig-option.selected {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.15);
+}
+
+/* Buttons */
+.aimode-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #02261a;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.aimode-btn-primary:hover {
+  background: linear-gradient(135deg, #34d399, #10b981);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+}
+
+.aimode-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #161b28;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aimode-btn-secondary:hover {
+  background: #202738;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Chat Input Bar */
+.aimode-chat-input-area {
+  padding: 14px 20px;
+  background: #0b0d14;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aimode-prompt-box {
+  background: #131722;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.aimode-prompt-box:focus-within {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.aimode-textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f8fafc;
+  font-size: 13px;
+  resize: none;
+  width: 100%;
+  min-height: 40px;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------------
+   RIGHT PANE: MS WORD A4 STUDIO (Dual Sub-Panes)
+   ------------------------------------------------------------- */
+.aimode-canvas-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #161922;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+/* When focus/fullscreen mode is enabled */
+.aimode-canvas-pane.fullscreen-focus {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+}
+
+/* MS Word Style Studio Toolbar */
+.aimode-word-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 18px;
+  background: #10131c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 10;
+}
+
+.aimode-word-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aimode-word-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aimode-word-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+.aimode-word-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-weight: 700;
+  border-color: #38bdf8;
+}
+
+/* Canvas Sub-Panes Layout (Outline Sidebar + A4 Desk Viewport) */
+.aimode-canvas-inner-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* =============================================================
+   NAVIGATION OUTLINE PANE (Left of Word Studio)
+   ============================================================= */
+.aimode-outline-pane {
+  width: 220px;
+  flex: 0 0 220px;
+  background: #0f121a;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.aimode-outline-header {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.aimode-outline-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aimode-outline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aimode-outline-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.aimode-outline-item.dragging {
+  opacity: 0.4;
+  border: 1px dashed #38bdf8;
+}
+
+.aimode-outline-item.drag-over {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.aimode-outline-drag-handle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: grab;
+  color: #64748b;
+  flex: 1;
+  min-width: 0;
+}
+
+.aimode-outline-drag-handle:active {
+  cursor: grabbing;
+}
+
+.aimode-outline-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aimode-outline-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.aimode-add-page-btn {
+  margin: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aimode-add-page-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* =============================================================
+   A4 WORKBENCH VIEWPORT (Center Floating Pages)
+   ============================================================= */
+.aimode-canvas-viewport {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  background: #1c202c; /* Classic MS Word desk gray */
+  scroll-behavior: smooth;
+}
+
+/* =============================================================
+   EMPTY CANVAS WAITING STATE (Step 0)
+   ============================================================= */
+.aimode-empty-canvas-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  width: 100%;
+  padding: 30px 16px;
+}
+
+.aimode-empty-canvas-card {
+  max-width: 560px;
+  width: 100%;
+  background: rgba(15, 18, 26, 0.88);
+  border: 1px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 18px;
+  padding: 36px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  animation: aimode-fade-in 0.35s ease-out;
+}
+
+.aimode-empty-canvas-icon-wrap {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  margin-bottom: 4px;
+}
+
+.aimode-empty-sparkle-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.6);
+}
+
+.aimode-empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.aimode-empty-subtitle {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.aimode-empty-subtitle strong {
+  color: #e2e8f0;
+}
+
+.aimode-empty-features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 4px 0;
+  text-align: left;
+}
+
+.aimode-empty-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: #cbd5e1;
+}
+
+.aimode-empty-feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+  flex-shrink: 0;
+}
+
+.aimode-empty-actions {
+  margin-top: 6px;
+}
+
+/* Genuine A4 Printed Page */
+.aimode-a4-sheet {
+  width: 720px;
+  max-width: 96%;
+  min-height: 1000px;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 2px;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 1px 4px rgba(0, 0, 0, 0.15);
+  padding: 48px 54px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.aimode-a4-running-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.aimode-a4-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.aimode-a4-doc-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.aimode-a4-editable-text,
+.aimode-a4-editable-rich-body {
+  width: 100%;
+  flex: 1;
+  min-height: 480px;
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: #1e293b;
+  background: transparent;
+  border: 1px solid transparent;
+  outline: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: text;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.aimode-a4-editable-text:focus,
+.aimode-a4-editable-rich-body:focus {
+  background: #fdfdfd;
+  border-color: #cbd5e1;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+}
+
+.aimode-a4-editable-rich-body h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 14px 0 8px 0;
+  text-transform: uppercase;
+}
+
+.aimode-a4-editable-rich-body h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 12px 0 6px 0;
+}
+
+.aimode-a4-editable-rich-body p {
+  margin: 0 0 8px 0;
+  line-height: 1.8;
+}
+
+.aimode-a4-editable-rich-body ul, 
+.aimode-a4-editable-rich-body ol {
+  margin: 6px 0 10px 24px;
+  padding: 0;
+}
+
+.aimode-a4-editable-rich-body li {
+  margin-bottom: 5px;
+}
+
+.aimode-a4-editable-rich-body strong, 
+.aimode-a4-editable-rich-body b {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.aimode-a4-editable-rich-body em, 
+.aimode-a4-editable-rich-body i {
+  font-style: italic;
+}
+
+.aimode-a4-editable-rich-body u {
+  text-decoration: underline;
+}
+
+.aimode-a4-running-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #cbd5e1;
+  padding-top: 10px;
+  margin-top: 24px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+/* Empty State Canvas */
+.aimode-empty-canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  text-align: center;
+  gap: 16px;
+}
+
+/* Keyframes */
+@keyframes aimode-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.95); }
+}
+
+@keyframes aimode-bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Scrollbars */
+.aimode-chat-scroll::-webkit-scrollbar,
+.aimode-outline-list::-webkit-scrollbar,
+.aimode-canvas-viewport::-webkit-scrollbar {
+  width: 7px;
+}
+
+.aimode-canvas-viewport::-webkit-scrollbar-track {
+  background: #141720;
+}
+
+.aimode-chat-scroll::-webkit-scrollbar-thumb,
+.aimode-outline-list::-webkit-scrollbar-thumb,
+.aimode-canvas-viewport::-webkit-scrollbar-thumb {
+  background: #333d52;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------------------
+   MINI FORMATTING RIBBON & ACTIVE SHEET
+   ------------------------------------------------------------- */
+.aimode-ribbon-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.aimode-ribbon-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.aimode-ribbon-btn:active {
+  background: #cbd5e1;
+  transform: scale(0.96);
+}
+
+.aimode-a4-sheet.active-a4-sheet {
+  box-shadow: 
+    0 0 0 2px #38bdf8,
+    0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* -------------------------------------------------------------
+   STAMP & IMAGE SELECTION MODAL
+   ------------------------------------------------------------- */
+.aimode-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: aimode-fade-in 0.2s ease-out;
+}
+
+.aimode-stamp-modal {
+  background: #111522;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.aimode-stamp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(56, 189, 248, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13.5px;
+  color: #f8fafc;
+}
+
+.aimode-stamp-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.aimode-stamp-presets-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.aimode-stamp-preset-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #181e2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.aimode-stamp-preset-card:hover {
+  background: #20273c;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.aimode-stamp-preset-img-box {
+  width: 90px;
+  height: 60px;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------
+   OFFICIAL MASTER COVER PAGE (PAGE 1)
+   ------------------------------------------------------------- */
+.aimode-cover-frame {
+  border: 3.5px double #0f172a;
+  padding: 32px 28px;
+  border-radius: 4px;
+  background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+}
+
+.aimode-cover-header {
+  text-align: center;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.aimode-cover-emblem {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px auto;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.aimode-cover-authority-sub {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #475569;
+}
+
+.aimode-cover-authority-main {
+  font-size: 13.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+  margin-top: 2px;
+}
+
+.aimode-cover-dossier-banner {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.aimode-cover-dossier-title {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  display: block;
+}
+
+.aimode-cover-tender-ref {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-top: 4px;
+}
+
+.aimode-cover-work-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #0284c7;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.aimode-cover-work-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.aimode-cover-work-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.45;
+  font-family: 'Lora', Georgia, serif;
+}
+
+.aimode-cover-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.aimode-cover-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 14px;
+}
+
+.aimode-cover-card-header {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0f172a;
+  border-bottom: 1.5px solid #0f172a;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aimode-cover-card-body {
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.aimode-cover-footer {
+  border-top: 2px solid #0f172a;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* -------------------------------------------------------------
+   AUTO-GENERATED DYNAMIC INDEX / TABLE OF CONTENTS (PAGE 2)
+   ------------------------------------------------------------- */
+.aimode-toc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.aimode-toc-header-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #0f172a;
+  padding: 10px 14px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aimode-toc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.aimode-toc-table th {
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.aimode-toc-table th:last-child {
+  text-align: right;
+}
+
+.aimode-toc-row {
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.aimode-toc-row:hover {
+  background: #f0f9ff;
+}
+
+.aimode-toc-row td {
+  padding: 10px 12px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.aimode-toc-title-cell {
+  font-weight: 600;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.aimode-toc-leader-dots {
+  flex: 1;
+  border-bottom: 1.5px dotted #94a3b8;
+  margin: 0 10px;
+  height: 12px;
+}
+
+.aimode-toc-page-badge {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.aimode-toc-summary-box {
+  background: #f8fafc;
+  border: 1px dashed #0284c7;
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 11.5px;
+  color: #0369a1;
+}
+
+
+@keyframes aimode-fade-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* -------------------------------------------------------------
+   PRINT & SAVE TO PDF ENGINE (@media print)
+   ------------------------------------------------------------- */
+@media print {
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Hide app navigation chrome */
+  .aimode-topbar,
+  .aimode-word-toolbar,
+  .aimode-outline-pane,
+  .aimode-chat-pane,
+  .aimode-word-mini-ribbon,
+  .aimode-modal-overlay,
+  nav,
+  header,
+  aside,
+  button,
+  .sidebar,
+  [role="navigation"] {
+    display: none !important;
+  }
+
+  .aimode-root,
+  .aimode-body,
+  .aimode-canvas-pane,
+  .aimode-canvas-inner-layout,
+  .aimode-canvas-viewport {
+    display: block !important;
+    position: static !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .aimode-a4-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 40px 48px !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .aimode-a4-editable-text {
+    overflow: visible !important;
+    height: auto !important;
+    border: none !important;
+    outline: none !important;
+    color: #000000 !important;
+  }
+}
+
