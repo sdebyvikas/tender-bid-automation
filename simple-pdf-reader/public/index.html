@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Reader - Non-AI Learning Demo</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #10b981;
+      --tag-bg: #eff6ff;
+      --tag-border: #bfdbfe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .badge-no-ai {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* Upload Box */
+    .upload-card {
+      background: var(--card);
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 24px;
+    }
+
+    .upload-card:hover, .upload-card.dragover {
+      border-color: var(--primary);
+      background: #f0f7ff;
+    }
+
+    .upload-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .upload-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .file-chosen-text {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    /* Result Section */
+    .results-container {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Metric Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .metric-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .metric-box .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .metric-box .value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Pattern Extraction Box */
+    .pattern-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .pattern-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pattern-row {
+      margin-bottom: 12px;
+    }
+
+    .pattern-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .pattern-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: #1e40af;
+      border: 1px solid var(--tag-border);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    .tag-empty {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    /* Raw Text Box */
+    .text-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .text-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .text-card-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .copy-btn:hover {
+      background: #e2e8f0;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: "Courier New", Courier, monospace;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* Explanation Note */
+    .info-card {
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #713f12;
+    }
+
+    .info-card strong {
+      color: #854d0e;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <span class="badge-no-ai">⚡ 100% Non-AI File Parsing Demo</span>
+    <h1>Simple PDF Reader (Learning Purpose)</h1>
+    <p>Dekhiye kaise ek PDF bina kisi AI API ke raw binary se text aur patterns me decode hoti hai.</p>
+  </div>
+
+  <!-- Upload Area -->
+  <div class="upload-card" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="upload-icon">📄</div>
+    <h3>Click karein ya PDF yahan Drag & Drop karein</h3>
+    <p style="font-size: 13px; color: #64748b; margin-top: 4px;">Koi bhi PDF file select karein (.pdf)</p>
+    <input type="file" id="fileInput" accept="application/pdf" style="display: none;" onchange="handleFileSelect(event)">
+    <div class="file-chosen-text" id="chosenFileName">Koi file select nahi hai</div>
+    <button class="upload-btn" onclick="extractPdf(event)">Extract Text (Bina AI ke)</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loadingSpinner">
+    ⏳ PDF padh rahe hain (Decompressing binary streams & decoding CMap)...
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-container" id="resultsSection">
+    
+    <!-- 1. Metadata Grid -->
+    <div class="metric-grid">
+      <div class="metric-box">
+        <div class="label">Total Pages</div>
+        <div class="value" id="valPages">0</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">Time Taken</div>
+        <div class="value" id="valTime" style="color: #059669;">0 ms</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">Total Characters</div>
+        <div class="value" id="valChars">0</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">Total Words</div>
+        <div class="value" id="valWords">0</div>
+      </div>
+    </div>
+
+    <!-- 2. Pure Regex Extracted Patterns (Without AI) -->
+    <div class="pattern-card">
+      <h3>🔍 Regex se Nikala Hua Data (Bina AI ke Patterns)</h3>
+      
+      <div class="pattern-row">
+        <span class="pattern-label">📌 Tender / Ref Numbers Mil Gaye:</span>
+        <div class="tag-container" id="tagsTenders"></div>
+      </div>
+
+      <div class="pattern-row">
+        <span class="pattern-label">📅 Dates Mili:</span>
+        <div class="tag-container" id="tagsDates"></div>
+      </div>
+
+      <div class="pattern-row">
+        <span class="pattern-label">💰 Amounts / Currency (₹):</span>
+        <div class="tag-container" id="tagsAmounts"></div>
+      </div>
+
+      <div class="pattern-row">
+        <span class="pattern-label">✉️ Emails:</span>
+        <div class="tag-container" id="tagsEmails"></div>
+      </div>
+
+      <div class="pattern-row">
+        <span class="pattern-label">📞 Phone Numbers:</span>
+        <div class="tag-container" id="tagsPhones"></div>
+      </div>
+    </div>
+
+    <!-- 3. Raw Text Box -->
+    <div class="text-card">
+      <div class="text-card-header">
+        <h3>📝 PDF se Nikala Hua Raw Plain Text</h3>
+        <button class="copy-btn" onclick="copyRawText()">📋 Copy Text</button>
+      </div>
+      <pre id="rawTextContent"></pre>
+    </div>
+
+    <!-- 4. How it worked Note -->
+    <div class="info-card">
+      <strong>💡 Yeh bina AI ke kaise hua?</strong><br>
+      1. Node.js ne file ko binary buffer ke roop me RAM me load kiya.<br>
+      2. <code>pdf-parse</code> ne PDF ke compressed streams ko Zlib decompress kiya aur embedded <code>ToUnicode CMap</code> se characters translate kiye.<br>
+      3. Upar ke Tender Number, Dates aur Amounts <strong>Regular Expressions (Regex Pattern Matching)</strong> se dhoonde gaye hain.
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let selectedFile = null;
+
+  function handleFileSelect(e) {
+    if (e.target.files && e.target.files[0]) {
+      selectedFile = e.target.files[0];
+      document.getElementById('chosenFileName').textContent = "Selected: " + selectedFile.name + " (" + (selectedFile.size / 1024).toFixed(1) + " KB)";
+    }
+  }
+
+  // Drag & Drop
+  const dropZone = document.getElementById('dropZone');
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      selectedFile = e.dataTransfer.files[0];
+      document.getElementById('chosenFileName').textContent = "Selected: " + selectedFile.name + " (" + (selectedFile.size / 1024).toFixed(1) + " KB)";
+    }
+  });
+
+  async function extractPdf(e) {
+    e.stopPropagation();
+    if (!selectedFile) {
+      alert("Pehle ek PDF file select karein!");
+      return;
+    }
+
+    const loading = document.getElementById('loadingSpinner');
+    const results = document.getElementById('resultsSection');
+
+    loading.style.display = 'block';
+    results.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('pdfFile', selectedFile);
+
+    try {
+      const response = await fetch('/api/extract', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      loading.style.display = 'none';
+
+      if (!data.success) {
+        alert("Error: " + data.error);
+        return;
+      }
+
+      // Display metrics
+      document.getElementById('valPages').textContent = data.totalPages;
+      document.getElementById('valTime').textContent = data.executionTimeMs + " ms";
+      document.getElementById('valChars').textContent = data.characterCount.toLocaleString();
+      document.getElementById('valWords').textContent = data.wordCount.toLocaleString();
+
+      // Render Tags Helper
+      function renderTags(elementId, items) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        if (!items || items.length === 0) {
+          container.innerHTML = '<span class="tag-empty">Koi match nahi mila</span>';
+          return;
+        }
+        items.forEach(item => {
+          const span = document.createElement('span');
+          span.className = 'tag';
+          span.textContent = item;
+          container.appendChild(span);
+        });
+      }
+
+      renderTags('tagsTenders', data.patternsFound.tenderNumbers);
+      renderTags('tagsDates', data.patternsFound.dates);
+      renderTags('tagsAmounts', data.patternsFound.amounts);
+      renderTags('tagsEmails', data.patternsFound.emails);
+      renderTags('tagsPhones', data.patternsFound.phoneNumbers);
+
+      // Render Raw Text
+      document.getElementById('rawTextContent').textContent = data.rawText;
+
+      results.style.display = 'block';
+
+    } catch (err) {
+      loading.style.display = 'none';
+      alert("Server connect karne me error: " + err.message);
+    }
+  }
+
+  function copyRawText() {
+    const text = document.getElementById('rawTextContent').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Raw text clipboard par copy ho gaya!");
+    });
+  }
+</script>
+
+</body>
+</html>

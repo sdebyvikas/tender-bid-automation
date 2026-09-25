@@ -86,6 +86,1328 @@
   },
   "tenders": [
     {
+      "id": "tender_a7cfd3d4-100e-44bf-985f-e266eb64b2a9",
+      "tenderNumber": "ELE.93/2024/2",
+      "title": "RFP for Tender Bid Package tender 2bd0eeca 63af 43fb 9e78 2d93ff316f25 1789966821304",
+      "organization": ", hereinafter referred to as CEO Assam, invites online bids",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T13:00:20.445Z",
+      "preBidMeetingDate": "2026-10-01T13:00:20.446Z",
+      "due": "15 Oct 2026, 06:30 pm",
+      "scopeSummary": " OFFICIAL BID SUBMISSION PACKAGE RFP Reference No: ELE.93/2024/2, Dated: 21 TENDER / RFP REF: TDR-581920 ISSUED BY: , hereinafter referred to as CEO Assam, invites online bids SUBMITTED BY: Apex Infotech Solutions Ltd. GSTIN: 07ABCDE1234F1Z5 | PAN: ABCDE1234F HQ: Connaught Place, New Delhi, India Authorized Signatory: Vikas Kumar (Director & Authorized Signatory) Contact: bids@apexinfotech.example.com | +91-9876543210 Submission Date: 21 September 2026 1. Executive Summary & Bidder Credentials Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TD...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\nOFFICIAL BID SUBMISSION PACKAGE\nRFP Reference No: ELE.93/2024/2, Dated: 21\nTENDER / RFP REF: TDR-581920\nISSUED BY: , hereinafter referred to as CEO Assam, invites online bids\nSUBMITTED BY:\nApex Infotech Solutions Ltd.\nGSTIN: 07ABCDE1234F1Z5 | PAN: ABCDE1234F\nHQ: Connaught Place, New Delhi, India\nAuthorized Signatory: Vikas Kumar (Director & Authorized Signatory)\nContact: bids@apexinfotech.example.com | +91-9876543210\nSubmission Date: 21 September 2026\n\n1. Executive Summary & Bidder Credentials\nApex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-581920 \nfor \"RFP Reference No: ELE.93/2024/2, Dated: 21\".\nBidder Financial & Quality Highlights:\n• Average Annual Turnover:  ¹3.80 Crore\n• Quality & Security Accreditations: ISO 9001:2015 (Quality Management), ISO 27001:2022 (Information Security), ISO \n20000-1:2018 (IT Service Management), CMMI Dev Level 3, CMMI SVC Level 3\n• Key Delivered Projects: Integrated Command & Control Center (ICCC) AI Platform ( ¹2.80 Cr); State Health Authority \nCloud HIS & Portal ( ¹1.95 Cr); Enterprise Document Management & AI Search ( ¹1.40 Cr)\n2. Technical Solution Architecture & Methodology\nOur technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security \nadherence.\nImplementation & Rollout Plan:\nPhase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)\n3. Clause-by-Clause Compliance Matrix\nClauseRFP RequirementStatusCompliance Justification / Remarks\nSec 1.1.0Bidder must be a registered Indian legal \nentity with active PAN and GST reg...\nCompliedApex Infotech Solutions Ltd. is incorporated \nunder Companies Act with active GST and ...\nSec 2.3.4Average annual financial turnover during \nlast 3 financial years must meet r...\nCompliedAudited financial statements and CA \ncertificate confirm robust turnover ( ¹4.50 Cr).\nSec 3.2.1Solution must adhere to ISO 9001 and \nISO 27001 standards for quality manage...\nCompliedCompany holds valid ISO 9001:2015 and \nISO 27001:2022 certifications.\nSec 4.1.5All data, logs, and sensitive workloads \nmust be hosted within MeitY empanel...\nCompliedHosting proposed exclusively within AWS/\nAzure India (Mumbai/Hyderabad) MeitY \ncertifie...\nSec 5.4.024x7 SLA support with maximum 4-hour \nMTTR for critical severity incidents d...\nCompliedDedicated Helpdesk with dedicated L1/L2 \nengineering team stationed in project region.\n\n4. Commercial Schedule & Bill of Quantities (BOQ)\nItem DescriptionCategoryQtyRate (INR)Total (INR)\nCore Platform & System Software LicenseSoftware1 \nEnterprise\n ¹87,50,000 ¹87,50,000\nImplementation, Setup & Integration ServicesServices12 Man-\nMonths\n ¹6,25,000 ¹75,00,000\nInfrastructure / Cloud Hosting & Edge DevicesHardware1 Set ¹50,00,000 ¹50,00,000\nAnnual Maintenance Contract & SLA Support (Year 1)Services1 Year ¹37,50,000 ¹37,50,000\nTOTAL BASE COMMERCIAL OFFER (EXCL. TAXES): ¹2,50,00,000\n\n5. Mandatory Undertakings & Declarations\nAnnexure I: Non-Blacklisting Certificate & Integrity Pact\nWe, Apex Infotech Solutions Ltd., hereby solemnly declare and affirm that we have not been debarred, blacklisted, or \ndisqualified by any Central / State Government Department, Public Sector Undertaking (PSU), or autonomous body in \nIndia as on the date of submission. We further affirm compliance with all local laws, Anti-Bribery regulations, and fair \ncompetition norms.\nAnnexure II: Make In India (MII) & Local Content Compliance\nWe  confirm  that  the  services  and  components  offered  under  Tender  TDR-581920  meet  the  minimum  local  content  \nrequirements prescribed under the Public Procurement (Preference to Make in India) Order issued by DPIIT, Govt. of \nIndia.\nFor and on behalf of:\nApex Infotech Solutions Ltd.\n[Digital / Physical Signature]\nVikas Kumar\nDirector & Authorized Signatory\n\nPage 2 of 4 | Tender Bid Package: TDR-581920\n\nPage 3 of 4 | Tender Bid Package: TDR-581920\n\nPage 4 of 4 | Tender Bid Package: TDR-581920",
+      "documentMeta": {
+        "fileName": "1790254818543-872812630-Tender_Bid_Package_tender_2bd0eeca-63af-43fb-9e78-2d93ff316f25_1789966821304.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 9616,
+        "pageCount": 7,
+        "isScanned": false,
+        "detectedSections": [
+          "BOQ / Financial Schedule",
+          "Submission Guidelines",
+          "Annexures & Undertakings",
+          "Mandatory Declarations"
+        ]
+      },
+      "uploadedFileName": "Tender_Bid_Package_tender_2bd0eeca-63af-43fb-9e78-2d93ff316f25_1789966821304.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_5a891718",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_80b1be03",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_a2d4440a",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_1d7d9165",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_1f185f36",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_526293",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_b3e419",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_bf2b59",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_c0b5f7",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP ELE.93/2024/2 for \"RFP for Tender Bid Package tender 2bd0eeca 63af 43fb 9e78 2d93ff316f25 1789966821304\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T13:00:22.210Z",
+      "updatedAt": "2026-09-24T13:00:22.210Z"
+    },
+    {
+      "id": "tender_4c5dce15-efc3-4662-beac-ba52353e090b",
+      "tenderNumber": "TDR-783444",
+      "title": "RFP for Node js Interview",
+      "organization": "Public Procurement Entity",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T12:59:43.446Z",
+      "preBidMeetingDate": "2026-10-01T12:59:43.446Z",
+      "due": "15 Oct 2026, 06:29 pm",
+      "scopeSummary": " ...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "documentMeta": {
+        "fileName": "1790254777431-12370665-Node js Interview.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 9933875,
+        "pageCount": 26,
+        "isScanned": true,
+        "detectedSections": []
+      },
+      "uploadedFileName": "Node js Interview.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_d87ce3dd",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_41a7ab03",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_d08f3429",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_df4326b9",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_216724f8",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_b004df",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_830dac",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_a51aaf",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_c867a1",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-783444 for \"RFP for Node js Interview\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T12:59:45.293Z",
+      "updatedAt": "2026-09-24T12:59:45.293Z"
+    },
+    {
+      "id": "tender_ab8db220-d572-457c-9012-e449ae2dc3ac",
+      "tenderNumber": "TDR-720981",
+      "title": "RFP for Node js Interview",
+      "organization": "Public Procurement Entity",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T12:58:40.984Z",
+      "preBidMeetingDate": "2026-10-01T12:58:40.985Z",
+      "due": "15 Oct 2026, 06:28 pm",
+      "scopeSummary": " ...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "documentMeta": {
+        "fileName": "1790254712693-235093600-Node js Interview.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 9933875,
+        "pageCount": 26,
+        "isScanned": true,
+        "detectedSections": []
+      },
+      "uploadedFileName": "Node js Interview.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_47ab9588",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_3e8408c4",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_a2e0c7a1",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_0d6c4d90",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_8e50a2bd",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_8c3ecd",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_5de0c8",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_fcfc3a",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_59fbe1",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-720981 for \"RFP for Node js Interview\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T12:58:42.988Z",
+      "updatedAt": "2026-09-24T12:58:42.988Z"
+    },
+    {
+      "id": "tender_d519cba6-7454-45b7-ba4e-a329f7b598d8",
+      "tenderNumber": "TDR-188039",
+      "title": "RFP for Node js Interview",
+      "organization": "Public Procurement Entity",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T11:59:48.041Z",
+      "preBidMeetingDate": "2026-10-01T11:59:48.041Z",
+      "due": "15 Oct 2026, 05:29 pm",
+      "scopeSummary": " ...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "documentMeta": {
+        "fileName": "1790251181688-150890566-Node js Interview.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 9933875,
+        "pageCount": 26,
+        "isScanned": true,
+        "detectedSections": []
+      },
+      "uploadedFileName": "Node js Interview.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_a31be5a9",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_25340892",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_fc84632d",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_a0472c39",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_a2958801",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_24af30",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_2cf953",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_775577",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_7b47c6",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-188039 for \"RFP for Node js Interview\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T11:59:49.982Z",
+      "updatedAt": "2026-09-24T11:59:49.982Z"
+    },
+    {
+      "id": "tender_28ad3a87-f541-42bd-9fe4-5ecbc09e8268",
+      "tenderNumber": "TDR-144095",
+      "title": "RFP for 1786951266572",
+      "organization": "Public Procurement Entity",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T11:59:04.097Z",
+      "preBidMeetingDate": "2026-10-01T11:59:04.098Z",
+      "due": "15 Oct 2026, 05:29 pm",
+      "scopeSummary": " ...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\n\n\n\n\n\n\n",
+      "documentMeta": {
+        "fileName": "1790251140499-501703108-1786951266572.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 1293976,
+        "pageCount": 4,
+        "isScanned": true,
+        "detectedSections": []
+      },
+      "uploadedFileName": "1786951266572.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_cd9075c6",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_eef40ffa",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_fd90d2f1",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_b7ba28fe",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_34acb697",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_61eb44",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_af824c",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_2639a9",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_fb277a",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-144095 for \"RFP for 1786951266572\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T11:59:06.002Z",
+      "updatedAt": "2026-09-24T11:59:06.002Z"
+    },
+    {
+      "id": "tender_f4ca4780-6855-46d8-a39b-b5d1093c5996",
+      "tenderNumber": "TDR-324796",
+      "title": "RFP for ravinder quashing HC",
+      "organization": "/ Authority / [| |",
+      "category": "IT / Enterprise Technology",
+      "portal": "GeM / CPPP Portal",
+      "estimatedValueINR": 25000000,
+      "estimatedValueDisplay": "₹2.50 Crore (Estimated)",
+      "emdAmountINR": 50000,
+      "emdDisplay": "₹50,000",
+      "tenderFeeINR": 5000,
+      "publishDate": "2026-09-24",
+      "submissionDeadline": "2026-10-15T11:28:44.797Z",
+      "preBidMeetingDate": "2026-10-01T11:28:44.798Z",
+      "due": "15 Oct 2026, 04:58 pm",
+      "scopeSummary": " TO BE FILLED BY HAND LISTING PROFORMA. | Pt INSTRUCTIONS : 1. DO NOT WRITE OUTSIDE THE BOXES. 3. ONE CHARACTER IN EACH BOX. 2. WRITE IN BLOCK CAPITAL LETTERS. 4. DO NOT Staple the Sheet. | | IN THE HIGH COURT OF DELHI AT NEW DELIL:I = [c[rlL] Ml [T TTT]er [2]o P IN'THE MATTER OF:- . navie [RIATVEENRIETRT [e[oIM AR ] To[RIST [T 1 ] oo Vs nave [T [N [ JoleT felelcMET Te] ToREs | o 1 (2) Case Category . [2]é] (b) Case Category [(ITT171-0 2 Date of Impuened order (/00 /70010 3 (a) Similar Matter [TTTTI] [LII1 o [ TT 1] Case Type / Number vsmweimans (O[T B8] Tole]...",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": 15000000,
+        "minTurnoverDisplay": "₹1.50 Cr",
+        "minExperienceYears": 3,
+        "requiredCertifications": [
+          "ISO 9001:2015",
+          "ISO 27001"
+        ],
+        "pastProjectRequirement": "At least 1 similar project executed in last 5 years."
+      },
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-I",
+          "title": "Bid Submission Cover Letter",
+          "description": "Formal transmission letter"
+        },
+        {
+          "formNumber": "Annexure-II",
+          "title": "Non-Blacklisting Undertaking",
+          "description": "Clean legal declaration"
+        },
+        {
+          "formNumber": "Annexure-III",
+          "title": "Make In India (MII) Certificate",
+          "description": "Local value addition compliance"
+        },
+        {
+          "formNumber": "Annexure-IV",
+          "title": "Manufacturer Authorization Form (MAF)",
+          "description": "OEM authorization"
+        }
+      ],
+      "keyRisks": [
+        {
+          "title": "Liquidated Damages",
+          "description": "0.5% per week delay up to 10% maximum.",
+          "riskLevel": "Medium"
+        },
+        {
+          "title": "Data Sovereignty",
+          "description": "All data must strictly reside in Indian territory.",
+          "riskLevel": "Low"
+        }
+      ],
+      "rawTextSnippet": "\n\nTO \nBE \nFILLED \nBY \nHAND \nLISTING \nPROFORMA. \n| \nPt \nINSTRUCTIONS : 1. DO NOT WRITE OUTSIDE THE BOXES. 3. ONE CHARACTER IN EACH BOX. \n2. WRITE IN BLOCK CAPITAL LETTERS. 4. DO NOT Staple the Sheet. \n| \n| \nIN \nTHE \nHIGH \nCOURT \nOF \nDELHI \nAT \nNEW \nDELIL:I \n= \n[c[rlL] Ml [T TTT]er [2]o P \nIN'THE MATTER OF:- . \nnavie [RIATVEENRIETRT [e[oIM AR ] To[RIST [T 1 ] oo \nVs \nnave [T [N [ JoleT felelcMET Te] ToREs | o \n1 (2) Case Category . [2]é] \n(b) Case Category [(ITT171-0 \n2 Date of Impuened order (/00 /70010 \n3 (a) Similar Matter [TTTTI] [LII1 o [ TT 1] \nCase Type / Number \nvsmweimans (O[T B8] Tole] TBNSET ez 1] \nBT EFT R Tolfl TR Ad AT 1 1] \nCriminal Matters - Code 100 to 105 \nFIR No. [o]z o |t ]/ [2] o[2]2] \nFIR \nDate \n28] \n/ \n[eB] \n/ \n[2]e]2]2] \nfolice Saton [PITsTealAM Tvleulnla] Te[a[sET TTT T 1] \nService Matters - Code 500 to 505 \n[TTTTTTTTTTTT] \n[TTTTITTITITTT \nl\\llluliorslAcridTm IClalim IMTter -IC0iie 6]00 \n[TTTTTTTTTITd \nDepartment / Authority / [| | \nOrganization etc. \n[T \nInsurance Company \n[ ] \n[T] \n[ \n3 \nLawvers \nCode \n‘)_%L/); \n181\n\nIN \nTHE \nHIGH \nCOURT \nOF \nDELHI \nAT \nNEW \nDELHI \nCRL. M. C.No. /2026 \nIN THE MATTER OF: \nRAVINDER \nKUMAR \n& \nORS. \n-.PETITIONERS \nVersus \nSTATE \n(NCT \nOF \nDELHI) \n& \nORS. \n-.RESPONDENTS \nINDEX \nS.No. \nParticulars \nPages \n| \nCourt \nFee \n1. \nNotice \nof \nMotion \n1 \n2 \nUrgent \nApplication \n2 \n3 \nMemo \nof \npartics \n3-4 \n4. \nConsolidated \nCourt \nFee \nS \n5. \nList \nof \nDates \n& \nEvents \n6= \n6. \nPetition \nunder \nsection \n528 \nof \nBharatiya \nL \nEEPINY \nNagarik \nSuraksha \nSanhita, \nBNSS, \n2023 \nR/W \nSection \n482 \nol \nCode \nof \nCriminal \nProcedure, \n1973 \nfor \nquashing \nof \nFIR \nand \nproceedings \nemanating \nthere \nfrom \nJ \nalongwith \nAffidavits \nof \nPetitioner \n| \nto \n4 \n| \n- \nand \nRespondent \nNo.2. \n) \n\" \n17 \nANNEXURE-P-1 \n21534 \nTrue \nCopy \nand \ntyped \ncopy \nof \nFIR \nf \n| \n‘ \nNo. \n0804/2022, \nP.S. \nPaschim \nVihar \n‘ \n| \nEast, \nU/s \n498A/406/34 \n1PC, \n1860, \n| \n3. \n, \nANNEXURF-P-2 \n$s-‘13‘ \n‘ \ni \n‘ \n| \nCertificd \ncopy \nof \nDelhi \nMediation \n| \n| \nl \nSettlement \ndated \n14.1 \n1.2025.(3’\\'\\@\\0(::‘:»3)! \n\nANNEXURE-P-3 \nCertified copy of Order Dated 29.11.2025 \npassed by Ld. Judge Family Court, West, \nTis Hazari Court, Delhi in Petition Under \nSection 13-B(1) of HMA, 1955. (Qworataky) \nWSy \nANNEXURE-P-4 \nPhotocopy of Decree Sheet dated \n13.03.2026 passed by Ld. Judge Family \nCourt, West, Tis Hazari Court, Delhi in \nPetition Under Section 13-B(2) of HMA, \n1955. \n83 \nb, \nANNEXURE-P-5 \nID  Proof of the petitioners and \nrespondent  no.2  alongwith  their \nphotographs. \n86 -6o \nCertificate of non-filing and undertaking. o\\-62 \n_ Delhi. \nCertificate/Undertaking regarding \nquashing petition filed on the basis of \nAmicable Settlement arrived at Delhi \nMediation Centre, Tis Hazari Courts, \nG3 -6N \nDelhi \nProof of Service to the Respondents \n68\" \nVakalatnamas (AN | \nDate - \\3l0s\\2026 \nFiled By: \nP \\(\"L ¥ \n}W;J;(Flw Q.,“‘i; g\\l“t\\ \nPrashant Kumar, Kuntal, \nDinesh Kumar, . \nCounscls for the petitioners \nChamber No.1118, 11\" Floor, \nLawyers Chamber Block, Rohini \nCourts, Delhi-110085. \nEmail:kuntalke | @ gmail.com \nMohile:97 \n17772205, \n9873005385 \n\nIN \nTHE \nHIGH \nCOURT \nOF \nDELHI \nAT \nNEW \nDELHI \nCRL.M. \nC.No. \n/2026 \nIN THE MATTER OF: \nRAVINDER \nKUMAR \n& \nORS. \n..PETITIONERS \nVersus \nSTATE \n(NCT \nOF \nDELHI) \n& \nORS. \n..RESPONDENTS \nNOTICE OF MOTION \nTo, \nThe Standing Counsel (Criminal), \nState NCT of Delhi, \nNew Delhi. \nSir, \nPlease \nfind \nenclosed \npetition \nin \nthe \naforcsaid \nmatter \nis \nbeing \nfiled \non \nbehalf \nof \nthe \npetitioners \nand \nis \nlikely \nto \nbe \nlisted \non \n052026 \norany \nother \ndate. \nTherefore, \nplease \ntake \nnotice \naccordingly. \nFiled By: Y \nDelhi \n&7\\ \nDate \n- \n3|05\\ \n2926 \n)/\"”(\":fi‘»“hfl’ \nQ\\)% \nP \nPrashant Kumar, Kuntal, \nDinesh Kumar \nCounsels for the petitioners \nChamber No. 1118, 11\" Floor, \nLawyers Chamber Block, Rohini \nCourts, Delhi-110085. \nEmail: kuntalke 1 gmail.com \nMobile:9717772205, 9873005385, ",
+      "documentMeta": {
+        "fileName": "1790249320018-115095277-ravinder quashing HC.pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 421112,
+        "pageCount": 4,
+        "isScanned": false,
+        "detectedSections": [
+          "Annexures & Undertakings",
+          "Mandatory Declarations"
+        ]
+      },
+      "uploadedFileName": "ravinder quashing HC.pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "decision": "CONDITIONAL GO",
+        "winProbability": 69,
+        "overallScore": 74,
+        "financialFitScore": 95,
+        "technicalFitScore": 65,
+        "experienceScore": 60,
+        "riskScore": 20,
+        "recommendationSummary": "Conditional recommendation. Satisfies majority of technical scope, but consider partnering with a consortium / OEM member to mitigate past single-contract size or specific certification gaps.",
+        "swot": {
+          "strengths": [
+            "Company average turnover (₹16.20 Cr) comfortably exceeds tender minimum requirement."
+          ],
+          "weaknesses": [
+            "Missing certified credentials: ISO 9001:2015, ISO 27001.",
+            "Past project values are lower than the standard 40-50% tender benchmark."
+          ],
+          "opportunities": [
+            "Long term high-margin AMC / support annuity revenue potential.",
+            "Expansion of reference profile in prestigious government procurement domain."
+          ],
+          "threats": [
+            "Liquidated damages (LD) penalties in case of hardware delivery chain delays."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages",
+            "description": "0.5% per week of delay up to maximum 10% of total contract value.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "SLA & Uptime",
+            "description": "99.5% service uptime required with 4-hour MTTR response.",
+            "riskLevel": "Low"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "60% on delivery/installation, 20% on UAT signoff, 20% quarterly milestone.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "complianceItems": [
+        {
+          "id": "comp_eee5de8b",
+          "clauseNo": "Sec 1.1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Tech Solutions Pvt Ltd is incorporated under Companies Act with active GST and PAN registration.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_7622e264",
+          "clauseNo": "Sec 2.3.4",
+          "requirement": "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Audited financial statements and CA certificate confirm robust turnover (₹16.20 Cr).",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_ce7824f6",
+          "clauseNo": "Sec 3.2.1",
+          "requirement": "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+          "category": "Technical",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Valid ISO Certification Copies"
+        },
+        {
+          "id": "comp_c1952260",
+          "clauseNo": "Sec 4.1.5",
+          "requirement": "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Cloud Architecture & Data Sovereignty Declaration"
+        },
+        {
+          "id": "comp_54820b62",
+          "clauseNo": "Sec 5.4.0",
+          "requirement": "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
+          "category": "Commercial & SLA",
+          "isMandatory": true,
+          "status": "Complied",
+          "justification": "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "SLA & Incident Escalation Matrix"
+        }
+      ],
+      "boqItems": [
+        {
+          "id": "boq_30f768",
+          "item": "Core Platform & System Software License",
+          "unit": "Enterprise",
+          "quantity": 1,
+          "unitPrice": 8750000,
+          "total": 8750000,
+          "category": "Software"
+        },
+        {
+          "id": "boq_4f589a",
+          "item": "Implementation, Setup & Integration Services",
+          "unit": "Man-Months",
+          "quantity": 12,
+          "unitPrice": 625000,
+          "total": 7500000,
+          "category": "Services"
+        },
+        {
+          "id": "boq_33f7ba",
+          "item": "Infrastructure / Cloud Hosting & Edge Devices",
+          "unit": "Set",
+          "quantity": 1,
+          "unitPrice": 5000000,
+          "total": 5000000,
+          "category": "Hardware"
+        },
+        {
+          "id": "boq_4db83f",
+          "item": "Annual Maintenance Contract & SLA Support (Year 1)",
+          "unit": "Year",
+          "quantity": 1,
+          "unitPrice": 3750000,
+          "total": 3750000,
+          "category": "Services"
+        }
+      ],
+      "proposals": {
+        "executiveSummary": "Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP TDR-324796 for \"RFP for ravinder quashing HC\".",
+        "technicalApproach": "Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-09-24T11:28:46.634Z",
+      "updatedAt": "2026-09-24T11:28:46.635Z"
+    },
+    {
       "id": "tender_77acd1b4-7d7c-4c9b-83fe-31ad0f4a52e8",
       "tenderNumber": "-",
       "title": "“Selection of Consulting agency",
@@ -3316,7 +4638,7 @@
         }
       ],
       "createdAt": "2026-09-21T05:34:45.608Z",
-      "updatedAt": "2026-09-21T05:34:45.609Z",
+      "updatedAt": "2026-09-24T09:13:55.302Z",
       "goNoGoAnalysis": {
         "decision": "CONDITIONAL GO",
         "winProbability": 64,
@@ -3359,6 +4681,9 @@
             "riskLevel": "Low"
           }
         ]
+      },
+      "proposals": {
+        "technicalApproach": "### TECHNICALAPPROACH\n\nDetailed technical execution methodology proposed by **Tech Solutions Pvt Ltd** for **Electronics & IT Dept., Government of Assam** under **ELE.93/2024/2**.\n\nOur approach adheres strictly to industry best practices, comprehensive quality assurance (ISO 9001/27001), and rapid milestone achievement."
       }
     },
     {

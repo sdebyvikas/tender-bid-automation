@@ -4,55 +4,117 @@ import { extractFallbackTenderData } from './documentParser.js';
 /**
  * AI Document Ingestion & Metadata Analysis
  */
-export async function analyzeTenderWithAI(rawText, fileName = 'Tender_Doc') {
-  try {
-    const systemPrompt = `You are a Senior RFP & Government Procurement Analyst. Parse the provided Tender / RFP document text and extract critical bid parameters.
-CRITICAL EXTRACTION RULES:
-- "title": Extract the full specific project/work title (e.g. "Development of Online Portal for Issuance of License for Adventure Sports and Water Sports in Uttar Pradesh"), NOT just generic strings like "REQUEST FOR PROPOSAL" or "RFP".
-- "organization": Extract the full issuing Government Department, PSU, Corporation, or Authority name (e.g. "Uttar Pradesh State Tourism Development Corporation Ltd. (UPSTDC Ltd.)").
-- "submissionDeadline": Strictly extract "Bid Submission End Date" / "Bid Due Date" / "Last date for submission" from the schedule table with time if provided. Convert to standard ISO string (e.g. "31-05-2025 12:00 NOON" -> "2025-05-31T06:30:00.000Z"). Do NOT invent fake future dates.
-- "preBidMeetingDate": Strictly extract "Pre-bid Meeting" / "Pre-bid Conference" date/time from the schedule table (e.g. "19-05-2025 12:00 NOON" -> "2025-05-19T06:30:00.000Z").
-- "publishDate": Strictly extract "Date of Publishing" / "Date of Publication" (e.g. "2025-05-10").
-- "emdAmountINR": Number in INR (e.g. 50000 or 100000). Look for Earnest Money Deposit (EMD) clause, NOT table-of-contents page numbers.
-- "emdDisplay": Formatted INR string (e.g. "₹50,000" or "₹1.00 Lakh").
-- "tenderFeeINR": Tender document fee in INR (e.g. 5900 or 2360).
+function buildSmartDocumentContext(rawText) {
+  if (!rawText) return "";
+  if (rawText.length <= 60000) {
+    return rawText;
+  }
 
-Return a STRICT valid JSON object with the following fields:
+  // Smart Context Assembler for 80-100+ page documents:
+  // 1. First 20,000 chars: NIT notice, important dates schedule, issuing entity, project title
+  const headerSection = `=== [STARTING PAGES: NIT & SCHEDULE] ===\n${rawText.slice(0, 20000)}`;
+
+  // 2. Middle page extraction: Eligibility, Turnover, Penalties, SLA, Scope
+  const middleSections = [];
+  const middlePatterns = [
+    { name: "ELIGIBILITY & TURNOVER", regex: /(?:eligibility\s*criteria|pre-?qualification|turnover\s*requirement|minimum\s*qualification)[\s\S]{100,10000}/i },
+    { name: "PENALTIES, SLA & PAYMENTS", regex: /(?:liquidated\s*damages|penalt(?:y|ies)|sla\s*requirements|payment\s*milestones)[\s\S]{100,8000}/i },
+    { name: "SCOPE & DELIVERABLES", regex: /(?:scope\s*of\s*work|technical\s*specifications|key\s*deliverables)[\s\S]{100,10000}/i }
+  ];
+
+  middlePatterns.forEach(pat => {
+    const match = rawText.match(pat.regex);
+    if (match) {
+      middleSections.push(`=== [MIDDLE SECTION: ${pat.name}] ===\n${match[0]}`);
+    }
+  });
+
+  // 3. Ending 25,000 chars: Annexure formats, Manufacturer Authorizations, Non-Blacklisting declarations
+  const endSection = `=== [END PAGES: ANNEXURES & STATUTORY FORMATS] ===\n${rawText.slice(-25000)}`;
+
+  return [headerSection, ...middleSections, endSection].join('\n\n--------------------------------------------\n\n');
+}
+
+/**
+ * AI Document Ingestion & Metadata Analysis
+ */
+export async function analyzeTenderWithAI(rawText, fileName = 'Tender_Doc', options = {}) {
+  try {
+    const isScanned = options.isScanned || false;
+    const fileBase64 = options.fileBase64 || null;
+
+    const systemPrompt = `You are an elite Government Procurement & Bid Automation Analyst. 
+Analyze the provided Tender / RFP document (which may be a long 80+ page document or a scanned document) and extract complete bid parameters.
+
+CRITICAL EXTRACTION RULES:
+- "title": Extract the full specific project/work title (e.g. "Development of Online Portal for Adventure Sports in UP"), NOT generic strings like "REQUEST FOR PROPOSAL" or "RFP".
+- "organization": Extract the full issuing Government Ministry, Department, PSU, or Authority.
+- "submissionDeadline": Strictly extract "Bid Submission End Date" / "Bid Due Date" from the schedule table with time if provided. Convert to standard ISO string (e.g. "31-05-2025 12:00 NOON" -> "2025-05-31T06:30:00.000Z").
+- "preBidMeetingDate": Strictly extract "Pre-bid Meeting" date/time from the schedule table.
+- "publishDate": Strictly extract publication date (e.g. "2025-05-10").
+- "emdAmountINR": Number in INR (e.g. 500000). Look for Earnest Money Deposit clause, NOT table-of-contents page numbers.
+- "emdDisplay": Formatted string (e.g. "₹5,00,000" or "₹5.00 Lakhs").
+- "tenderFeeINR": Tender document fee in INR.
+- "annexures": Carefully examine the END PAGES of the RFP and list all required Annexures, Forms, and Undertakings (e.g. Form-1 Cover Letter, Annexure-II Non-Blacklisting, Annexure-III Make in India, MAF).
+
+Return a STRICT valid JSON object matching this schema:
 {
-  "tenderNumber": "Tender or NIT reference number",
-  "title": "Comprehensive project title",
-  "organization": "Issuing Ministry, Department, PSU or Entity",
-  "category": "e.g. IT & Software, Surveillance, Healthcare IT, Cloud Infrastructure, Civil",
-  "portal": "e.g. e-Tender UP, GeM, CPPP, State Portal, Direct",
-  "estimatedValueINR": number (in INR integer, e.g. 25000000),
-  "estimatedValueDisplay": "e.g. ₹2.50 Crore",
+  "tenderNumber": "string",
+  "title": "string",
+  "organization": "string",
+  "category": "string",
+  "portal": "string",
+  "estimatedValueINR": number,
+  "estimatedValueDisplay": "string",
   "emdAmountINR": number,
-  "emdDisplay": "e.g. ₹50,000",
+  "emdDisplay": "string",
   "tenderFeeINR": number,
   "publishDate": "YYYY-MM-DD",
-  "submissionDeadline": "ISO string date",
-  "preBidMeetingDate": "ISO string date",
-  "scopeSummary": "3 to 4 sentences summarizing the core deliverables, technology stack, and SLA scope",
+  "submissionDeadline": "ISO string",
+  "preBidMeetingDate": "ISO string",
+  "scopeSummary": "Comprehensive summary of deliverables, tech stack, and SLA scope",
   "eligibilityCriteria": {
     "minAnnualTurnoverINR": number,
     "minTurnoverDisplay": "string",
     "minExperienceYears": number,
     "requiredCertifications": ["ISO 9001:2015", "ISO 27001"],
-    "pastProjectRequirement": "Summary of required past experience"
+    "pastProjectRequirement": "string"
   },
+  "detectedAnnexures": [
+    { "formNumber": "Annexure-I", "title": "Bid Submission Cover Letter", "description": "string" }
+  ],
   "keyRisks": [
     { "title": "string", "description": "string", "riskLevel": "Low | Medium | High" }
   ]
 }`;
 
-    const userPrompt = `Document Filename: ${fileName}\n\nDocument Text Extract:\n${rawText.slice(0, 10000)}`;
+    let response;
 
-    const response = await callLLM({
-      systemPrompt,
-      userPrompt,
-      responseFormat: 'json',
-      temperature: 0.2
-    });
+    if (isScanned && fileBase64) {
+      // 📸 SCANNED / PHOTO PDF: Use Multimodal Gemini Vision
+      const userPrompt = `Document Filename: ${fileName}\n\nThis is a Scanned / Image-based Tender Document. Perform visual OCR and extract all key parameters according to the system instructions.`;
+      response = await callLLM({
+        systemPrompt,
+        userPrompt,
+        responseFormat: 'json',
+        temperature: 0.2,
+        inlineData: {
+          data: fileBase64,
+          mimeType: 'application/pdf'
+        }
+      });
+    } else {
+      // 📄 DIGITAL LONG DOCUMENT: Use Smart Composite Context (Beginning, Middle, End Pages)
+      const smartDocumentText = buildSmartDocumentContext(rawText);
+      const userPrompt = `Document Filename: ${fileName}\n\nDocument Length: ${rawText.length} characters\n\nFull Tender Extract (Covering Notice, Eligibility, Scope, and End Annexures):\n${smartDocumentText}`;
+
+      response = await callLLM({
+        systemPrompt,
+        userPrompt,
+        responseFormat: 'json',
+        temperature: 0.2
+      });
+    }
 
     const parsed = JSON.parse(response);
     const fallback = extractFallbackTenderData(rawText, fileName);
@@ -99,6 +161,12 @@ Return a STRICT valid JSON object with the following fields:
         requiredCertifications: ['ISO 9001:2015', 'ISO 27001'],
         pastProjectRequirement: 'At least 1 similar IT/Software integration project executed in past 5 years.'
       },
+      detectedAnnexures: parsed.detectedAnnexures || [
+        { formNumber: 'Annexure-I', title: 'Bid Submission Cover Letter', description: 'Formal transmission letter' },
+        { formNumber: 'Annexure-II', title: 'Non-Blacklisting Undertaking', description: 'Clean legal declaration' },
+        { formNumber: 'Annexure-III', title: 'Make In India (MII) Certificate', description: 'Local value addition compliance' },
+        { formNumber: 'Annexure-IV', title: 'Manufacturer Authorization Form (MAF)', description: 'OEM authorization' }
+      ],
       keyRisks: parsed.keyRisks || [
         { title: 'Delivery Timeline', description: 'Strict milestone delivery timeline with liquidated damages penalties.', riskLevel: 'Medium' },
         { title: 'SLA Uptime', description: 'Stringent 99.5% uptime requirement during 5-year warranty/O&M.', riskLevel: 'Low' }
@@ -116,6 +184,12 @@ Return a STRICT valid JSON object with the following fields:
         requiredCertifications: ['ISO 9001:2015', 'ISO 27001'],
         pastProjectRequirement: 'At least 1 similar project executed in last 5 years.'
       },
+      detectedAnnexures: [
+        { formNumber: 'Annexure-I', title: 'Bid Submission Cover Letter', description: 'Formal transmission letter' },
+        { formNumber: 'Annexure-II', title: 'Non-Blacklisting Undertaking', description: 'Clean legal declaration' },
+        { formNumber: 'Annexure-III', title: 'Make In India (MII) Certificate', description: 'Local value addition compliance' },
+        { formNumber: 'Annexure-IV', title: 'Manufacturer Authorization Form (MAF)', description: 'OEM authorization' }
+      ],
       keyRisks: [
         { title: 'Liquidated Damages', description: '0.5% per week delay up to 10% maximum.', riskLevel: 'Medium' },
         { title: 'Data Sovereignty', description: 'All data must strictly reside in Indian territory.', riskLevel: 'Low' }

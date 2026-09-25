@@ -9,24 +9,37 @@ import * as xlsx from "xlsx";
  */
 export async function parseTenderDocument(filePath, originalFilename) {
   const ext = path.extname(originalFilename || filePath).toLowerCase();
+
   let extractedText = "";
+
   let metadata = {
     fileName: path.basename(filePath),
     fileType: ext,
     fileSizeBytes: 0,
     pageCount: 1,
+    isScanned: false,
     detectedSections: [],
   };
 
   try {
     const stats = fs.statSync(filePath);
     metadata.fileSizeBytes = stats.size;
+    let fileBase64 = null;
 
     if (ext === ".pdf") {
       const dataBuffer = fs.readFileSync(filePath);
+      fileBase64 = dataBuffer.toString("base64");
       const pdfData = await pdfParse(dataBuffer);
       extractedText = pdfData.text || "";
       metadata.pageCount = pdfData.numpages || 1;
+
+      // Scanned Document Detector: If PDF has pages but little/no selectable text layer
+      if (extractedText.trim().length < 100) {
+        metadata.isScanned = true;
+        console.log(
+          `📸 Scanned / Image-only PDF detected for "${path.basename(filePath)}". Multimodal Vision OCR will be utilized.`,
+        );
+      }
     } else if (ext === ".docx" || ext === ".doc") {
       const docBuffer = fs.readFileSync(filePath);
       const result = await mammoth.extractRawText({ buffer: docBuffer });
@@ -57,6 +70,8 @@ export async function parseTenderDocument(filePath, originalFilename) {
       { key: "earnest money", name: "EMD & Bid Security" },
       { key: "bill of quantities", name: "BOQ / Financial Schedule" },
       { key: "submission", name: "Submission Guidelines" },
+      { key: "annexure", name: "Annexures & Undertakings" },
+      { key: "undertaking", name: "Mandatory Declarations" },
     ];
 
     sectionKeywords.forEach((sec) => {
@@ -68,6 +83,8 @@ export async function parseTenderDocument(filePath, originalFilename) {
     return {
       text: extractedText,
       metadata,
+      isScanned: metadata.isScanned,
+      fileBase64,
     };
   } catch (err) {
     console.error(`Error parsing document ${filePath}:`, err);
@@ -382,5 +399,81 @@ export function extractFallbackTenderData(text, fileName = "Tender_Doc") {
     preBidMeetingDate,
     due: dueFormatted,
     scopeSummary: text.slice(0, 600).replace(/\s+/g, " ") + "...",
+  };
+}
+
+/**
+ * Bina AI ke check karta hai ki kya document ek valid Tender/RFP hai
+ */
+export function validateTenderDocument(text) {
+  if (!text || text.trim().length < 50) {
+    return {
+      isValid: false,
+      score: 0,
+      matchedKeywords: [],
+      reason: "Document me koi readable text nahi mila ya document empty hai.",
+    };
+  }
+
+  const lowerText = text.toLowerCase();
+
+  // 1. High Weightage Keywords (Ye milte hain to 100% tender hi hota hai)
+  const strongKeywords = [
+    "notice inviting tender",
+    "request for proposal",
+    "nit no",
+    "rfp no",
+    "earnest money deposit",
+    "emd",
+    "bid submission end date",
+    "submission deadline",
+    "eligibility criteria",
+    "bill of quantities",
+    "pre-qualification",
+    "corrigendum",
+  ];
+
+  // 2. Medium Weightage Keywords
+  const secondaryKeywords = [
+    "tender",
+    "procurement",
+    "bidding",
+    "scope of work",
+    "tender fee",
+    "liquidated damages",
+    "techno-commercial",
+    "work order",
+    "contract value",
+  ];
+
+  const matched = [];
+  let score = 0;
+
+  // Strong keywords check (Har match par 2 points)
+  strongKeywords.forEach((kw) => {
+    if (lowerText.includes(kw)) {
+      matched.push(kw);
+      score += 2;
+    }
+  });
+
+  // Secondary keywords check (Har match par 1 point)
+  secondaryKeywords.forEach((kw) => {
+    if (lowerText.includes(kw)) {
+      matched.push(kw);
+      score += 1;
+    }
+  });
+
+  // Rule: Kam se kam score 3 hona chahiye (i.e. at least 1-2 strong keywords ya 3 secondary keywords)
+  const isValid = score >= 3;
+
+  return {
+    isValid,
+    score,
+    matchedKeywords: matched,
+    reason: isValid
+      ? "Valid Tender Document"
+      : "Document me zaroori Tender/RFP keywords (NIT, EMD, Scope, etc.) nahi mile.",
   };
 }

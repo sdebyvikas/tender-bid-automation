@@ -1,0 +1,627 @@
+{
+  "info": {
+    "_postman_id": "c71a3e8b-8219-4cb3-911e-812e9b891a01",
+    "name": "Tender & Bid Automation AI API",
+    "description": "Complete Postman API Collection for Tender & Bid Automation AI Backend system.\nBase URL defaults to `http://localhost:5000`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "tenderId",
+      "value": "tender_ele_93",
+      "type": "string"
+    },
+    {
+      "key": "complianceItemId",
+      "value": "comp_1",
+      "type": "string"
+    },
+    {
+      "key": "boqItemId",
+      "value": "boq_1",
+      "type": "string"
+    },
+    {
+      "key": "docId",
+      "value": "doc_1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00. Health & System",
+      "item": [
+        {
+          "name": "Healthcheck & Core Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Returns current server status, timestamp, and version."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "01. Tenders Management",
+      "item": [
+        {
+          "name": "Get All Tenders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders"]
+            },
+            "description": "Fetch all tenders listed in the system with their status, scores, and metadata."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tender By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders", "{{tenderId}}"]
+            },
+            "description": "Fetch complete details of a specific tender by its ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload & AI Ingest Tender Document",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "document",
+                  "type": "file",
+                  "description": "PDF, DOCX, or TXT tender RFP document file (Max: 50MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders", "upload"]
+            },
+            "description": "Upload a RFP document (PDF/DOCX). Backend parses text, extracts key tender metadata, calculates Go/No-Go score, and generates initial compliance & BOQ matrix."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tender Manually",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenderNumber\": \"NIT-2026-IT-901\",\n  \"title\": \"Smart City Surveillance & AI Analytics System\",\n  \"organization\": \"Delhi Smart City Mission Ltd\",\n  \"category\": \"Smart City / Surveillance / IoT\",\n  \"portal\": \"GeM Portal\",\n  \"estimatedValueINR\": 250000000,\n  \"estimatedValueDisplay\": \"₹25.00 Cr\",\n  \"emdAmountINR\": 500000,\n  \"emdDisplay\": \"₹5.00 Lakhs\",\n  \"tenderFeeINR\": 10000,\n  \"publishDate\": \"2026-09-24\",\n  \"submissionDeadline\": \"2026-10-15T15:00:00\",\n  \"preBidMeetingDate\": \"2026-09-30T11:00:00\",\n  \"scopeSummary\": \"Supply, installation, cloud AI video analytics, command and control center setup for 500+ edge cameras.\",\n  \"eligibilityCriteria\": {\n    \"minAnnualTurnoverINR\": 120000000,\n    \"minExperienceYears\": 5,\n    \"requiredCertifications\": [\"ISO 9001\", \"ISO 27001\", \"CMMI Level 3\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders/manual",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders", "manual"]
+            },
+            "description": "Manually create a tender entry with parameters without uploading a file."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tender",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Ready to bid\",\n  \"priority\": \"High\",\n  \"scopeSummary\": \"Updated scope summary for delivery governance and milestone tracking.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders", "{{tenderId}}"]
+            },
+            "description": "Update specific fields on an existing tender."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tender",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tenders/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenders", "{{tenderId}}"]
+            },
+            "description": "Delete a tender by ID from the database."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02. Go-No-Go Analysis",
+      "item": [
+        {
+          "name": "Recalculate Go/No-Go Decision Score",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/analysis/gonogo/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analysis", "gonogo", "{{tenderId}}"]
+            },
+            "description": "Recalculates eligibility gates (Turnover, Certifications, Experience, Financial criteria) and updates win probability score."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03. Compliance Matrix",
+      "item": [
+        {
+          "name": "Get Compliance Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/compliance/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compliance", "{{tenderId}}"]
+            },
+            "description": "Retrieve all compliance clauses and requirement items for the tender."
+          },
+          "response": []
+        },
+        {
+          "name": "Auto-Generate Compliance Matrix (AI)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/compliance/{{tenderId}}/auto-generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compliance", "{{tenderId}}", "auto-generate"]
+            },
+            "description": "Uses AI to extract mandatory technical, financial, and statutory clauses from the tender text."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Single Compliance Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clauseNo\": \"Clause 4.1.2\",\n  \"requirement\": \"24/7 Security Operations Center with Tier-III Datacenter hosting in India\",\n  \"category\": \"Technical\",\n  \"isMandatory\": true,\n  \"status\": \"Complied\",\n  \"justification\": \"Our primary infrastructure is hosted in MeitY empaneled Tier-III Datacenters in Mumbai and Noida.\",\n  \"deviationRemarks\": \"None\",\n  \"evidenceDoc\": \"Data Center MeitY Empanelment Certificate\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/compliance/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compliance", "{{tenderId}}"]
+            },
+            "description": "Add a manual compliance requirement row."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Compliance Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Complied\",\n  \"justification\": \"Updated justification: Complete adherence to ISO 27001 standard.\",\n  \"deviationRemarks\": \"No deviation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/compliance/{{tenderId}}/items/{{complianceItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compliance", "{{tenderId}}", "items", "{{complianceItemId}}"]
+            },
+            "description": "Update status, justification, or comments of a specific compliance item."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Compliance Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/compliance/{{tenderId}}/items/{{complianceItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compliance", "{{tenderId}}", "items", "{{complianceItemId}}"]
+            },
+            "description": "Delete a compliance clause row."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04. AI Proposal Generation",
+      "item": [
+        {
+          "name": "Get Proposals Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/proposals/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "proposals", "{{tenderId}}"]
+            },
+            "description": "Get all written proposal sections (Executive Summary, Technical Approach, Implementation Plan, SLA, etc.)."
+          },
+          "response": []
+        },
+        {
+          "name": "AI Generate Proposal Section",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sectionName\": \"technicalApproach\",\n  \"customInstructions\": \"Focus on microservices architecture, zero-downtime rolling updates, disaster recovery, and 99.9% uptime SLA.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/proposals/{{tenderId}}/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "proposals", "{{tenderId}}", "generate"]
+            },
+            "description": "Generate or re-write proposal sections (e.g., 'executiveSummary', 'technicalApproach', 'implementationPlan', 'slaSupport') using AI tailored to the company profile and tender specs."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Proposal Sections",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"executiveSummary\": \"Apex Solutions Ltd. offers an enterprise-grade digital services platform with proven 99.99% uptime...\",\n  \"technicalApproach\": \"Our solution is built on modern microservices with Kubernetes orchestration and 24/7 SIEM monitoring.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/proposals/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "proposals", "{{tenderId}}"]
+            },
+            "description": "Save manually edited proposal content."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05. Bill of Quantities (BOQ)",
+      "item": [
+        {
+          "name": "Get BOQ Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boq/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boq", "{{tenderId}}"]
+            },
+            "description": "Get all pricing line items in the BOQ breakdown."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Single BOQ Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item\": \"Edge AI Inference Appliance with GPU\",\n  \"category\": \"Hardware\",\n  \"unit\": \"Units\",\n  \"quantity\": 10,\n  \"unitPrice\": 350000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/boq/{{tenderId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boq", "{{tenderId}}", "items"]
+            },
+            "description": "Add a new pricing/cost deliverable item."
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Update BOQ Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"boqItems\": [\n    {\n      \"id\": \"boq_101\",\n      \"item\": \"Core Software Platform Licenses\",\n      \"unit\": \"Enterprise\",\n      \"quantity\": 1,\n      \"unitPrice\": 6500000,\n      \"total\": 6500000,\n      \"category\": \"Software\"\n    },\n    {\n      \"id\": \"boq_102\",\n      \"item\": \"Implementation & Cloud Migration Services\",\n      \"unit\": \"Man-Months\",\n      \"quantity\": 12,\n      \"unitPrice\": 450000,\n      \"total\": 5400000,\n      \"category\": \"Services\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/boq/{{tenderId}}/batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boq", "{{tenderId}}", "batch"]
+            },
+            "description": "Overwrite/batch save all BOQ items."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete BOQ Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boq/{{tenderId}}/items/{{boqItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boq", "{{tenderId}}", "items", "{{boqItemId}}"]
+            },
+            "description": "Delete a BOQ item by ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06. Annexures & Undertakings",
+      "item": [
+        {
+          "name": "Get Auto-Filled Annexures",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/annexures/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "annexures", "{{tenderId}}"]
+            },
+            "description": "Retrieves automatically generated statutory forms: Cover Letter, Non-Blacklisting Undertaking, Make in India (MII) Certificate, and Manufacturer Authorization Form (MAF)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07. Company Profile & Vault",
+      "item": [
+        {
+          "name": "Get Company Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/company-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "company-profile"]
+            },
+            "description": "Fetch company credentials, statutory documents vault, certifications, key personnel, turnover, and readiness score."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Apex Infotech & AI Solutions Pvt Ltd\",\n  \"pan\": \"AABCA1234F\",\n  \"gstin\": \"07AABCA1234F1Z5\",\n  \"headquarters\": \"Connaught Place, New Delhi, India\",\n  \"website\": \"https://apexinfotech.example.com\",\n  \"annualTurnover\": [\n    { \"year\": \"2023-24\", \"amountINR\": 185000000, \"amountDisplay\": \"₹18.50 Cr\" },\n    { \"year\": \"2022-23\", \"amountINR\": 160000000, \"amountDisplay\": \"₹16.00 Cr\" },\n    { \"year\": \"2021-22\", \"amountINR\": 142000000, \"amountDisplay\": \"₹14.20 Cr\" }\n  ],\n  \"certifications\": [\n    \"ISO 9001:2015 (Quality Management System)\",\n    \"ISO 27001:2022 (Information Security Management) - Verified Active\",\n    \"CMMI Dev Level 3\",\n    \"ISO 20000-1:2018 (IT Service Management)\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/company-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "company-profile"]
+            },
+            "description": "Update company profile details. Automatically triggers score recalculations across all tenders in the system."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Document to Vault",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "document",
+                  "type": "file",
+                  "description": "Certificate / Balance Sheet / Tax PDF file"
+                },
+                {
+                  "key": "name",
+                  "value": "Renewed ISO 27001 Certificate 2026",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Certification",
+                  "type": "text"
+                },
+                {
+                  "key": "expiryDate",
+                  "value": "2029-09-30",
+                  "type": "text"
+                },
+                {
+                  "key": "tag",
+                  "value": "Verified",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/company-profile/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "company-profile", "documents"]
+            },
+            "description": "Upload a statutory document (ISO, PAN, GST, CA Certificate, MSME, CV Bank) into Company Vault."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document from Vault",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/company-profile/documents/{{docId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "company-profile", "documents", "{{docId}}"]
+            },
+            "description": "Delete a document from Company Vault."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08. AI Tender Assistant Chat",
+      "item": [
+        {
+          "name": "Ask Question / Chat with Tender Assistant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"What are the mandatory eligibility criteria, EMD requirement, and penalty clauses for this tender?\",\n  \"chatHistory\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Hello\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"Hello! I am your AI Tender & Bid Assistant. How can I help you with this RFP?\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chat/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chat", "{{tenderId}}"]
+            },
+            "description": "Ask conversational questions about the tender document, clauses, penalties, and company fitment."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09. Export Bid Package",
+      "item": [
+        {
+          "name": "Export Bid Proposal (PDF)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"pdf\",\n  \"selectedSections\": [\n    \"executiveSummary\",\n    \"technicalApproach\",\n    \"complianceMatrix\",\n    \"boq\",\n    \"annexures\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/export/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "export", "{{tenderId}}"]
+            },
+            "description": "Generates and downloads a complete Bid Document in PDF format."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Bid Proposal (DOCX)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"docx\",\n  \"selectedSections\": [\n    \"executiveSummary\",\n    \"technicalApproach\",\n    \"complianceMatrix\",\n    \"boq\",\n    \"annexures\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/export/{{tenderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "export", "{{tenderId}}"]
+            },
+            "description": "Generates and downloads an editable Microsoft Word (DOCX) Bid Document."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
