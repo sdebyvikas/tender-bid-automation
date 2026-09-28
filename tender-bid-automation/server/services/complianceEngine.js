@@ -14,22 +14,31 @@ export async function generateComplianceMatrix(
   try {
     const systemPrompt = `You are a Senior Government Tender Compliance Specialist. Analyze the provided tender/RFP text and extract a structured compliance matrix.
 Return a valid JSON object with the key "complianceItems", which is an array of objects with the following fields:
-- "clauseNo": e.g. "Sec 3.1.2"
-- "requirement": Exact text or clear summary of what is required
-- "category": One of ["Eligibility", "Financial", "Technical", "Regulatory", "Commercial & SLA"]
+- "clauseNo": Exact clause reference from RFP (e.g. "Clause 1.1", "Clause 12.A", "Clause 3", "Section 4.1")
+- "requirement": Full exact text or clear summary of what is required
+- "category": One of ["Eligibility", "Financial", "Technical / Advisory", "Regulatory", "Commercial & Terms"]
 - "isMandatory": boolean
-- "status": One of ["Complied", "Partially Complied", "Deviation", "Not Applicable"] (Default to "Complied" unless there is an obvious gap)
-- "justification": Detailed technical or organizational justification of how the company complies
+- "status": One of ["Complied (Pass)", "Pending Verification", "Deviation", "Not Met"] (Set "Pending Verification" if real vault documents are pending verification, or "Complied (Pass)" only if verifiable evidence is present)
+- "justification": Detailed justification explaining how the requirement is satisfied
 - "deviationRemarks": "None" or explanation of minor variance
-- "evidenceDoc": e.g. "Annexure-A", "ISO Certificate", "Technical Architecture Doc", "CA Balance Sheet"
+- "evidenceDoc": e.g. "CA Turnover Certificate with UDIN", "Client Completion Certificate", "Incorporation Certificate", "Non-Blacklisting Affidavit"
 
-Provide 5 to 10 key distinct clauses covering Technical specs, Eligibility, SLA, Financial, and Data Sovereignty.`;
+Provide 6 to 10 key distinct clauses covering Legal Eligibility, Financial turnover, Net Worth, Domain Experience, Key Personnel, and Statutory Declarations.`;
+
+    // Locate Eligibility Section if present in document
+    let textSlice = tenderText;
+    const eligIndex = tenderText.search(/eligibility\s*criteria|pre-?qualification|minimum\s*eligibility/i);
+    if (eligIndex !== -1) {
+      textSlice = tenderText.slice(eligIndex, eligIndex + 25000);
+    } else {
+      textSlice = tenderText.slice(0, 25000);
+    }
 
     const userPrompt = `Tender Title: ${tenderTitle}
-Company Profile Context: ${companyProfile ? JSON.stringify({ name: companyProfile.name, certs: companyProfile.certifications, turnover: companyProfile.averageTurnoverINR }) : "Experienced Indian IT & Systems Integrator"}
+Company Profile Context: ${companyProfile ? JSON.stringify({ name: companyProfile.name, turnover: companyProfile.averageTurnoverINR, netWorth: companyProfile.netWorthINR }) : "Bidder Entity"}
 
 Tender Text Extract:
-${tenderText.slice(0, 7000)}`;
+${textSlice}`;
 
     const rawResponse = await callLLM({
       systemPrompt,
@@ -42,86 +51,165 @@ ${tenderText.slice(0, 7000)}`;
     if (parsed.complianceItems && Array.isArray(parsed.complianceItems)) {
       return parsed.complianceItems.map((item) => ({
         id: `comp_${uuidv4().slice(0, 8)}`,
-        clauseNo: item.clauseNo || "Sec 1.0",
+        clauseNo: item.clauseNo || "Clause 1.0",
         requirement: item.requirement || "Requirement specification",
-        category: item.category || "Technical",
+        category: item.category || "Eligibility",
         isMandatory: item.isMandatory !== undefined ? item.isMandatory : true,
-        status: item.status || "Complied",
+        status: item.status || "Pending Verification",
         justification:
           item.justification ||
-          "Fully complied as per standard specifications and company delivery credentials.",
+          `Subject to document verification against ${companyProfile?.name || "Bidder Vault"} records.`,
         deviationRemarks: item.deviationRemarks || "None",
-        evidenceDoc: item.evidenceDoc || "Technical Proposal & Annexures",
+        evidenceDoc: item.evidenceDoc || "Supporting Credentials in Vault",
       }));
     }
   } catch (err) {
     console.warn("AI Compliance extraction fallback triggered:", err.message);
   }
 
-  // Intelligent fallback clauses
+  // Domain-Aware Fallback Matrix
+  const isConsultancy = `${tenderTitle} ${tenderText}`
+    .toLowerCase()
+    .match(/consultan|advisory|planning|strategy|public relation|media|dipr|research|communication/);
+
+  if (isConsultancy) {
+    return [
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 1.0",
+        requirement:
+          "Bidder must be a registered Indian legal entity with active PAN and GST registration in operational states.",
+        category: "Eligibility",
+        isMandatory: true,
+        status: companyProfile?.gstin ? "Complied (Pass)" : "Pending Verification",
+        justification: `${companyProfile?.name || "Bidder Entity"} holds valid legal incorporation with active GSTIN (${companyProfile?.gstin || "Pending Vault Upload"}) and PAN.`,
+        deviationRemarks: "None",
+        evidenceDoc: "Certificate of Incorporation & GST Certificate",
+      },
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 2.0",
+        requirement:
+          "Average annual financial turnover from consulting/advisory services during last 3 FYs must meet mandatory RFP threshold.",
+        category: "Financial",
+        isMandatory: true,
+        status: "Pending Verification",
+        justification: `Audited financial statements and CA turnover certificate pending verification against RFP threshold.`,
+        deviationRemarks: "None",
+        evidenceDoc: "CA Turnover Certificate with UDIN & Audited Balance Sheets",
+      },
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 3.0",
+        requirement:
+          "Bidder must have minimum 3 years of demonstrable track record in strategic planning, advisory, and stakeholder communications.",
+        category: "Technical / Advisory",
+        isMandatory: true,
+        status: "Pending Verification",
+        justification: `Track record and client credentials must be verified via attached completion certificates.`,
+        deviationRemarks: "None",
+        evidenceDoc: "Client Work Orders & Completion Certificates",
+      },
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 4.0",
+        requirement:
+          "Bidder must have successfully delivered at least 2 relevant advisory / strategy projects of scale in government or public sector.",
+        category: "Technical / Advisory",
+        isMandatory: true,
+        status: "Pending Verification",
+        justification: `Past project citations and client sign-off letters require document validation in vault.`,
+        deviationRemarks: "None",
+        evidenceDoc: "Project Sign-off & Client Testimonials",
+      },
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 5.0",
+        requirement:
+          "Bidder must have dedicated team of qualified domain experts and strategists available for project deployment.",
+        category: "Technical / Advisory",
+        isMandatory: true,
+        status: "Pending Verification",
+        justification: `CV profiles of key personnel to be verified against RFP Terms of Reference requirements.`,
+        deviationRemarks: "None",
+        evidenceDoc: "Key Personnel CVs & Deployment Undertaking",
+      },
+      {
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: "Clause 6.0",
+        requirement:
+          "Bidder must not be debarred or blacklisted by any Central/State Government Ministry, Department, or PSU.",
+        category: "Regulatory",
+        isMandatory: true,
+        status: "Pending Verification",
+        justification: `Duly notarized Non-Blacklisting Affidavit on stamp paper required as per prescribed Annexure.`,
+        deviationRemarks: "None",
+        evidenceDoc: "Non-Blacklisting Affidavit (Annexure-A)",
+      },
+    ];
+  }
+
+  // General IT Fallback
   return [
     {
       id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: "Sec 1.1.0",
+      clauseNo: "Clause 1.0",
       requirement:
-        "Bidder must be a registered Indian legal entity with active PAN and GST registration.",
+        "Bidder must be a registered legal entity in India with active PAN and GST registration.",
       category: "Eligibility",
       isMandatory: true,
-      status: "Complied",
-      justification: `${companyProfile?.name || "Apex Infotech Solutions Ltd."} is incorporated under Companies Act with active GST and PAN registration.`,
+      status: companyProfile?.gstin ? "Complied (Pass)" : "Pending Verification",
+      justification: `${companyProfile?.name || "Bidder Entity"} holds valid legal incorporation and active GST (${companyProfile?.gstin || "In Vault"}).`,
       deviationRemarks: "None",
       evidenceDoc: "Certificate of Incorporation & GST Certificate",
     },
     {
       id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: "Sec 2.3.4",
+      clauseNo: "Clause 2.0",
       requirement:
-        "Average annual financial turnover during last 3 financial years must meet required tender threshold.",
+        "Average annual financial turnover during last 3 financial years must satisfy mandatory RFP threshold.",
       category: "Financial",
       isMandatory: true,
-      status: "Complied",
-      justification: `Audited financial statements and CA certificate confirm robust turnover (${companyProfile?.annualTurnover?.[0]?.amountDisplay || "₹3.8+ Cr"}).`,
+      status: "Pending Verification",
+      justification: `Financial statements subject to CA audit verification.`,
       deviationRemarks: "None",
-      evidenceDoc: "CA Turnover Certificate & Audited Balance Sheets",
+      evidenceDoc: "CA Turnover Certificate with UDIN & Audited Balance Sheets",
     },
     {
       id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: "Sec 3.2.1",
+      clauseNo: "Clause 3.0",
       requirement:
-        "Solution must adhere to ISO 9001 and ISO 27001 standards for quality management and information security.",
+        "Bidder must have positive net worth as certified by Statutory Auditor as on close of last FY.",
+      category: "Financial",
+      isMandatory: true,
+      status: "Pending Verification",
+      justification: `Net worth certificate with CA UDIN verification required.`,
+      deviationRemarks: "None",
+      evidenceDoc: "Statutory Auditor Net Worth Certificate",
+    },
+    {
+      id: `comp_${uuidv4().slice(0, 8)}`,
+      clauseNo: "Clause 4.0",
+      requirement:
+        "Bidder must have demonstrated track record in delivering similar solutions.",
       category: "Technical",
       isMandatory: true,
-      status: "Complied",
-      justification:
-        "Company holds valid ISO 9001:2015 and ISO 27001:2022 certifications.",
+      status: "Pending Verification",
+      justification: `Credentials to be validated with past client work orders.`,
       deviationRemarks: "None",
-      evidenceDoc: "Valid ISO Certification Copies",
+      evidenceDoc: "Client Work Orders & Completion Certificates",
     },
     {
       id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: "Sec 4.1.5",
+      clauseNo: "Clause 5.0",
       requirement:
-        "All data, logs, and sensitive workloads must be hosted within MeitY empanelled Indian cloud data centers.",
+        "Bidder must not be debarred / blacklisted by any Government Ministry or PSU.",
       category: "Regulatory",
       isMandatory: true,
-      status: "Complied",
-      justification:
-        "Hosting proposed exclusively within AWS/Azure India (Mumbai/Hyderabad) MeitY certified sovereign zones.",
+      status: "Pending Verification",
+      justification: `Duly attested Non-Blacklisting Affidavit required.`,
       deviationRemarks: "None",
-      evidenceDoc: "Cloud Architecture & Data Sovereignty Declaration",
-    },
-    {
-      id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: "Sec 5.4.0",
-      requirement:
-        "24x7 SLA support with maximum 4-hour MTTR for critical severity incidents during warranty period.",
-      category: "Commercial & SLA",
-      isMandatory: true,
-      status: "Complied",
-      justification:
-        "Dedicated Helpdesk with dedicated L1/L2 engineering team stationed in project region.",
-      deviationRemarks: "None",
-      evidenceDoc: "SLA & Incident Escalation Matrix",
+      evidenceDoc: "Non-Blacklisting Affidavit",
     },
   ];
 }

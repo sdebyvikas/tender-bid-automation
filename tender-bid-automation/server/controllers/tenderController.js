@@ -65,76 +65,81 @@ export async function uploadAndCreateTender(req, res) {
     }
     // =========================================================================
 
-    // 2. AI Ingestion & Parameter Extraction (Supports 80+ page long documents & Multimodal Scanned PDFs)
+    const db = readDB();
+    const companyProfile = db.companyProfile;
+
+    // 2. AI Ingestion & Parameter Extraction (Passes direct PDF buffer & Company Profile for 100% accurate matching)
     const extractedData = await analyzeTenderWithAI(text, originalName, {
       isScanned,
       fileBase64,
+      companyProfile,
     });
-
-    const db = readDB();
-    const companyProfile = db.companyProfile;
 
     // 3. Compute Go/No-Go Decision Matrix
     const goNoGo = calculateGoNoGoScore(extractedData, companyProfile);
 
-    // 4. Generate Compliance Items
-    const complianceItems = await generateComplianceMatrix(
-      text,
-      extractedData.title,
-      companyProfile,
-    );
+    // 4. Generate / Use Compliance Items (Direct from PDF AI extraction or fallback)
+    let complianceItems = [];
+    if (
+      extractedData.complianceItems &&
+      Array.isArray(extractedData.complianceItems) &&
+      extractedData.complianceItems.length > 0
+    ) {
+      complianceItems = extractedData.complianceItems.map((item) => ({
+        id: `comp_${uuidv4().slice(0, 8)}`,
+        clauseNo: item.clauseNo || "Sec 1.0",
+        requirement: item.requirement || "Requirement specification",
+        category: item.category || "Eligibility",
+        isMandatory: item.isMandatory !== undefined ? item.isMandatory : true,
+        status: item.status || "Complied (Pass)",
+        justification:
+          item.justification ||
+          `Complied with ${companyProfile?.name || "Company Vault"} records.`,
+        deviationRemarks: item.deviationRemarks || "None",
+        evidenceDoc: item.evidenceDoc || "Supporting Credentials in Vault",
+      }));
+    } else {
+      complianceItems = await generateComplianceMatrix(
+        text,
+        extractedData.title,
+        companyProfile,
+      );
+    }
 
-    // 5. Initial Proposal Stubs
+    // 5. Domain-Aware Initial Proposal Stubs
+    const isConsultancy = `${extractedData.title || ""} ${extractedData.category || ""} ${extractedData.scopeSummary || ""}`
+      .toLowerCase()
+      .match(/consultan|advisory|planning|strategy|public relation|media|dipr|research|communication/);
+
     const proposals = {
-      executiveSummary: `Apex Infotech Solutions Ltd. is pleased to submit this comprehensive proposal in response to RFP ${extractedData.tenderNumber} for "${extractedData.title}".`,
-      technicalApproach: `Our technical approach utilizes modular, cloud-ready architecture designed for high availability and strict security adherence.`,
-      implementationPlan: `Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)`,
+      executiveSummary: `${companyProfile?.name || "Bidder Entity"} is pleased to submit this comprehensive proposal in response to RFP ${extractedData.tenderNumber || ""} for "${extractedData.title}".`,
+      technicalApproach: isConsultancy
+        ? `Our proposed methodology centers on structured research, strategic advisory, multi-stakeholder communication planning, and measurable impact tracking tailored to ${extractedData.organization || "the Department"}.`
+        : `Our technical approach utilizes modular, standards-compliant architecture designed for high availability, security, and SLA excellence.`,
+      implementationPlan: isConsultancy
+        ? `Phase 1: Inception & Stakeholder Mapping (Weeks 1-3)\nPhase 2: Strategy Formulation & Advisory Roadmap (Weeks 4-8)\nPhase 3: Campaign Execution & Media Rollout (Months 3-6)\nPhase 4: Impact Evaluation & Deliverable Review (Ongoing)`
+        : `Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)`,
     };
 
-    // 6. Initial BOQ Stubs
-    const estVal = extractedData.estimatedValueINR || 20000000;
-    const boqItems = [
-      {
-        id: `boq_${uuidv4().slice(0, 6)}`,
-        item: "Core Platform & System Software License",
-        unit: "Enterprise",
-        quantity: 1,
-        unitPrice: Math.round(estVal * 0.35),
-        total: Math.round(estVal * 0.35),
-        category: "Software",
-      },
-      {
-        id: `boq_${uuidv4().slice(0, 6)}`,
-        item: "Implementation, Setup & Integration Services",
-        unit: "Man-Months",
-        quantity: 12,
-        unitPrice: Math.round((estVal * 0.3) / 12),
-        total: Math.round(estVal * 0.3),
-        category: "Services",
-      },
-      {
-        id: `boq_${uuidv4().slice(0, 6)}`,
-        item: "Infrastructure / Cloud Hosting & Edge Devices",
-        unit: "Set",
-        quantity: 1,
-        unitPrice: Math.round(estVal * 0.2),
-        total: Math.round(estVal * 0.2),
-        category: "Hardware",
-      },
-      {
-        id: `boq_${uuidv4().slice(0, 6)}`,
-        item: "Annual Maintenance Contract & SLA Support (Year 1)",
-        unit: "Year",
-        quantity: 1,
-        unitPrice: Math.round(estVal * 0.15),
-        total: Math.round(estVal * 0.15),
-        category: "Services",
-      },
-    ];
+    // 6. Authentic BOQ Items (No hardcoded dummy items; only use if authentic items were parsed from document)
+    const boqItems =
+      Array.isArray(extractedData.boqItems) && extractedData.boqItems.length > 0
+        ? extractedData.boqItems.map((item) => ({
+            id: item.id || `boq_${uuidv4().slice(0, 6)}`,
+            item: item.item || "Line Item",
+            unit: item.unit || "Unit",
+            quantity: Number(item.quantity) || 1,
+            unitPrice: Number(item.unitPrice) || 0,
+            total: (Number(item.quantity) || 1) * (Number(item.unitPrice) || 0),
+            category: item.category || "Services",
+          }))
+        : [];
 
     const newTender = {
       id: `tender_${uuidv4()}`,
       ...extractedData,
+      hasBOQ: boqItems.length > 0,
+      boqType: boqItems.length > 0 ? "Itemized BOQ" : "Milestone / Retainer Based (No Itemized BOQ)",
       rawTextSnippet: text.slice(0, 20000), // store reference excerpt
       documentMeta: metadata,
       uploadedFileName: originalName,

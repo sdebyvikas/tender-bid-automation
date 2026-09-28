@@ -47,6 +47,7 @@ import AIModeWorkspace from "./ai-mode/AIModeWorkspace";
 const ROUTE_MAP = {
   Overview: "/overview",
   "Company Vault": "/vault",
+  "Tenders Repository": "/intake",
   "Tender Intake": "/intake",
   Eligibility: "/eligibility",
   "Payment Proof": "/payment-proof",
@@ -60,8 +61,8 @@ const PATH_TO_LABEL_MAP = {
   "/overview": "Overview",
   "/vault": "Company Vault",
   "/company-vault": "Company Vault",
-  "/intake": "Tender Intake",
-  "/tender-intake": "Tender Intake",
+  "/intake": "Tenders Repository",
+  "/tender-intake": "Tenders Repository",
   "/eligibility": "Eligibility",
   "/payment-proof": "Payment Proof",
   "/proposal-desk": "Proposal Desk",
@@ -89,7 +90,16 @@ export default function App() {
   const [isVaultUploadOpen, setIsVaultUploadOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  const activeLabel = PATH_TO_LABEL_MAP[location.pathname] || "Overview";
+  const activeLabel = useMemo(() => {
+    if (
+      location.pathname.startsWith("/intake/") ||
+      location.pathname.startsWith("/tender-intake/") ||
+      location.pathname.startsWith("/tenders/")
+    ) {
+      return "Tender Command Center";
+    }
+    return PATH_TO_LABEL_MAP[location.pathname] || "Overview";
+  }, [location.pathname]);
 
   const setActive = useCallback(
     (target) => {
@@ -186,7 +196,7 @@ export default function App() {
   };
 
   const groupedNav = useMemo(() => {
-    return ["Workspace", "Bid workspace"].map((section) => ({
+    return ["Workspace", "Bid Operations"].map((section) => ({
       section,
       items: navItems.filter((item) => item.section === section),
     }));
@@ -277,7 +287,10 @@ export default function App() {
                       location.pathname === "/company-vault")) ||
                   (item.path === "/intake" &&
                     (location.pathname === "/intake" ||
-                      location.pathname === "/tender-intake"));
+                      location.pathname === "/tender-intake" ||
+                      location.pathname.startsWith("/intake/") ||
+                      location.pathname.startsWith("/tender-intake/") ||
+                      location.pathname.startsWith("/tenders/")));
 
                 const badgeText =
                   item.path === "/intake" && tenders.length > 0
@@ -509,7 +522,97 @@ export default function App() {
               }
             />
             <Route
+              path="/intake/:tenderId"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
+              path="/intake/:tenderId/:stepKey"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
               path="/tender-intake"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
+              path="/tender-intake/:tenderId"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
+              path="/tender-intake/:tenderId/:stepKey"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
+              path="/tenders/:tenderId"
+              element={
+                <TenderIntake
+                  tenders={tenders}
+                  activeTender={activeTender}
+                  onSelectTender={handleSelectTender}
+                  setActive={setActive}
+                  setStage={setStage}
+                  onTenderCreated={handleTenderCreated}
+                  onDeleteTender={handleDeleteTender}
+                  companyProfile={companyProfile}
+                />
+              }
+            />
+            <Route
+              path="/tenders/:tenderId/:stepKey"
               element={
                 <TenderIntake
                   tenders={tenders}
@@ -583,7 +686,7 @@ export default function App() {
         onClose={() => setIsUploadOpen(false)}
         onTenderCreated={(newTender) => {
           handleTenderCreated(newTender);
-          navigate("/intake");
+          navigate(`/intake/${newTender.id}/overview`);
         }}
       />
 

@@ -1,5 +1,8 @@
 import { callLLM } from "../config/aiConfig.js";
-import { extractFallbackTenderData } from "./documentParser.js";
+import {
+  extractFallbackTenderData,
+  cleanOrganizationName,
+} from "./documentParser.js";
 
 /**
  * AI Document Ingestion & Metadata Analysis
@@ -60,20 +63,44 @@ export async function analyzeTenderWithAI(
   try {
     const isScanned = options.isScanned || false;
     const fileBase64 = options.fileBase64 || null;
+    const companyProfile = options.companyProfile || null;
+
+    const companyContextStr = companyProfile
+      ? `Bidder Company Profile:
+- Company Name: ${companyProfile.name || "Bidder Entity"}
+- CIN / Legal: ${companyProfile.cin || "Active MCA Registration"}
+- Annual / Avg Turnover: ${companyProfile.annualTurnover?.[0]?.amountDisplay || (companyProfile.averageTurnoverINR ? `₹${(companyProfile.averageTurnoverINR / 10000000).toFixed(2)} Cr` : "Verified in Vault")}
+- Net Worth: Positive net worth certified by CA
+- Technical Manpower: In-house certified engineers (B.Tech / MCA)
+- Active Certifications: ${(companyProfile.certifications || []).join(", ") || "ISO 9001:2015, ISO 27001:2022, CMMI"}
+- Statutory: Active PAN (${companyProfile.pan || "Active"}), GSTIN (${companyProfile.gstin || "Active"}), ESI, EPF`
+      : "Bidder: Reputed Indian IT Solutions & Systems Integration Company with active MCA, PAN, GSTIN, and multi-crore enterprise delivery credentials.";
 
     const systemPrompt = `You are an elite Government Procurement & Bid Automation Analyst. 
-Analyze the provided Tender / RFP document (which may be a long 80+ page document or a scanned document) and extract complete bid parameters.
+Analyze the provided Tender / RFP document (which is a complete tender document PDF) and extract complete bid parameters and the FULL Eligibility Matrix.
 
 CRITICAL EXTRACTION RULES:
-- "title": Extract the full specific project/work title (e.g. "Development of Online Portal for Adventure Sports in UP"), NOT generic strings like "REQUEST FOR PROPOSAL" or "RFP".
-- "organization": Extract the full issuing Government Ministry, Department, PSU, or Authority.
-- "submissionDeadline": Strictly extract "Bid Submission End Date" / "Bid Due Date" from the schedule table with time if provided. Convert to standard ISO string (e.g. "31-05-2025 12:00 NOON" -> "2025-05-31T06:30:00.000Z").
-- "preBidMeetingDate": Strictly extract "Pre-bid Meeting" date/time from the schedule table.
-- "publishDate": Strictly extract publication date (e.g. "2025-05-10").
-- "emdAmountINR": Number in INR (e.g. 500000). Look for Earnest Money Deposit clause, NOT table-of-contents page numbers.
-- "emdDisplay": Formatted string (e.g. "₹5,00,000" or "₹5.00 Lakhs").
-- "tenderFeeINR": Tender document fee in INR.
-- "annexures": Carefully examine the END PAGES of the RFP and list all required Annexures, Forms, and Undertakings (e.g. Form-1 Cover Letter, Annexure-II Non-Blacklisting, Annexure-III Make in India, MAF).
+- "title": Extract the full specific project/work title (e.g. "Selection of Agency for Strategy, Planning and Advisory Consultancy"), NOT generic strings like "REQUEST FOR PROPOSAL" or "RFP".
+- "organization": Extract the full exact issuing Government Ministry, Department, PSU, or Authority (e.g. "DEPARTMENT OF INFORMATION & PUBLIC RELATIONS (DIPR)"). Avoid OCR slips (e.g. "Public Relations", NOT "Public Rights").
+- "tenderNumber": Extract exact NIT No. / Tender No. / RFP Ref.
+- "submissionDeadline": Strictly extract "Last date and Time of Submission of bids" / "Bid Submission End Date" from the schedule table with time if provided. Convert to standard ISO string.
+- "preBidMeetingDate": Strictly extract "Pre-bid Meeting" date/time from the schedule table. Convert to standard ISO string.
+- "publishDate": Strictly extract publication date (e.g. "YYYY-MM-DD").
+- "estimatedValueINR": Exact numeric value in INR (e.g. 30000000 for Rs. 3 Crore approx).
+- "estimatedValueDisplay": Formatted string (e.g. "₹3.00 Crore" or "₹50.00 Lakhs").
+- "emdAmountINR": Number in INR (e.g. 500000 for Rs. 5,00,000/-).
+- "emdDisplay": Formatted string (e.g. "₹5.00 Lakhs" or "₹5,00,000").
+- "tenderFeeINR": Tender document fee in INR (0 if NIL).
+- "scopeSummary": Comprehensive authentic summary of work, deliverables, and domain-specific terms of reference from the RFP.
+- "complianceItems": CAREFULLY examine the "Eligibility Criteria" / "Mandatory Criteria" section and extract EVERY distinct clause/rule into a structured array:
+  - "clauseNo": Exact clause identifier as written in the PDF (e.g. "Clause 1.1", "Clause 12.B", "Clause 3", "Section 4").
+  - "category": One of ["Financial Turnover", "Experience & Scale", "Net Worth", "Technical / Advisory Manpower", "Statutory Compliance", "Quality & Security", "Legal Status", "Commercial & Terms"]
+  - "requirement": Full, exact wording of the requirement from the PDF (e.g. "Minimum turnover of Rs. 3 Crore in last 3 FYs", "Experience of 3 years in strategic advisory/communication", "2 completed projects >= Rs. 50 Lakh").
+  - "evidenceDoc": Mandatory supporting document required (e.g. "CA Certificate with UDIN + Audited Balance Sheets", "Client Work Orders & Completion Certificates", "Non-Blacklisting Affidavit").
+  - "isMandatory": true
+  - "status": If company verified documents are attached in vault, set "Complied (Pass)"; if verification is incomplete, set "Pending Verification". If criteria not met, set "Deviation" or "Not Met".
+  - "justification": Detailed justification explaining how the bidder satisfies this requirement.
+- "annexures": List all required Annexures, Forms, and Undertakings from the end pages of the RFP.
 
 Return a STRICT valid JSON object matching this schema:
 {
@@ -90,16 +117,27 @@ Return a STRICT valid JSON object matching this schema:
   "publishDate": "YYYY-MM-DD",
   "submissionDeadline": "ISO string",
   "preBidMeetingDate": "ISO string",
-  "scopeSummary": "Comprehensive summary of deliverables, tech stack, and SLA scope",
+  "scopeSummary": "Comprehensive summary of deliverables and scope of work",
   "eligibilityCriteria": {
     "minAnnualTurnoverINR": number,
     "minTurnoverDisplay": "string",
     "minExperienceYears": number,
-    "requiredCertifications": ["ISO 9001:2015", "ISO 27001"],
+    "requiredCertifications": ["string"],
     "pastProjectRequirement": "string"
   },
+  "complianceItems": [
+    {
+      "clauseNo": "string",
+      "category": "string",
+      "requirement": "string",
+      "evidenceDoc": "string",
+      "isMandatory": true,
+      "status": "Complied (Pass) | Pending Verification | Deviation | Not Met",
+      "justification": "string"
+    }
+  ],
   "detectedAnnexures": [
-    { "formNumber": "Annexure-I", "title": "Bid Submission Cover Letter", "description": "string" }
+    { "formNumber": "Annexure-A", "title": "Affidavit Regarding Debarment", "description": "string" }
   ],
   "keyRisks": [
     { "title": "string", "description": "string", "riskLevel": "Low | Medium | High" }
@@ -108,23 +146,32 @@ Return a STRICT valid JSON object matching this schema:
 
     let response;
 
-    if (isScanned && fileBase64) {
-      // 📸 SCANNED / PHOTO PDF: Use Multimodal Gemini Vision
-      const userPrompt = `Document Filename: ${fileName}\n\nThis is a Scanned / Image-based Tender Document. Perform visual OCR and extract all key parameters according to the system instructions.`;
-      response = await callLLM({
-        systemPrompt,
-        userPrompt,
-        responseFormat: "json",
-        temperature: 0.2,
-        inlineData: {
-          data: fileBase64,
-          mimeType: "application/pdf",
-        },
-      });
-    } else {
-      // 📄 DIGITAL LONG DOCUMENT: Use Smart Composite Context (Beginning, Middle, End Pages)
+    if (fileBase64) {
+      try {
+        console.log(
+          `📄 Analyzing complete PDF document directly with Multimodal AI for: ${fileName}`,
+        );
+        const userPrompt = `Document Filename: ${fileName}\n\n${companyContextStr}\n\nPerform in-depth analysis of this complete Tender Document PDF. Extract all exact parameters, the complete Eligibility Criteria table (with all sub-clauses, turnover, net worth, manpower, experience), and map against the bidder company profile.`;
+
+        response = await callLLM({
+          systemPrompt,
+          userPrompt,
+          responseFormat: "json",
+          temperature: 0.2,
+          inlineData: {
+            data: fileBase64,
+            mimeType: "application/pdf",
+          },
+        });
+      } catch (mmErr) {
+        console.warn("Multimodal PDF analysis failed, falling back to text parsing:", mmErr.message);
+      }
+    }
+
+    if (!response) {
+      // 📄 DIGITAL TEXT EXTRACTION (Fast & resilient with Groq/Gemini text models)
       const smartDocumentText = buildSmartDocumentContext(rawText);
-      const userPrompt = `Document Filename: ${fileName}\n\nDocument Length: ${rawText.length} characters\n\nFull Tender Extract (Covering Notice, Eligibility, Scope, and End Annexures):\n${smartDocumentText}`;
+      const userPrompt = `Document Filename: ${fileName}\n\n${companyContextStr}\n\nDocument Length: ${rawText.length} characters\n\nFull Tender Extract (Covering Notice, Eligibility, Scope, and End Annexures):\n${smartDocumentText}`;
 
       response = await callLLM({
         systemPrompt,
@@ -167,12 +214,14 @@ Return a STRICT valid JSON object matching this schema:
         parsed.title.length > 5
           ? parsed.title
           : fallback.title,
-      organization:
+      organization: cleanOrganizationName(
         parsed.organization &&
-        parsed.organization !== "Ltd." &&
-        parsed.organization.length > 3
+          parsed.organization !== "Ltd." &&
+          parsed.organization.length > 3
           ? parsed.organization
           : fallback.organization,
+        rawText,
+      ),
       category: parsed.category || fallback.category,
       portal: parsed.portal || fallback.portal,
       estimatedValueINR: parsed.estimatedValueINR || fallback.estimatedValueINR,
@@ -192,100 +241,51 @@ Return a STRICT valid JSON object matching this schema:
       preBidMeetingDate: finalPreBid,
       due: dueFormatted,
       scopeSummary: parsed.scopeSummary || fallback.scopeSummary,
-      eligibilityCriteria: parsed.eligibilityCriteria || {
-        minAnnualTurnoverINR: 15000000,
-        minTurnoverDisplay: "₹1.50 Cr",
-        minExperienceYears: 3,
-        requiredCertifications: ["ISO 9001:2015", "ISO 27001"],
-        pastProjectRequirement:
-          "At least 1 similar IT/Software integration project executed in past 5 years.",
-      },
-      detectedAnnexures: parsed.detectedAnnexures || [
-        {
-          formNumber: "Annexure-I",
-          title: "Bid Submission Cover Letter",
-          description: "Formal transmission letter",
-        },
-        {
-          formNumber: "Annexure-II",
-          title: "Non-Blacklisting Undertaking",
-          description: "Clean legal declaration",
-        },
-        {
-          formNumber: "Annexure-III",
-          title: "Make In India (MII) Certificate",
-          description: "Local value addition compliance",
-        },
-        {
-          formNumber: "Annexure-IV",
-          title: "Manufacturer Authorization Form (MAF)",
-          description: "OEM authorization",
-        },
-      ],
-      keyRisks: parsed.keyRisks || [
-        {
-          title: "Delivery Timeline",
-          description:
-            "Strict milestone delivery timeline with liquidated damages penalties.",
-          riskLevel: "Medium",
-        },
-        {
-          title: "SLA Uptime",
-          description:
-            "Stringent 99.5% uptime requirement during 5-year warranty/O&M.",
-          riskLevel: "Low",
-        },
-      ],
+      eligibilityCriteria:
+        parsed.eligibilityCriteria || fallback.eligibilityCriteria,
+      complianceItems: parsed.complianceItems || [],
+      detectedAnnexures:
+        parsed.detectedAnnexures && parsed.detectedAnnexures.length > 0
+          ? parsed.detectedAnnexures
+          : extractDynamicAnnexures(rawText),
+      keyRisks: parsed.keyRisks || [],
     };
   } catch (err) {
     console.warn("AI analysis fallback triggered:", err.message);
     const fallback = extractFallbackTenderData(rawText, fileName);
+    const detectedAnnexures = extractDynamicAnnexures(rawText);
+
     return {
       ...fallback,
-      eligibilityCriteria: {
-        minAnnualTurnoverINR: 15000000,
-        minTurnoverDisplay: "₹1.50 Cr",
-        minExperienceYears: 3,
-        requiredCertifications: ["ISO 9001:2015", "ISO 27001"],
-        pastProjectRequirement:
-          "At least 1 similar project executed in last 5 years.",
-      },
-      detectedAnnexures: [
-        {
-          formNumber: "Annexure-I",
-          title: "Bid Submission Cover Letter",
-          description: "Formal transmission letter",
-        },
-        {
-          formNumber: "Annexure-II",
-          title: "Non-Blacklisting Undertaking",
-          description: "Clean legal declaration",
-        },
-        {
-          formNumber: "Annexure-III",
-          title: "Make In India (MII) Certificate",
-          description: "Local value addition compliance",
-        },
-        {
-          formNumber: "Annexure-IV",
-          title: "Manufacturer Authorization Form (MAF)",
-          description: "OEM authorization",
-        },
-      ],
-      keyRisks: [
-        {
-          title: "Liquidated Damages",
-          description: "0.5% per week delay up to 10% maximum.",
-          riskLevel: "Medium",
-        },
-        {
-          title: "Data Sovereignty",
-          description: "All data must strictly reside in Indian territory.",
-          riskLevel: "Low",
-        },
-      ],
+      complianceItems: [],
+      detectedAnnexures,
+      keyRisks: [],
     };
   }
+}
+
+function extractDynamicAnnexures(rawText) {
+  if (!rawText) return [];
+  const detectedAnnexures = [];
+  const annexureMatches = [
+    ...rawText.matchAll(
+      /(?:Annexure|Form|Appendix|Schedule)\s*[-–—:]?\s*([A-Za-z0-9IVXLCDM]+)[\s:\.\-]*([^\n\r]{5,60})/gi,
+    ),
+  ];
+  const seen = new Set();
+  annexureMatches.slice(0, 10).forEach((m) => {
+    const code = `Annexure-${m[1].toUpperCase()}`;
+    const title = m[2].trim();
+    if (!seen.has(code) && title.length >= 3 && !title.includes("....")) {
+      seen.add(code);
+      detectedAnnexures.push({
+        formNumber: code,
+        title: title,
+        description: "Mandatory tender submission document / undertaking",
+      });
+    }
+  });
+  return detectedAnnexures;
 }
 
 /**
@@ -297,11 +297,36 @@ export async function generateProposalSection({
   companyProfile,
   customInstructions = "",
 }) {
-  const sectionDescriptions = {
+  const domainText = `${tender.title || ""} ${tender.category || ""} ${tender.scopeSummary || ""}`.toLowerCase();
+  const isConsultancy =
+    domainText.includes("consultan") ||
+    domainText.includes("advisory") ||
+    domainText.includes("planning") ||
+    domainText.includes("strategy") ||
+    domainText.includes("public relation") ||
+    domainText.includes("media") ||
+    domainText.includes("dipr") ||
+    domainText.includes("research") ||
+    domainText.includes("communication");
+
+  const consultancySectionDescriptions = {
     executiveSummary:
-      "Compelling Executive Summary establishing bidder credibility, understanding of client pain points, value proposition, and commitment to SLA excellence.",
+      "Compelling Executive Summary establishing bidder credentials, understanding of the Department's strategic objectives, stakeholder ecosystem, and commitment to deliverable excellence.",
     technicalApproach:
-      "Detailed Technical Architecture, Solution Components, Data Flow, Security Framework (MeitY Tier-III cloud, encryption), and Scalability.",
+      "Strategic Advisory Methodology, Empirical Research & Baseline Assessment, Communication Planning, Stakeholder Mapping, and Media Rollout Strategy.",
+    implementationPlan:
+      "Phased Advisory Roadmap (Inception & Discovery, Strategy Formulation, Campaign Execution & Stakeholder Coordination, Periodic Impact Assessment).",
+    slaGovernance:
+      "Project Governance Framework, Deliverable Sign-Off Mechanism, Steering Committee Cadence, and Advisory Output Quality Assurance.",
+    riskMitigation:
+      "Risk Management Strategy addressing communication risks, multi-stakeholder alignment, message consistency, and proactive mitigation controls.",
+  };
+
+  const itSectionDescriptions = {
+    executiveSummary:
+      "Compelling Executive Summary establishing bidder credibility, understanding of technical requirements, value proposition, and commitment to SLA excellence.",
+    technicalApproach:
+      "Detailed Technical Architecture, Solution Components, Data Flow, Security Framework (Tier-III cloud, encryption), and Scalability.",
     implementationPlan:
       "Work Breakdown Structure (WBS), Phased Milestones (Weeks/Months), Deployment Plan, Resource Allocation, and UAT Testing Methodology.",
     slaGovernance:
@@ -310,34 +335,43 @@ export async function generateProposalSection({
       "Risk Management Strategy identifying technical, operational, and supply chain risks along with proactive mitigation controls.",
   };
 
+  const sectionDescriptions = isConsultancy
+    ? consultancySectionDescriptions
+    : itSectionDescriptions;
+
   const targetDesc =
     sectionDescriptions[sectionName] ||
     `Detailed professional bid proposal content for section: ${sectionName}`;
 
   try {
-    const systemPrompt = `You are a Principal Bid Manager and Solution Architect at an elite Indian Technology Consulting firm.
+    const systemPrompt = isConsultancy
+      ? `You are a Principal Strategic Bid Consultant and Policy Advisory Specialist at an elite Indian Management Consulting firm.
+Draft a highly persuasive, rigorous, and formal tender proposal section for a Government Strategy / Consultancy / Communication RFP.
+Maintain professional government tone. Use clear headings, structured bullet points, and actionable advisory frameworks.
+Avoid generic IT jargon like 'cloud hosting, deployment, UAT, MTTR' unless relevant. Incorporate specific facts from the Tender Scope and Company Profile provided.`
+      : `You are a Principal Bid Manager and Solution Architect at an elite Indian Technology Solutions firm.
 Draft a highly persuasive, technically rigorous, and formal tender proposal section.
 Maintain professional government & enterprise RFP tone. Use clear headings, bullet points, and actionable details.
 Avoid generic boilerplate fluff—incorporate specific facts from the Tender and Company Profile provided.`;
 
     const userPrompt = `Section to Draft: ${sectionName} (${targetDesc})
-${customInstructions ? `Special Instructions / Tone: ${customInstructions}` : ""}
+${customInstructions ? `Special Instructions / Focus: ${customInstructions}` : ""}
 
-Tender Details:
+Tender Context:
 - Title: ${tender.title}
 - Organization: ${tender.organization}
 - Tender Ref: ${tender.tenderNumber}
-- Scope: ${tender.scopeSummary}
+- Scope & ToR: ${tender.scopeSummary}
 - Estimated Value: ${tender.estimatedValueDisplay}
 
-Company Capabilities:
+Company Credentials:
 - Name: ${companyProfile.name}
-- Average Turnover: ${companyProfile.averageTurnoverINR} (${companyProfile.annualTurnover?.[0]?.amountDisplay})
-- Certifications: ${(companyProfile.certifications || []).join(", ")}
+- Average Turnover: ${companyProfile.averageTurnoverINR ? `₹${(companyProfile.averageTurnoverINR / 10000000).toFixed(2)} Cr` : "Verified"}
+- Certifications / Credentials: ${(companyProfile.certifications || []).join(", ") || "Standard Industry Accreditations"}
 - Relevant Past Projects: ${(companyProfile.pastProjects || []).map((p) => `${p.title} for ${p.client} (${p.valueDisplay})`).join("; ")}
-- Key Personnel: ${(companyProfile.keyPersonnel || []).map((p) => `${p.name} (${p.role})`).join("; ")}
+- Key Personnel / Experts: ${(companyProfile.keyPersonnel || []).map((p) => `${p.name} (${p.role})`).join("; ")}
 
-Draft the complete proposal text in clean markdown:`;
+Draft the complete proposal section in clean markdown:`;
 
     const content = await callLLM({
       systemPrompt,
@@ -348,11 +382,13 @@ Draft the complete proposal text in clean markdown:`;
     return content;
   } catch (err) {
     console.warn("AI proposal generation fallback triggered:", err.message);
-    // Intelligent fallback content
     if (sectionName === "executiveSummary") {
-      return `### 1. Executive Summary\n\n**${companyProfile.name}** is honoured to submit this comprehensive technical and commercial proposal for the *"${tender.title}"* (Ref: **${tender.tenderNumber}**) issued by **${tender.organization}**.\n\nWith our proven pedigree in delivering mission-critical enterprise systems and holding international certifications (${(companyProfile.certifications || []).join(", ")}), we propose a future-ready, scalable, and secure turnkey solution.\n\n#### Key Value Drivers of Our Proposal:\n- **Domain Expertise**: Successfully deployed similar systems for premier entities including ${(companyProfile.pastProjects || []).map((p) => p.client).join(" and ")}.\n- **Zero-Disruption Migration**: Phased agile implementation minimizing operational downtime.\n- **Sovereign Security**: Fully compliant with Indian data localization and Tier-III cloud specifications.\n- **Guaranteed SLA**: 24/7 dedicated support desk ensuring 99.5%+ system availability.`;
+      if (isConsultancy) {
+        return `### 1. Executive Summary\n\n**${companyProfile.name}** is honoured to submit this strategic advisory and technical proposal in response to the RFP *"${tender.title}"* (Ref: **${tender.tenderNumber}**) issued by **${tender.organization}**.\n\nWith extensive domain experience in strategic planning, stakeholder research, and institutional communication advisory, we propose an agile, evidence-backed approach designed to fulfill the Department's mission.\n\n#### Key Value Pillars of Our Approach:\n- **Strategic Alignment**: Tailored methodology ensuring seamless alignment with ${tender.organization}'s policy objectives.\n- **Proven Track Record**: Successfully delivered advisory & strategy engagements for leading government and public sector institutions including ${(companyProfile.pastProjects || []).map((p) => p.client).join(" and ") || "state entities"}.\n- **Rigorous Governance**: Dedicated project leads with structured monthly milestones, deliverable validation, and transparent KPI monitoring.`;
+      }
+      return `### 1. Executive Summary\n\n**${companyProfile.name}** is honoured to submit this comprehensive technical proposal for *"${tender.title}"* (Ref: **${tender.tenderNumber}**) issued by **${tender.organization}**.\n\nWith our proven delivery track record and certified quality standards (${(companyProfile.certifications || []).join(", ")}), we propose a scalable, reliable, and secure turnkey solution.`;
     }
-    return `### ${sectionName.toUpperCase()}\n\nDetailed technical execution methodology proposed by **${companyProfile.name}** for **${tender.organization}** under **${tender.tenderNumber}**.\n\nOur approach adheres strictly to industry best practices, comprehensive quality assurance (ISO 9001/27001), and rapid milestone achievement.`;
+    return `### ${sectionName.toUpperCase()}\n\nDetailed execution methodology proposed by **${companyProfile.name}** for **${tender.organization}** under **${tender.tenderNumber}**.\n\nOur approach adheres strictly to industry standards, transparent deliverable reviews, and rapid milestone achievement.`;
   }
 }
 

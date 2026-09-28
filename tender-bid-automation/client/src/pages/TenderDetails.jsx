@@ -666,97 +666,118 @@ export default function TenderDetails({
             </button>
           </div>
 
-          <div className="tf-card rounded-2xl overflow-hidden border border-slate-200">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase text-[10px] font-bold tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4 min-w-[220px]">Item Description</th>
-                    <th className="py-3 px-4 w-28">Category</th>
-                    <th className="py-3 px-4 w-20 text-right">Qty</th>
-                    <th className="py-3 px-4 w-28 text-right">Unit Rate (₹)</th>
-                    <th className="py-3 px-4 w-32 text-right">Total (₹)</th>
-                    <th className="py-3 px-4 text-right w-12"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {boqList.map((item, idx) => (
-                    <tr key={item.id} className="hover:bg-slate-50/60">
-                      <td className="py-2.5 px-4">
-                        <input
-                          type="text"
-                          value={item.item}
-                          onChange={(e) => {
-                            const updated = [...boqList];
-                            updated[idx].item = e.target.value;
-                            setBoqList(updated);
-                            boqAPI.saveBatch(tender.id, updated);
-                          }}
-                          className="w-full custom-input text-xs py-1 px-2"
-                        />
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <select
-                          value={item.category}
-                          onChange={(e) => {
-                            const updated = [...boqList];
-                            updated[idx].category = e.target.value;
-                            setBoqList(updated);
-                            boqAPI.saveBatch(tender.id, updated);
-                          }}
-                          className="w-full custom-input text-xs py-1"
-                        >
-                          <option value="Hardware">Hardware</option>
-                          <option value="Software">Software</option>
-                          <option value="Services">Services</option>
-                          <option value="Cloud">Cloud</option>
-                          <option value="Manpower">Manpower</option>
-                        </select>
-                      </td>
-                      <td className="py-2.5 px-4 text-right">
-                        <input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) => {
-                            const val = Number(e.target.value) || 0;
-                            const updated = [...boqList];
-                            updated[idx].quantity = val;
-                            updated[idx].total = val * (updated[idx].unitPrice || 0);
-                            setBoqList(updated);
-                            boqAPI.saveBatch(tender.id, updated);
-                          }}
-                          className="w-16 custom-input text-xs py-1 text-right"
-                        />
-                      </td>
-                      <td className="py-2.5 px-4 text-right">
-                        <input
-                          type="number"
-                          value={item.unitPrice}
-                          onChange={(e) => {
-                            const val = Number(e.target.value) || 0;
-                            const updated = [...boqList];
-                            updated[idx].unitPrice = val;
-                            updated[idx].total = val * (updated[idx].quantity || 1);
-                            setBoqList(updated);
-                            boqAPI.saveBatch(tender.id, updated);
-                          }}
-                          className="w-24 custom-input text-xs py-1 text-right"
-                        />
-                      </td>
-                      <td className="py-2.5 px-4 text-right font-bold text-slate-900">
-                        ₹{Number(item.total).toLocaleString('en-IN')}
-                      </td>
-                      <td className="py-2.5 px-4 text-right">
-                        <button onClick={() => handleDeleteBOQItem(item.id)} className="p-1 text-slate-400 hover:text-red-600">
-                          <Trash2 size={13} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {boqList.length === 0 ? (
+            <div className="tf-card p-8 rounded-2xl border border-slate-200 text-center space-y-3 bg-slate-50/50">
+              <div className="w-10 h-10 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                <FileText size={18} />
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm">No Itemized BOQ Mandated in RFP</h4>
+              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                This RFP is structured as a {tender.category || "Consultancy / Advisory Services"} contract with deliverable or milestone-based disbursements. No physical hardware or software line items were detected.
+              </p>
+              <div className="pt-2">
+                <button
+                  onClick={handleAddBOQItem}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0D3B36] text-white hover:bg-[#092B27]"
+                >
+                  <Plus size={13} />
+                  <span>Add Custom Cost Head / Milestone</span>
+                </button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="tf-card rounded-2xl overflow-hidden border border-slate-200">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase text-[10px] font-bold tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4 min-w-[220px]">Item Description</th>
+                      <th className="py-3 px-4 w-28">Category</th>
+                      <th className="py-3 px-4 w-20 text-right">Qty</th>
+                      <th className="py-3 px-4 w-28 text-right">Unit Rate (₹)</th>
+                      <th className="py-3 px-4 w-32 text-right">Total (₹)</th>
+                      <th className="py-3 px-4 text-right w-12"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {boqList.map((item, idx) => (
+                      <tr key={item.id} className="hover:bg-slate-50/60">
+                        <td className="py-2.5 px-4">
+                          <input
+                            type="text"
+                            value={item.item}
+                            onChange={(e) => {
+                              const updated = [...boqList];
+                              updated[idx].item = e.target.value;
+                              setBoqList(updated);
+                              boqAPI.saveBatch(tender.id, updated);
+                            }}
+                            className="w-full custom-input text-xs py-1 px-2"
+                          />
+                        </td>
+                        <td className="py-2.5 px-4">
+                          <select
+                            value={item.category}
+                            onChange={(e) => {
+                              const updated = [...boqList];
+                              updated[idx].category = e.target.value;
+                              setBoqList(updated);
+                              boqAPI.saveBatch(tender.id, updated);
+                            }}
+                            className="w-full custom-input text-xs py-1"
+                          >
+                            <option value="Services">Services</option>
+                            <option value="Manpower">Manpower / Advisory</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Software">Software</option>
+                            <option value="Cloud">Cloud</option>
+                          </select>
+                        </td>
+                        <td className="py-2.5 px-4 text-right">
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => {
+                              const val = Number(e.target.value) || 0;
+                              const updated = [...boqList];
+                              updated[idx].quantity = val;
+                              updated[idx].total = val * (updated[idx].unitPrice || 0);
+                              setBoqList(updated);
+                              boqAPI.saveBatch(tender.id, updated);
+                            }}
+                            className="w-16 custom-input text-xs py-1 text-right"
+                          />
+                        </td>
+                        <td className="py-2.5 px-4 text-right">
+                          <input
+                            type="number"
+                            value={item.unitPrice}
+                            onChange={(e) => {
+                              const val = Number(e.target.value) || 0;
+                              const updated = [...boqList];
+                              updated[idx].unitPrice = val;
+                              updated[idx].total = val * (updated[idx].quantity || 1);
+                              setBoqList(updated);
+                              boqAPI.saveBatch(tender.id, updated);
+                            }}
+                            className="w-24 custom-input text-xs py-1 text-right"
+                          />
+                        </td>
+                        <td className="py-2.5 px-4 text-right font-bold text-slate-900">
+                          ₹{Number(item.total).toLocaleString('en-IN')}
+                        </td>
+                        <td className="py-2.5 px-4 text-right">
+                          <button onClick={() => handleDeleteBOQItem(item.id)} className="p-1 text-slate-400 hover:text-red-600">
+                            <Trash2 size={13} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="tf-card p-5 rounded-2xl space-y-3">

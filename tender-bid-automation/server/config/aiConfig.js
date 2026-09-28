@@ -12,7 +12,12 @@ export async function callLLM({ systemPrompt, userPrompt, temperature = 0.3, res
 
   // 1. If inlineData (e.g. Scanned PDF / Image) is provided, prioritize Multimodal Gemini
   if (geminiKey && !geminiKey.includes('your_gemini')) {
-    const geminiModels = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+    const geminiModels = [
+      'gemini-3.1-flash-lite',
+      'gemini-3.5-flash-lite',
+      'gemini-3.8-flash',
+      'gemini-flash-latest'
+    ];
     for (const model of geminiModels) {
       try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
@@ -37,7 +42,7 @@ export async function callLLM({ systemPrompt, userPrompt, temperature = 0.3, res
               ...(responseFormat === 'json' ? { responseMimeType: 'application/json' } : {})
             }
           },
-          { timeout: 60000 }
+          { timeout: 20000 }
         );
 
         const content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -48,9 +53,9 @@ export async function callLLM({ systemPrompt, userPrompt, temperature = 0.3, res
     }
   }
 
-  // 2. Try Groq models in sequence (for pure text prompts)
-  if (!inlineData && groqKey && !groqKey.includes('your_groq')) {
-    const groqModels = ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile', 'llama3-70b-8192', 'llama3-8b-8192', 'mixtral-8x7b-32768'];
+  // 2. Try Groq models in sequence (for pure text prompts or text fallback)
+  if (groqKey && !groqKey.includes('your_groq')) {
+    const groqModels = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'allam-2-7b'];
     for (const model of groqModels) {
       try {
         const response = await axios.post(

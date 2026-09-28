@@ -12,7 +12,7 @@ import {
 import { SectionTitle } from "../components/Common";
 import { tenderAPI } from "../services/api";
 
-export default function PaymentProof({ activeTender, setActive }) {
+export default function PaymentProof({ activeTender, setActive, isEmbedded = false, onNextStep }) {
   const [mode, setMode] = useState("Demand Draft (DD)");
   const [saved, setSaved] = useState(true);
   const [utr, setUtr] = useState("DD-849201934");
@@ -52,41 +52,47 @@ export default function PaymentProof({ activeTender, setActive }) {
 
   return (
     <>
-      <div className="page-heading fade-up">
-        <div>
-          <div className="breadcrumb">
-            <span>Bid workspace</span>
-            <ChevronRight size={13} />
-            <strong>Payment Proof</strong>
+      {!isEmbedded && (
+        <div className="page-heading fade-up">
+          <div>
+            <div className="breadcrumb">
+              <span>Bid workspace</span>
+              <ChevronRight size={13} />
+              <strong>Payment Proof</strong>
+            </div>
+            <h1>Lock in your fee & EMD proof.</h1>
+            <p>
+              Generate Cover-1 receipt slips mapped directly to tender{" "}
+              <strong>{activeTender?.title}</strong>.
+            </p>
           </div>
-          <h1>Lock in your fee & EMD proof.</h1>
-          <p>
-            Generate Cover-1 receipt slips mapped directly to tender{" "}
-            <strong>{activeTender?.title}</strong>.
-          </p>
+          <div className="heading-actions">
+            <button
+              className="button button-secondary cursor-pointer"
+              onClick={() =>
+                toast.success("Instrument slip downloaded", {
+                  description: "PDF ready for Cover-1 physical bundle.",
+                })
+              }
+            >
+              <Download size={16} /> Download slip
+            </button>
+            <button
+              className="button button-primary cursor-pointer"
+              onClick={() => {
+                if (onNextStep) {
+                  onNextStep();
+                } else if (setActive) {
+                  setActive("Proposal Desk");
+                }
+                toast.success("Navigating to Proposal Desk");
+              }}
+            >
+              Go to Proposal Desk <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
-        <div className="heading-actions">
-          <button
-            className="button button-secondary cursor-pointer"
-            onClick={() =>
-              toast.success("Instrument slip downloaded", {
-                description: "PDF ready for Cover-1 physical bundle.",
-              })
-            }
-          >
-            <Download size={16} /> Download slip
-          </button>
-          <button
-            className="button button-primary cursor-pointer"
-            onClick={() => {
-              setActive("Proposal Desk");
-              toast.success("Navigating to Proposal Desk");
-            }}
-          >
-            Go to Proposal Desk <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="content-grid payment-grid fade-up delay-1">
         <section className="panel">

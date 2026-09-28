@@ -11,7 +11,7 @@ import {
 import { StatusPill, IconButton, SectionTitle } from "../components/Common";
 import { exportAPI } from "../services/api";
 
-export default function PdfBinder({ activeTender }) {
+export default function PdfBinder({ activeTender, setActive, isEmbedded = false }) {
   const [items, setItems] = useState([
     "Tender fee & EMD proof",
     "Covering letter",
@@ -56,31 +56,33 @@ export default function PdfBinder({ activeTender }) {
 
   return (
     <>
-      <div className="page-heading fade-up">
-        <div>
-          <div className="breadcrumb">
-            <span>Bid workspace</span>
-            <ChevronRight size={13} />
-            <strong>PDF Binder</strong>
+      {!isEmbedded && (
+        <div className="page-heading fade-up">
+          <div>
+            <div className="breadcrumb">
+              <span>Bid workspace</span>
+              <ChevronRight size={13} />
+              <strong>PDF Binder</strong>
+            </div>
+            <h1>One package. No loose ends.</h1>
+            <p>
+              Continuous stamped compilation for{" "}
+              <strong>{activeTender?.title}</strong>.
+            </p>
           </div>
-          <h1>One package. No loose ends.</h1>
-          <p>
-            Continuous stamped compilation for{" "}
-            <strong>{activeTender?.title}</strong>.
-          </p>
+          <div className="heading-actions">
+            <StatusPill tone="green">Ready · 44 pages</StatusPill>
+            <button
+              className="button button-primary cursor-pointer"
+              onClick={handleExportMasterPDF}
+              disabled={exporting}
+            >
+              <Download size={16} />{" "}
+              {exporting ? "Generating Master PDF..." : "Export master PDF"}
+            </button>
+          </div>
         </div>
-        <div className="heading-actions">
-          <StatusPill tone="green">Ready · 44 pages</StatusPill>
-          <button
-            className="button button-primary cursor-pointer"
-            onClick={handleExportMasterPDF}
-            disabled={exporting}
-          >
-            <Download size={16} />{" "}
-            {exporting ? "Generating Master PDF..." : "Export master PDF"}
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="binder-layout fade-up delay-1">
         <section className="panel sequence-panel">

@@ -10,7 +10,12 @@ import {
 } from "lucide-react";
 import { StatusPill, SectionTitle } from "../components/Common";
 
-export default function Eligibility({ activeTender, setActive }) {
+export default function Eligibility({
+  activeTender,
+  setActive,
+  isEmbedded = false,
+  onNextStep,
+}) {
   const [selected, setSelected] = useState("overview");
 
   const gates = useMemo(() => {
@@ -70,41 +75,47 @@ export default function Eligibility({ activeTender, setActive }) {
 
   return (
     <>
-      <div className="page-heading fade-up">
-        <div>
-          <div className="breadcrumb">
-            <span>Bid workspace</span>
-            <ChevronRight size={13} />
-            <strong>Eligibility</strong>
+      {!isEmbedded && (
+        <div className="page-heading fade-up">
+          <div>
+            <div className="breadcrumb">
+              <span>Bid workspace</span>
+              <ChevronRight size={13} />
+              <strong>Eligibility</strong>
+            </div>
+            <h1>Can you win this bid?</h1>
+            <p>
+              Transparent, deterministic checks against your verified company
+              vault for <strong>{activeTender?.title}</strong>.
+            </p>
           </div>
-          <h1>Can you win this bid?</h1>
-          <p>
-            Transparent, deterministic checks against your verified company
-            vault for <strong>{activeTender?.title}</strong>.
-          </p>
+          <div className="heading-actions">
+            <button
+              className="button button-secondary cursor-pointer"
+              onClick={() =>
+                toast.success("Scorecard exported", {
+                  description: "Eligibility report generated.",
+                })
+              }
+            >
+              <ExternalLink size={16} /> Export scorecard
+            </button>
+            <button
+              className="button button-primary cursor-pointer"
+              onClick={() => {
+                if (onNextStep) {
+                  onNextStep();
+                } else if (setActive) {
+                  setActive("Payment Proof");
+                }
+                toast.success("Moving to payment proof");
+              }}
+            >
+              Continue to payment <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
-        <div className="heading-actions">
-          <button
-            className="button button-secondary cursor-pointer"
-            onClick={() =>
-              toast.success("Scorecard exported", {
-                description: "Eligibility report generated.",
-              })
-            }
-          >
-            <ExternalLink size={16} /> Export scorecard
-          </button>
-          <button
-            className="button button-primary cursor-pointer"
-            onClick={() => {
-              setActive("Payment Proof");
-              toast.success("Moving to payment proof");
-            }}
-          >
-            Continue to payment <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="eligibility-top fade-up delay-1">
         <div className="score-card-large">
@@ -199,7 +210,10 @@ export default function Eligibility({ activeTender, setActive }) {
                 {activeTender?.keyRisks?.[0]?.description ||
                   "0.5% per week delay up to 10% maximum. Milestone tracking recommended."}
               </p>
-              <button className="cursor-pointer" onClick={() => setSelected("document")}>
+              <button
+                className="cursor-pointer"
+                onClick={() => setSelected("document")}
+              >
                 See affected clauses <ChevronRight size={14} />
               </button>
             </div>
@@ -226,7 +240,11 @@ export default function Eligibility({ activeTender, setActive }) {
               <span>
                 Clause 5.4 · Liquidated damages & milestone delivery governance.
               </span>
-              <X size={14} className="cursor-pointer" onClick={() => setSelected("overview")} />
+              <X
+                size={14}
+                className="cursor-pointer"
+                onClick={() => setSelected("overview")}
+              />
             </div>
           )}
         </section>

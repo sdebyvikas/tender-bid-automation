@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { StatusPill } from "../components/Common";
 
-export default function ProposalDesk({ activeTender, setActive }) {
+export default function ProposalDesk({ activeTender, setActive, isEmbedded = false, onNextStep }) {
   const [doc, setDoc] = useState("Executive Summary");
   const docs = [
     "Executive Summary",
@@ -52,36 +52,42 @@ export default function ProposalDesk({ activeTender, setActive }) {
 
   return (
     <>
-      <div className="page-heading fade-up">
-        <div>
-          <div className="breadcrumb">
-            <span>Bid workspace</span>
-            <ChevronRight size={13} />
-            <strong>Proposal Desk</strong>
+      {!isEmbedded && (
+        <div className="page-heading fade-up">
+          <div>
+            <div className="breadcrumb">
+              <span>Bid workspace</span>
+              <ChevronRight size={13} />
+              <strong>Proposal Desk</strong>
+            </div>
+            <h1>Draft with context. Review with control.</h1>
+            <p>
+              AI-generated proposal for <strong>{activeTender?.title}</strong>.
+            </p>
           </div>
-          <h1>Draft with context. Review with control.</h1>
-          <p>
-            AI-generated proposal for <strong>{activeTender?.title}</strong>.
-          </p>
+          <div className="heading-actions">
+            <button
+              className="button button-secondary cursor-pointer"
+              onClick={() => toast.success("Draft version saved locally")}
+            >
+              <FileCheck2 size={16} /> Save version
+            </button>
+            <button
+              className="button button-primary cursor-pointer"
+              onClick={() => {
+                if (onNextStep) {
+                  onNextStep();
+                } else if (setActive) {
+                  setActive("PDF Binder");
+                }
+                toast.success("Draft marked ready for binder");
+              }}
+            >
+              Send to binder <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
-        <div className="heading-actions">
-          <button
-            className="button button-secondary cursor-pointer"
-            onClick={() => toast.success("Draft version saved locally")}
-          >
-            <FileCheck2 size={16} /> Save version
-          </button>
-          <button
-            className="button button-primary cursor-pointer"
-            onClick={() => {
-              setActive("PDF Binder");
-              toast.success("Draft marked ready for binder");
-            }}
-          >
-            Send to binder <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="editor-shell fade-up delay-1">
         <aside className="editor-sidebar">

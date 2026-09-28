@@ -205,191 +205,378 @@ export function parseDateAndTimeToISO(dateStr, timeStr = "") {
 }
 
 /**
- * Heuristically extracts initial tender details from text if LLM is unavailable
+ * Extracts authentic tender parameters from document text using strict pattern matching.
+ * NO FAKE/RANDOM FALLBACK VALUES: if a field is not found in the document, returns empty/null.
+ */
+/**
+ * Helper to convert Indian currency phrases (numbers or words) to numeric INR
+ */
+export function parseIndianCurrencyWords(phrase) {
+  if (!phrase) return null;
+  const clean = phrase
+    .toLowerCase()
+    .replace(/[^\w\s\.]/g, " ")
+    .trim();
+
+  // Check digit + unit e.g. "15.32 Crore", "20 Lakhs", "50 Thousand"
+  const numUnit = clean.match(
+    /([0-9]+(?:\.[0-9]+)?)\s*(crores?|cr|lakhs?|lacs?|lac|thousands?|k)/i,
+  );
+  if (numUnit) {
+    const val = parseFloat(numUnit[1]);
+    const unit = numUnit[2].toLowerCase();
+    if (unit.startsWith("cr")) return Math.round(val * 10000000);
+    if (unit.startsWith("la")) return Math.round(val * 100000);
+    if (unit.startsWith("th") || unit === "k") return Math.round(val * 1000);
+  }
+
+  // Check pure number e.g. "306269928" or "2000000"
+  const pureNum = clean.replace(/[\s,]/g, "");
+  if (/^[0-9]+(?:\.[0-9]+)?$/.test(pureNum)) {
+    const val = parseFloat(pureNum);
+    if (!isNaN(val) && val > 0) return Math.round(val);
+  }
+
+  // Check words e.g. "twenty lakh", "fifty thousand", "one crore"
+  const wordToNum = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+    thirteen: 13,
+    fourteen: 14,
+    fifteen: 15,
+    sixteen: 16,
+    seventeen: 17,
+    eighteen: 18,
+    nineteen: 19,
+    twenty: 20,
+    thirty: 30,
+    forty: 40,
+    fifty: 50,
+    sixty: 60,
+    seventy: 70,
+    eighty: 80,
+    ninety: 90,
+    hundred: 100,
+  };
+
+  let total = 0;
+  let currentGroup = 0;
+  const words = clean.split(/\s+/);
+  for (const w of words) {
+    if (wordToNum[w]) {
+      currentGroup += wordToNum[w];
+    } else if (w.startsWith("crore") || w === "cr") {
+      total += (currentGroup || 1) * 10000000;
+      currentGroup = 0;
+    } else if (w.startsWith("lakh") || w.startsWith("lac")) {
+      total += (currentGroup || 1) * 100000;
+      currentGroup = 0;
+    } else if (w.startsWith("thousand") || w === "k") {
+      total += (currentGroup || 1) * 1000;
+      currentGroup = 0;
+    } else if (w === "hundred") {
+      currentGroup *= 100;
+    }
+  }
+  total += currentGroup;
+  return total > 0 ? total : null;
+}
+
+export function formatINRDisplay(amount) {
+  if (amount === null || amount === undefined || isNaN(amount)) return "";
+  if (amount === 0) return "NIL / Exempted";
+  if (amount >= 10000000) {
+    return `₹${(amount / 10000000).toFixed(2)} Crore`;
+  }
+  if (amount >= 100000) {
+    return `₹${(amount / 100000).toFixed(2)} Lakhs`;
+  }
+  return `₹${amount.toLocaleString("en-IN")}`;
+}
+
+export function cleanOrganizationName(orgName, text = "") {
+  if (!orgName) return "";
+  let clean = orgName
+    .replace(/\s+/g, " ")
+    .replace(/\s*CIN\s*-[A-Za-z0-9]+/gi, "")
+    .replace(/Page\s+\d+/gi, "")
+    .trim();
+
+  // Correct OCR mistranscriptions (e.g. "Public Rights" -> "Public Relations")
+  if (/public\s+rights/i.test(clean)) {
+    clean = clean.replace(/public\s+rights/gi, "PUBLIC RELATIONS");
+  }
+
+  if (
+    /(?:DIPR|Directorate\s+of\s+Information|Information\s*&\s*Public)/i.test(text) &&
+    /information/i.test(clean) &&
+    !/relations/i.test(clean)
+  ) {
+    clean = "DEPARTMENT OF INFORMATION & PUBLIC RELATIONS (DIPR)";
+  }
+
+  return clean;
+}
+
+/**
+ * Extracts authentic tender parameters from document text using strict pattern matching.
+ * NO FAKE/RANDOM FALLBACK VALUES: if a field is not found in the document, returns empty/null.
  */
 export function extractFallbackTenderData(text, fileName = "Tender_Doc") {
+  if (!text || typeof text !== "string") {
+    return {
+      tenderNumber: "",
+      title: fileName.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " "),
+      organization: "",
+      category: "Procurement / Services",
+      portal: "",
+      estimatedValueINR: null,
+      estimatedValueDisplay: "",
+      emdAmountINR: null,
+      emdDisplay: "",
+      tenderFeeINR: null,
+      publishDate: null,
+      submissionDeadline: null,
+      preBidMeetingDate: null,
+      due: "",
+      scopeSummary: "",
+      eligibilityCriteria: {
+        minAnnualTurnoverINR: null,
+        minTurnoverDisplay: "",
+        minExperienceYears: null,
+        requiredCertifications: [],
+        pastProjectRequirement: "",
+      },
+    };
+  }
+
   // 1. Title Extraction
-  let title = `RFP for ${fileName.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ")}`;
-  const titleRfpMatch = text.match(
-    /REQUEST\s+FOR\s+PROPOSAL\s*(?:\(RFP\))?\s*[:\-]?\s*(?:for\s+)?([\s\S]{10,250}?)(?=\s+(?:for|by)\s+[A-Z0-9\s,\.\-&()]{5,}?(?:Corporation|Department|Ministry|Authority|Board|Limited|Ltd\.|Nigam)|\s+3rd|\s+Paryatan|\s+Sl\.|\n\s*\n\s*\n)/i,
+  let title = "";
+  const openTenderMatch = text.match(
+    /(?:OPEN\s*(?:E-)?TENDER\s+FOR|E-TENDER\s+FOR|TENDER\s+FOR|REQUEST\s+FOR\s+PROPOSAL\s*(?:\(RFP\))?\s*FOR|NOTICE\s+INVITING\s+(?:E-)?TENDER\s+FOR|NAME\s+OF\s+WORK\s*[:\-]|SUBJECT\s*[:\-]|PURPOSE\s*[:\-])\s*([^\n\r]{15,250})/i,
   );
-  if (titleRfpMatch) {
-    title = titleRfpMatch[1]
+  if (openTenderMatch) {
+    title = openTenderMatch[1]
       .replace(/\s*Page\s+\d+\s*/gi, " ")
-      .replace(/^[:\s\-]+/, "")
+      .replace(/\s*CIN\s*-[A-Za-z0-9]+/gi, "")
       .replace(/\s+/g, " ")
-      .replace(/^for\s+/i, "")
+      .trim();
+  }
+
+  if (!title || title.length < 10) {
+    const subMatch = text.match(
+      /(?:Sub\s*[:\-]|Selection\s+of\s+(?:Consulting\s+Agency|Service\s+Provider|Vendor)\s+for)\s*([^\n\r]{15,250})/i,
+    );
+    if (subMatch) {
+      title = subMatch[1].replace(/\s+/g, " ").trim();
+    }
+  }
+
+  if (!title || title.length < 10) {
+    title = fileName.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
+  }
+
+  // 2. Organization / Authority Extraction (Universal across all Indian Govt / PSUs / Depts)
+  let organization = "";
+  const orgNameMatch = text.match(
+    /([A-Z0-9\s,\.\-&()]{4,90}?(?:CORPORATION\s+(?:LIMITED|LTD\.?)|MINISTRY\s+OF\s+[A-Z\s]+|DEPARTMENT\s+OF\s+[A-Z\s]+|DIRECTORATE\s+OF\s+[A-Z\s]+|AUTHORITY\s+OF\s+INDIA|DEVELOPMENT\s+AUTHORITY|BOARD|NIGAM\s+LIMITED|NIGAM\s+LTD\.?|SAMITI|PARISHAD|COMMISSION|COUNCIL|UNIVERSITY|INSTITUTE\s+OF\s+[A-Z\s]+|MUNICIPAL\s+CORPORATION|SMART\s+CITY\s+(?:LIMITED|LTD\.?)))/i,
+  );
+  if (orgNameMatch) {
+    organization = cleanOrganizationName(orgNameMatch[1], text);
+  }
+
+  if (!organization || organization.length < 4) {
+    const orgIssuedMatch = text.match(
+      /(?:Issued\s*by|Client|Purchaser|Procuring\s*Entity|Authority|Employer)[\s:\.\-]*([A-Za-z0-9\s,\.\-&()]{4,80})/i,
+    );
+    if (orgIssuedMatch) {
+      organization = cleanOrganizationName(orgIssuedMatch[1], text);
+    }
+  }
+
+  // 3. Tender / NIT / RFP Reference Number
+  let tenderNo = "";
+  const tenderNoMatch = text.match(
+    /(?:Open\s*E-Tender\s*No\.?|NIT\s*No\.?|RFP\s*No\.?|Tender\s*No\.?|Reference\s*No\.?|Ref\s*No\.?|Tender\s*Notice\s*No\.?|Bid\s*No\.?|Tender\s*ID)\s*[:\-]?\s*([A-Za-z0-9\/\-_. ]{4,60})/i,
+  );
+  if (tenderNoMatch && !tenderNoMatch[1].includes("____")) {
+    tenderNo = tenderNoMatch[1].replace(/\s*Page\s+\d+/gi, "").trim();
+  } else {
+    const fallbackNo = text.match(
+      /(?:Contract\s*No[\s:\.]*)([A-Z0-9\/\-_]{4,35})/i,
+    );
+    if (fallbackNo && !fallbackNo[1].includes("____")) {
+      tenderNo = fallbackNo[1].trim();
+    }
+  }
+
+  // 4. Estimated Total Contract Value (Universal parsing)
+  let estimatedValueINR = null;
+  let estimatedValueDisplay = "";
+
+  const exactValueMatch = text.match(
+    /(?:Estimated\s*Total\s*Contract\s*Value|Estimated\s*(?:Cost|Value|Budget)|Tender\s*Value|Contract\s*Value|Approximate\s*(?:Value|Cost))\s*(?:\(in\s*Rs\.?\))?[\s:\.\-]*([RsINR₹\s0-9,\.]+(?:Crore|Cr|Lakhs?|Lacs?|Lac|Thousands?|K)?)/i,
+  );
+  if (exactValueMatch) {
+    const parsedVal = parseIndianCurrencyWords(exactValueMatch[1]);
+    if (parsedVal && parsedVal > 0) {
+      estimatedValueINR = parsedVal;
+      estimatedValueDisplay = formatINRDisplay(parsedVal);
+    }
+  }
+
+  // 5. EMD (Earnest Money Deposit) (Universal parsing)
+  let emdAmountINR = null;
+  let emdDisplay = "";
+
+  if (text.match(/EMD\s*[:\-]?\s*(?:NIL|N\.A\.|EXEMPT(?:ED)?|ZERO)/i)) {
+    emdAmountINR = 0;
+    emdDisplay = "NIL / Exempted";
+  } else {
+    const emdMatch = text.match(
+      /(?:EMD|Earnest\s*Money\s*(?:Deposit)?)\s*(?:\(EMD\))?\s*[:\-]?\s*(?:Rs\.?|INR|₹)?\s*([RsINR₹\s0-9,\.]+(?:Crore|Cr|Lakhs?|Lacs?|Lac|Thousands?|K|[A-Za-z\s]+Lakh|[A-Za-z\s]+Thousand)?)/i,
+    );
+    if (emdMatch) {
+      const parsedEmd = parseIndianCurrencyWords(emdMatch[1]);
+      if (parsedEmd !== null && parsedEmd > 0) {
+        emdAmountINR = parsedEmd;
+        emdDisplay = formatINRDisplay(parsedEmd);
+      }
+    }
+  }
+
+  // 6. Tender Form Fee
+  let tenderFeeINR = null;
+  const feeMatch = text.match(
+    /(?:E-tender\s*Form\s*Price|Tender\s*(?:Form\s*)?Fee|Cost\s*of\s*Tender|Document\s*Fee|BOQ\s*Cost)\s*[:\-]?\s*(?:Rs\.?|INR|₹)?\s*([0-9,]+|NIL|N\.A\.)/i,
+  );
+  if (feeMatch) {
+    if (
+      feeMatch[1].toUpperCase() === "NIL" ||
+      feeMatch[1].toUpperCase() === "N.A."
+    ) {
+      tenderFeeINR = 0;
+    } else {
+      const rawFee = parseInt(feeMatch[1].replace(/,/g, ""), 10);
+      if (!isNaN(rawFee)) {
+        tenderFeeINR = rawFee;
+      }
+    }
+  }
+
+  // 7. Dates (Submission, Pre-bid, Publish) - Authentic parsing only
+  let submissionDeadline = null;
+  const deadlineMatch = text.match(
+    /(?:Last\s*date\s*and\s*Time\s*of\s*Submission\s*of\s*bids|Bid\s*Submission\s*End\s*Date|Bid\s*Due\s*Date|Last\s*Date\s*for\s*Submission|Submission\s*Deadline)[\s:\.\-\n\r]*(?:Date\s*[:\-]?\s*)?([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4}|[0-9]{1,2}(?:st|nd|rd|th)?[\s\-\/\.][A-Za-z]+[\s\-\/\.][0-9]{2,4})(?:[\s,\n\r]+(?:Time\s*[:\-]?\s*)?(?:at|by)?\s*([0-9]{1,2}(?::[0-9]{2})?\s*(?:AM|PM|NOON|MIDNIGHT|Hours|Hrs)?))?/i,
+  );
+  if (deadlineMatch) {
+    submissionDeadline = parseDateAndTimeToISO(
+      deadlineMatch[1],
+      deadlineMatch[2] || "",
+    );
+  }
+
+  let preBidMeetingDate = null;
+  const preBidMatch = text.match(
+    /(?:Pre\s*[-\s]?\s*Bid\s*Meeting(?:\s*\([^\)]*\))?|Pre-Bid\s*Queries)[\s:\.\-\n\r]*(?:Date\s*[:\-]?\s*)?([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4}|[0-9]{1,2}(?:st|nd|rd|th)?[\s\-\/\.][A-Za-z]+[\s\-\/\.][0-9]{2,4})(?:[\s,\n\r]+(?:Time\s*[:\-]?\s*)?(?:at|by)?\s*([0-9]{1,2}(?::[0-9]{2})?\s*(?:AM|PM|NOON|MIDNIGHT|Hours|Hrs)?))?/i,
+  );
+  if (preBidMatch) {
+    preBidMeetingDate = parseDateAndTimeToISO(
+      preBidMatch[1],
+      preBidMatch[2] || "",
+    );
+  }
+
+  let publishDate = null;
+  const pubMatch = text.match(
+    /(?:Date\s*of\s*Publishing|Date\s*of\s*Publication|Publication\s*Date|Publish\s*Date|NIT\s*Date|Bid\s*submission\s*Start\s*Date)\s*[:\-]?\s*([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4})/i,
+  );
+  if (pubMatch) {
+    const parsedPub = parseDateAndTimeToISO(pubMatch[1], "09:00 AM");
+    if (parsedPub) {
+      publishDate = parsedPub.split("T")[0];
+    }
+  }
+
+  const dueFormatted = submissionDeadline
+    ? new Date(submissionDeadline).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
+
+  // 8. Scope of Work Extraction (Universal lookahead)
+  let scopeSummary = "";
+  const briefScopeMatch = text.match(
+    /(?:Brief\s*Scope\s*of\s*Work|Scope\s*of\s*Work|Terms\s*of\s*Reference|Detailed\s*Scope)[\s\S]{0,100}?([\s\S]{100,2000}?)(?=\n\s*(?:NOTICE\s*INVITING|Section\s*IV|Eligibility\s*Criteria|General\s*Conditions|Special\s*Conditions|\d+\.\s*Responsibilities|\d+\.\s*Period))/i,
+  );
+  if (briefScopeMatch) {
+    scopeSummary = briefScopeMatch[1]
+      .replace(/Open\s*E-Tender\s*No\.?[^\n\r]*Page\s*\d+/gi, "")
+      .replace(/CIN\s*-[A-Za-z0-9]+/gi, "")
+      .replace(/\s+/g, " ")
       .trim();
   } else {
-    const titleMatch = text.match(
-      /(?:name\s+of\s+work|tender\s+title|subject|purpose|selection\s+of\s+consulting\s+agency\s+for)\s*[:\-]?\s*([^\n\r]{10,180})/i,
+    const scopeClauseMatch = text.match(
+      /(?:The\s*bidder\s*will\s*be\s*responsible\s*for[\s\S]{100,1200}?)(?=\n\s*\d+\.|\n\s*[A-Z]\.|\n\s*Section)/i,
     );
-    if (titleMatch) {
-      title = titleMatch[1]
-        .replace(/^["'“]+|["'”]+$/g, "")
-        .replace(/\s*Page\s+\d+\s*/gi, " ")
-        .replace(/^[:\s\-]+/, "")
+    if (scopeClauseMatch) {
+      scopeSummary = scopeClauseMatch[0]
+        .replace(/Open\s*E-Tender\s*No\.?[^\n\r]*Page\s*\d+/gi, "")
+        .replace(/\s+/g, " ")
         .trim();
     }
   }
 
-  // 2. Organization Extraction
-  let organization = "Public Procurement Entity";
-  const orgMatchFull = text.match(
-    /(?:for|by|issued\s*by|purchaser\s*is|client\s*is)\s*[\n\r\s]*([A-Za-z0-9\s,\.\-&()]{5,90}?(?:Corporation|Department|Ministry|Authority|Board|Limited|Ltd\.|Nigam|Vikas|Samiti|Paryatan|Mission)[A-Za-z0-9\s,\.\-&()]{0,30})/i,
+  // 9. Authentic Eligibility Extraction (Turnover, Experience, Net Worth)
+  let minTurnoverDisplay = "";
+  let minAnnualTurnoverINR = null;
+  const turnoverMatch = text.match(
+    /(?:Annual\s*turnover\s*from\s*[^\n\r]{0,60}?|Average\s*Annual\s*Turnover|Turnover\s*requirement)[\s:\.\-]*Rs\.?\s*([0-9,]+(?:\.[0-9]{1,2})?\s*(?:Cr(?:ore)?|Lakhs?|Lacs?))/i,
   );
-  if (orgMatchFull) {
-    let org = orgMatchFull[1].replace(/\s+/g, " ").trim();
-    org = org
-      .replace(
-        /(\s*,\s*)?(?:3\s*rd\s*Floor|6\s*th\s*Floor|Paryatan\s*Bhawan|Birsa\s*Munda|Dhurwa|Ranchi|Lucknow|Tel:|\d{6}).*$/i,
-        "",
-      )
-      .trim();
-    organization = org;
-  } else {
-    const orgMatch = text.match(
-      /(?:issued\s*by|organization|client|procuring\s*entity|department|corporation|authority|ministry)[\s:]*([^\n\r]{5,70})/i,
-    );
-    if (orgMatch) {
-      organization = orgMatch[1].trim();
-    }
+  if (turnoverMatch) {
+    minTurnoverDisplay = `₹${turnoverMatch[1].trim()}`;
+    const parsedTurnover = parseIndianCurrencyWords(turnoverMatch[1]);
+    if (parsedTurnover) minAnnualTurnoverINR = parsedTurnover;
   }
 
-  // 3. Tender Number Extraction
-  let tenderNo = `TDR-${Date.now().toString().slice(-6)}`;
-  const refNoMatch = text.match(
-    /(?:Reference\s*No\.?|Ref\.?\s*No\.?|RFP\s*No\.?|NIT\s*No\.?|Tender\s*(?:No\.?|Notice|Ref|Number|ID))\s*[:\-]?\s*([A-Za-z0-9\/\-_.]+)/i,
+  let minExperienceYears = null;
+  const expMatch = text.match(
+    /(?:minimum\s*([0-9]+)\s*[- ]year\s*experience|([0-9]+)\s*years?\s*experience)/i,
   );
-  if (refNoMatch && !refNoMatch[1].includes("____")) {
-    tenderNo = refNoMatch[1].trim();
-  } else {
-    const tenderNoMatch = text.match(
-      /(?:tender\s*(?:no|ref|id|notice|number)[\s:\.]*|nit\s*no[\s:\.]*|contract\s*no[\s:\.]*)([A-Z0-9\/\-_]{4,35})/i,
-    );
-    if (tenderNoMatch && !tenderNoMatch[1].includes("____")) {
-      tenderNo = tenderNoMatch[1].trim();
-    } else if (
-      text.toLowerCase().includes("adventure") &&
-      text.toLowerCase().includes("sports")
-    ) {
-      tenderNo = "UPSTDC/ADV-SPORTS/2025/01";
-    }
+  if (expMatch) {
+    minExperienceYears = parseInt(expMatch[1] || expMatch[2], 10);
   }
 
-  // 4. Value Match
-  const valueMatch = text.match(
-    /(?:estimated\s*(?:cost|value|budget)|tender\s*value|contract\s*value)[\s:\.]*(?:rs\.?|inr|₹)?\s*([0-9,]+(?:\.[0-9]{1,2})?\s*(?:cr(?:ore)?|lakhs?|million)?)/i,
+  // 10. Portal Detection (Dynamic extraction from URLs in document)
+  let portal = "";
+  const portalUrlMatch = text.match(
+    /(?:https?:\/\/)?([a-zA-Z0-9.-]+\.(?:gov\.in|nic\.in|tenderwizard\.com|gem\.gov\.in|eprocure\.gov\.in)(?:\/[a-zA-Z0-9_.-]+)?)/i,
   );
-  const estimatedValueDisplay = valueMatch
-    ? `₹${valueMatch[1].trim()}`
-    : "₹2.50 Crore (Estimated)";
-
-  // 5. EMD Match (prevent TOC dot leader matches like "EMD ..... 16")
-  let emdAmountINR = 50000;
-  let emdDisplay = "₹50,000";
-  const emdMatch =
-    text.match(
-      /(?:earnest\s*money\s*(?:deposit)?|emd)\s*(?:\(emd\))?[^\n\r\.]{0,40}?(?:rs\.?|inr|₹)\s*([0-9,]+)/i,
-    ) ||
-    text.match(
-      /(?:earnest\s*money\s*(?:deposit)?|emd)\s*(?:\(emd\))?\s*[:\-]?\s*(?:rs\.?|inr|₹)?\s*([0-9,]{4,10})/i,
-    );
-  if (emdMatch) {
-    const rawVal = parseInt(emdMatch[1].replace(/,/g, ""), 10);
-    if (!isNaN(rawVal) && rawVal >= 1000) {
-      emdAmountINR = rawVal;
-      emdDisplay = `₹${rawVal.toLocaleString("en-IN")}`;
-    }
+  if (portalUrlMatch) {
+    portal = portalUrlMatch[1].trim();
   }
-
-  // 6. Tender Fee Match
-  let tenderFeeINR = 5000;
-  const feeMatch = text.match(
-    /(?:Bid\s*fee|Tender\s*Cost|Bid\s*Document\s*Cost|Tender\s*Fee|Cost\s*of\s*Tender|Document\s*Fee|BOQ\s*Cost)[^\n\r]{0,35}?(?:Rs\.?|INR|₹)\s*([0-9,]+)/i,
-  );
-  if (feeMatch) {
-    const rawFee = parseInt(feeMatch[1].replace(/,/g, ""), 10);
-    if (!isNaN(rawFee) && rawFee >= 100) {
-      tenderFeeINR = rawFee;
-    }
-  }
-
-  // 7. Date Matching - Schedule Table & Notice Heuristics
-  // A. Submission Deadline
-  let submissionDeadline = null;
-  const deadlineRegex =
-    /(?:Bid\s*Submission\s*End\s*Date|Bid\s*Due\s*Date|Last\s*Date\s*(?:&|and)?\s*Time\s*for\s*(?:e-?\s*Bid\s*)?Submission|Last\s*Date\s*for\s*Submission|Tender\s*Closing\s*Date|Submission\s*End\s*Date|Bid\s*Closing\s*Date|Submission\s*Deadline)[\s:\.\-\n\r]*(?:Date\s*[:\-]?\s*)?([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4}|[0-9]{1,2}(?:st|nd|rd|th)?[\s\-\/\.][A-Za-z]+[\s\-\/\.][0-9]{2,4})(?:[\s,\n\r]+(?:Time\s*[:\-]?\s*)?(?:at|by)?\s*([0-9]{1,2}(?::[0-9]{2})?\s*(?:AM|PM|NOON|MIDNIGHT|Hours|Hrs)?))?/i;
-  const deadlineMatch = text.match(deadlineRegex);
-  if (deadlineMatch) {
-    const parsedIso = parseDateAndTimeToISO(
-      deadlineMatch[1],
-      deadlineMatch[2] || "",
-    );
-    if (parsedIso) {
-      submissionDeadline = parsedIso;
-    }
-  }
-  if (!submissionDeadline) {
-    // Default fallback 21 days from now
-    submissionDeadline = new Date(
-      Date.now() + 21 * 24 * 60 * 60 * 1000,
-    ).toISOString();
-  }
-
-  // B. Pre-Bid Meeting Date
-  let preBidMeetingDate = null;
-  const preBidRegex =
-    /(?:Pre\s*[-\s]?\s*Bid\s*(?:Meeting|Conference|Queries\s*Submission|Query))[\s:\.\-\n\r]*(?:Date\s*[:\-]?\s*)?([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4}|[0-9]{1,2}(?:st|nd|rd|th)?[\s\-\/\.][A-Za-z]+[\s\-\/\.][0-9]{2,4})(?:[\s,\n\r]+(?:Time\s*[:\-]?\s*)?(?:at|by)?\s*([0-9]{1,2}(?::[0-9]{2})?\s*(?:AM|PM|NOON|MIDNIGHT|Hours|Hrs)?))?/i;
-  const preBidMatch = text.match(preBidRegex);
-  if (preBidMatch) {
-    const parsedIso = parseDateAndTimeToISO(
-      preBidMatch[1],
-      preBidMatch[2] || "",
-    );
-    if (parsedIso) {
-      preBidMeetingDate = parsedIso;
-    }
-  }
-  if (!preBidMeetingDate) {
-    preBidMeetingDate = new Date(
-      Date.now() + 7 * 24 * 60 * 60 * 1000,
-    ).toISOString();
-  }
-
-  // C. Publish Date
-  let publishDate = new Date().toISOString().split("T")[0];
-  const pubRegex =
-    /(?:Date\s*of\s*Publishing|Date\s*of\s*Publication|Publication\s*Date|Publish\s*Date|NIT\s*Date|Bid\s*Download\s*Start\s*Date|Bid\s*submission\s*Start\s*Date|Date\s*[:\-])\s*([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4})/i;
-  const pubMatch = text.match(pubRegex);
-  if (pubMatch) {
-    const parsedIso = parseDateAndTimeToISO(pubMatch[1], "09:00 AM");
-    if (parsedIso) {
-      publishDate = parsedIso.split("T")[0];
-    }
-  }
-
-  // Formatted Due String for Header / Lists
-  const dueFormatted = new Date(submissionDeadline).toLocaleDateString(
-    "en-IN",
-    {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-  );
 
   return {
     tenderNumber: tenderNo,
     title,
     organization,
-    category: "IT / Enterprise Technology",
-    portal: text.includes("etender.up.nic.in")
-      ? "e-Tender UP (etender.up.nic.in)"
-      : "GeM / CPPP Portal",
-    estimatedValueINR: 25000000,
+    category: "Procurement / Services",
+    portal: portal || "e-Procurement Portal",
+    estimatedValueINR,
     estimatedValueDisplay,
     emdAmountINR,
     emdDisplay,
@@ -398,7 +585,14 @@ export function extractFallbackTenderData(text, fileName = "Tender_Doc") {
     submissionDeadline,
     preBidMeetingDate,
     due: dueFormatted,
-    scopeSummary: text.slice(0, 600).replace(/\s+/g, " ") + "...",
+    scopeSummary,
+    eligibilityCriteria: {
+      minAnnualTurnoverINR,
+      minTurnoverDisplay,
+      minExperienceYears,
+      requiredCertifications: [],
+      pastProjectRequirement: "",
+    },
   };
 }
 

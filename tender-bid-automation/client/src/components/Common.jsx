@@ -11,18 +11,12 @@ import {
 } from "lucide-react";
 
 export const navItems = [
-  // =========================================================================
-  // 🌟 AI AGENT MODE MENU
-  // =========================================================================
   {
-    label: "AI Mode",
-    path: "/ai-mode",
-    icon: Sparkles,
-    section: "Bid workspace",
-    badge: "AI 2.0",
+    label: "Overview",
+    path: "/overview",
+    icon: LayoutDashboard,
+    section: "Workspace",
   },
-  // =========================================================================
-  { label: "Overview", path: "/overview", icon: LayoutDashboard, section: "Workspace" },
   {
     label: "Company Vault",
     path: "/vault",
@@ -31,21 +25,55 @@ export const navItems = [
     badge: "96%",
   },
   {
-    label: "Tender Intake",
+    label: "Tenders Repository",
     path: "/intake",
     icon: FileText,
-    section: "Bid workspace",
-    badge: "3",
+    section: "Bid Operations",
   },
-  { label: "Eligibility", path: "/eligibility", icon: ShieldCheck, section: "Bid workspace" },
-  { label: "Payment Proof", path: "/payment-proof", icon: CreditCard, section: "Bid workspace" },
-  { label: "Proposal Desk", path: "/proposal-desk", icon: PenLine, section: "Bid workspace" },
   {
-    label: "PDF Binder",
-    path: "/pdf-binder",
+    label: "AI Mode",
+    path: "/ai-mode",
+    icon: Sparkles,
+    section: "Bid Operations",
+    badge: "AI 2.0",
+  },
+];
+
+export const tenderPipelineSteps = [
+  {
+    id: 1,
+    key: "overview",
+    label: "1. Overview & Scope",
+    subtitle: "Parameters & AI Copilot",
+    icon: FileText,
+  },
+  {
+    id: 2,
+    key: "eligibility",
+    label: "2. Eligibility & Gates",
+    subtitle: "Scorecard & Rules",
+    icon: ShieldCheck,
+  },
+  {
+    id: 3,
+    key: "payment",
+    label: "3. Payment Proof",
+    subtitle: "EMD & Cover-1 Slip",
+    icon: CreditCard,
+  },
+  {
+    id: 4,
+    key: "proposal",
+    label: "4. Proposal Desk",
+    subtitle: "AI Technical Drafts",
+    icon: PenLine,
+  },
+  {
+    id: 5,
+    key: "binder",
+    label: "5. PDF Binder",
+    subtitle: "Master Pack & Export",
     icon: Library,
-    section: "Bid workspace",
-    badge: "Draft",
   },
 ];
 

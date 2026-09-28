@@ -8,7 +8,8 @@ export const tenderAPI = {
   getAll: () => api.get('/tenders'),
   getById: (id) => api.get(`/tenders/${id}`),
   upload: (formData) => api.post('/tenders/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000
   }),
   createManual: (data) => api.post('/tenders/manual', data),
   update: (id, data) => api.put(`/tenders/${id}`, data),

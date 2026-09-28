@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
   AlertTriangle,
@@ -21,7 +22,12 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-import { StatusPill, IconButton, SectionTitle, pipeline } from "../components/Common";
+import {
+  StatusPill,
+  IconButton,
+  SectionTitle,
+  pipeline,
+} from "../components/Common";
 
 export default function Overview({
   tenders,
@@ -32,6 +38,7 @@ export default function Overview({
   setStage,
   onOpenUploadModal,
 }) {
+  const navigate = useNavigate();
   const [showAll, setShowAll] = useState(false);
 
   const actionItems = [
@@ -46,7 +53,7 @@ export default function Overview({
     {
       icon: CreditCard,
       title: "Add EMD payment proof",
-      text: `Tender ${activeTender?.tenderNumber || activeTender?.reference || "ELE.93/2024/2"} is waiting for its Cover-1 instrument.`,
+      text: `Tender ${activeTender?.tenderNumber || activeTender?.reference || activeTender?.title || "Active Tender"} is waiting for its Cover-1 instrument.`,
       tone: "blue",
       action: "Add proof",
       target: "Payment Proof",
@@ -85,7 +92,10 @@ export default function Overview({
           >
             <Copy size={16} /> Share workspace
           </button>
-          <button className="button button-primary cursor-pointer" onClick={onOpenUploadModal}>
+          <button
+            className="button button-primary cursor-pointer"
+            onClick={onOpenUploadModal}
+          >
             <Plus size={17} /> New tender
           </button>
         </div>
@@ -210,16 +220,16 @@ export default function Overview({
               )}
             </div>
             <h2>
-              {activeTender?.tenderNumber ||
-                activeTender?.reference ||
-                "ELE.93/2024/2"}{" "}
-              <span>·</span>{" "}
-              {activeTender?.title || "Digital Citizen Services Platform"}
+              {activeTender?.tenderNumber || activeTender?.reference ? (
+                <>
+                  {activeTender?.tenderNumber || activeTender?.reference}{" "}
+                  <span>·</span>{" "}
+                </>
+              ) : null}
+              {activeTender?.title || "Tender Overview"}
             </h2>
             <p>
-              {activeTender?.organization ||
-                activeTender?.authority ||
-                "Electronics & IT Department"}{" "}
+              {activeTender?.organization || activeTender?.authority || "-"}{" "}
               <span className="workflow-separator">·</span> Due{" "}
               {activeTender?.due ||
                 (activeTender?.submissionDeadline
@@ -230,7 +240,7 @@ export default function Overview({
                       month: "short",
                       year: "numeric",
                     })
-                  : "24 Sep 2026")}
+                  : "-")}
             </p>
           </div>
           <div className="workflow-actions">
@@ -314,8 +324,11 @@ export default function Overview({
           <button
             className="workflow-link cursor-pointer"
             onClick={() => {
-              setActive("Eligibility");
-              setStage(3);
+              if (activeTender?.id) {
+                navigate(`/intake/${activeTender.id}/eligibility`);
+              } else {
+                navigate("/intake");
+              }
             }}
           >
             Open bid workflow <ArrowUpRight size={16} />
@@ -359,7 +372,10 @@ export default function Overview({
               );
             })}
           </div>
-          <button className="text-button cursor-pointer" onClick={() => setShowAll((v) => !v)}>
+          <button
+            className="text-button cursor-pointer"
+            onClick={() => setShowAll((v) => !v)}
+          >
             {showAll ? "Show less" : "View all actions"}{" "}
             <ArrowUpRight size={15} />
           </button>
@@ -423,7 +439,7 @@ export default function Overview({
           action={
             <button
               className="button button-ghost cursor-pointer"
-              onClick={() => setActive("Tender Intake")}
+              onClick={() => navigate("/intake")}
             >
               View all tenders <ArrowUpRight size={15} />
             </button>
@@ -451,6 +467,7 @@ export default function Overview({
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       onSelectTender(row);
+                      navigate(`/intake/${row.id}/overview`);
                       toast.success(
                         `Active tender switched to: ${row.title || row.tenderNumber}`,
                       );
@@ -476,7 +493,7 @@ export default function Overview({
                         </div>
                       </div>
                     </td>
-                    <td>{row.organization || row.authority}</td>
+                    <td>{row.organization || row.authority || "-"}</td>
                     <td>
                       <span className="date-cell">
                         <CalendarDays size={14} />
@@ -489,7 +506,7 @@ export default function Overview({
                                 month: "short",
                                 year: "numeric",
                               })
-                            : "24 Sep 2026")}
+                            : "-")}
                       </span>
                     </td>
                     <td>
@@ -528,7 +545,7 @@ export default function Overview({
                         onClick={(e) => {
                           e.stopPropagation();
                           onSelectTender(row);
-                          setActive("Tender Intake");
+                          navigate(`/intake/${row.id}/overview`);
                           toast("Tender loaded in workspace", {
                             description: row.title,
                           });
