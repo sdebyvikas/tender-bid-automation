@@ -28,7 +28,7 @@ export async function parseTenderDocument(filePath, originalFilename) {
 
     if (ext === ".pdf") {
       const dataBuffer = fs.readFileSync(filePath);
-      
+
       // Only generate Base64 for Multimodal Gemini if file <= 15MB (Gemini 20MB inlineData limit safety)
       if (stats.size <= 15 * 1024 * 1024) {
         fileBase64 = dataBuffer.toString("base64");

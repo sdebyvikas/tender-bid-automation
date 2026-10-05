@@ -88,7 +88,213 @@
     "updatedAt": "2026-10-05T05:16:38.832Z",
     "__v": 6
   },
-  "tenders": [],
+  "tenders": [
+    {
+      "id": "tender_d552bf5a-1537-4661-abed-fbc81ae1cc03",
+      "tenderNumber": "SAJHA/69",
+      "title": "“Development of Integrated Website and Mobile",
+      "organization": "00 PM (Directorate of Sports",
+      "category": "Procurement / Services",
+      "portal": "e-Procurement Portal",
+      "estimatedValueINR": null,
+      "estimatedValueDisplay": "",
+      "emdAmountINR": null,
+      "emdDisplay": "",
+      "tenderFeeINR": null,
+      "publishDate": null,
+      "submissionDeadline": "2024-03-28T05:30:00.000Z",
+      "preBidMeetingDate": "2024-03-18T10:30:00.000Z",
+      "due": "28 Mar 2024, 11:00 am",
+      "scopeSummary": "",
+      "eligibilityCriteria": {
+        "minAnnualTurnoverINR": null,
+        "minTurnoverDisplay": "",
+        "minExperienceYears": null,
+        "requiredCertifications": [],
+        "pastProjectRequirement": ""
+      },
+      "complianceItems": [
+        {
+          "id": "comp_c2ab579c",
+          "clauseNo": "Clause 1.0",
+          "requirement": "Bidder must be a registered Indian legal entity with active PAN and GST registration in operational states.",
+          "category": "Eligibility",
+          "isMandatory": true,
+          "status": "Complied (Pass)",
+          "justification": "J fermst ANA AHR holds valid legal incorporation with active GSTIN (18AABCT1234F1ZP) and PAN.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Certificate of Incorporation & GST Certificate"
+        },
+        {
+          "id": "comp_1dcd1b1e",
+          "clauseNo": "Clause 2.0",
+          "requirement": "Average annual financial turnover from consulting/advisory services during last 3 FYs must meet mandatory RFP threshold.",
+          "category": "Financial",
+          "isMandatory": true,
+          "status": "Pending Verification",
+          "justification": "Audited financial statements and CA turnover certificate pending verification against RFP threshold.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "CA Turnover Certificate with UDIN & Audited Balance Sheets"
+        },
+        {
+          "id": "comp_b75d31ff",
+          "clauseNo": "Clause 3.0",
+          "requirement": "Bidder must have minimum 3 years of demonstrable track record in strategic planning, advisory, and stakeholder communications.",
+          "category": "Technical / Advisory",
+          "isMandatory": true,
+          "status": "Pending Verification",
+          "justification": "Track record and client credentials must be verified via attached completion certificates.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Client Work Orders & Completion Certificates"
+        },
+        {
+          "id": "comp_b7d4903e",
+          "clauseNo": "Clause 4.0",
+          "requirement": "Bidder must have successfully delivered at least 2 relevant advisory / strategy projects of scale in government or public sector.",
+          "category": "Technical / Advisory",
+          "isMandatory": true,
+          "status": "Pending Verification",
+          "justification": "Past project citations and client sign-off letters require document validation in vault.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Project Sign-off & Client Testimonials"
+        },
+        {
+          "id": "comp_33e8b303",
+          "clauseNo": "Clause 5.0",
+          "requirement": "Bidder must have dedicated team of qualified domain experts and strategists available for project deployment.",
+          "category": "Technical / Advisory",
+          "isMandatory": true,
+          "status": "Pending Verification",
+          "justification": "CV profiles of key personnel to be verified against RFP Terms of Reference requirements.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Key Personnel CVs & Deployment Undertaking"
+        },
+        {
+          "id": "comp_f88cdd33",
+          "clauseNo": "Clause 6.0",
+          "requirement": "Bidder must not be debarred or blacklisted by any Central/State Government Ministry, Department, or PSU.",
+          "category": "Regulatory",
+          "isMandatory": true,
+          "status": "Pending Verification",
+          "justification": "Duly notarized Non-Blacklisting Affidavit on stamp paper required as per prescribed Annexure.",
+          "deviationRemarks": "None",
+          "evidenceDoc": "Non-Blacklisting Affidavit (Annexure-A)"
+        }
+      ],
+      "detectedAnnexures": [
+        {
+          "formNumber": "Annexure-A",
+          "title": "& ANNEXURE 27",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-1",
+          "title": "Technical Bid Letter for Agency 27",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-2",
+          "title": "Self Declaration 29",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-3",
+          "title": "Format for Power of Attorney for Signing of Proposal 30",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-4",
+          "title": "BILL OF QUANTITIES 32",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-OF",
+          "title": "Demand Draft in favour of",
+          "description": "Mandatory tender submission document / undertaking"
+        },
+        {
+          "formNumber": "Annexure-AT",
+          "title": "(Given in RFP), duly filled by the bidder to be submitted al",
+          "description": "Mandatory tender submission document / undertaking"
+        }
+      ],
+      "keyRisks": [],
+      "hasBOQ": false,
+      "boqType": "Milestone / Retainer Based (No Itemized BOQ)",
+      "rawTextSnippet": "\n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 1 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \n \n \n \n \n \n \n \n \n \n \n \n \nReference No: SAJHA/69 \n \n \n \n \nRequest For Proposal (RFP): Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA) \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nSports Authority of Jharkhand (SAJHA) \nBirsa Munda Football Stadium, Morabadi, Ranchi - 834 008 \n \n \n \n \n \n \n \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 2 \n Application for Sports Authority of Jharkhand (SAJHA)     \nTable of Contents \n \n \nNotice For Request for Proposal 3 \n1. Introduction 5 \n2. Terms & Conditions 6 \n3. KEY DEFINITIONS: 7 \n4. Instruction to Bidders 7 \n5. ELIGIBILITY CRITERIA FOR BIDDER 16 \n6. Scope of Work: 17 \n8. PROPOSAL EVALUATION 19 \n9. Technical Bid Evaluation Criteria 19 \nTECHNICAL BID EVALUATION CRITERIA 19 \n10. EVALUATION OF FINANCIAL PROPOSALS 21 \n11. GENERAL TERMS & CONDITIONS 22 \n12. PERFORMA & ANNEXURE 27 \nAnnexure - 1: Technical Bid Letter for Agency 27 \nAnnexure - 2 : Self Declaration 29 \nAnnexure - 3 : Format for Power of Attorney for Signing of Proposal 30 \nAnnexure - 4: BILL OF QUANTITIES 32 \n  \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 3 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \nNotice For Request for Proposal \n \nSports Authority of Jharkhand (SAJHA) \nBirsa Munda Football Stadium, Morabadi, Ranchi - 834 008 \n \nRFP No: SAJHA/69                 Date:07/03/2024 \n \nSports Authority of Jharkhand invites sealed Bids under two bid-bases, i.e., Technical \nBid and Financial Bid from reputed Agencies for “Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA)”. \n \nDescription of work Location \nBid Document Cost \n(Non-Refundable) \nEarnest Money Deposit \n(Rs.) (Refundable) \nPeriod of \nContract \n“Selection of Agency for the \nDevelopment of Integrated \nWebsite and Mobile Application \nfor Sports Authority of Jharkhand \n(SAJHA)” \nSports Authority of \nJharkhand, First floor, \nGate No.-28/29, Birsa \nMunda Football \nStadium, Morabadi, \nRanchi. \n₹25,000/- \n \n[Rupees Twenty-Five \nThousand Only] \n \nBOQ cost in the form of \nDemand Draft in favour of   \n\"Sports Authority of \nJharkhand, Morabadi\" \nPayable at Ranchi. \n₹5,00,000/- \n(Rupees Five Lakh Only) \nEMD in the form of Demand \nDraft in favour of   Sports \nAuthority of Jharkhand, \nMorabadi Payable at Ranchi. \n3 Years \nfrom LOA, \nSubject to \nextension. \n \n \n1. Time Schedule of Tender \n \n \nS.No. Particulars Date \n1 Name of RFP \nRequest For Proposal (RFP): Development of Integrated Website and \nMobile Application for Sports Authority of Jharkhand (SAJHA) \n2 Type of RFP \nOpen Tender \n3 \nLast date for sending queries \nto SAJHA Office \nDate: 15.03.2024, Time: 11:00 AM \nQueries may be sent by email to: sajha9@gmail.com \n4 Pre - bid meeting \nDate: 18.03.2024, Time: 04:00 PM \nLink will be provided on the website. \n5 Bid Due Date Date: 28.03.2024, Time: 11:00 AM \n6 Opening of Technical Bid \nDate: 28.03.2024, Time: 04:00 PM \n(Directorate of Sports & Youth Affairs cum Sports Authority of \nJharkhand, Birsa Munda Football Stadium, Gate No: 28/29, Morabadi, \nRanchi, Jharkhand - 834 008. \n7 Opening of Financial Bid After Technical Bid evaluation. \n8 \nEarnest Money Deposit \n(EMD) \nBID SECURITY DECLARATION as per the above table in prescribed \nformat (Given in RFP), duly filled by the bidder to be submitted along with \nbid document. \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 4 \n Application for Sports Authority of Jharkhand (SAJHA)     \n1. Tender documents can be downloaded from the SAJHA Website (www.sajha.in) from \n08.03.2024 10:00 AM onwards.  \n2. The interested bidders should submit their bids in SAJHA office by Hand/Registered \nPost/ Speed Post before the prescribed time. Details regarding the tender can be \naccessed through the RFP document as uploaded on the website. \n3. Sports Authority of Jharkhand (SAJHA) reserves the right to cancel the bid at any time \nor amend/ withdraw any ion the terms and conditions in the RFP Document without \nassigning any reason thereof.  \n \nSd/- \nExecutive Director, \nSports Authority of Jharkhand. \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 5 \n Application for Sports Authority of Jharkhand (SAJHA)     \n1. Introduction  \n \nAbout Sports Authority of Jharkhand \n \nSports Authority of Jharkhand, (A Unit of Jharkhand Government) was incorporated on \n07.06.2006 by Department of Sports to promote Sports in the State of Jharkhand. SAJHA \nhas played a greater role for development of sports in Jharkhand State. This is important \nthat the SAJHA is supported by the government in the form of share capital and grants. \nThe main objective of the SAJHA is: \n \nA. To promote and develop the sports activities and to prepare the concerned policies \nin the light of sports policy of Jharkhand Government, and to implement them in \nJharkhand for the sake of improving sports level. \n \nB. To instill a sense of health consciousness and physical well-being in the minds of \npublic and to provide opportunities to and create awareness among all the age group \nto attain physical fitness through sports, yoga, and other such techniques. \n \nC. To give advice to the State Government for the growth of sports and thereby \nimplement them with the help of state government. \n \nD. To implement the policies proposed by Jharkhand Government. Government of \nIndia, or other such organisation for the development of sports with the passage of \ntime. \n \nE. To prepare proposal for providing sports facilities and structure, land sports field, and \naccommodation for the players, coach, and authorities and to develop, build up, \nprocure, and take under the its purview, manage, conserve and make the optimal \nuse of the aforesaid entities. \n \nF. To organise competition, sports exhibition, training camps and other such sports \nactivities that encourage sports, sportsperson and physical well-being and also make \nthem easily accessible to public on single point responsibility basis or with the help \nof other organisations. \n \nG. Inception of sports organisation, management of new as well as existing organisation \nand to give direction for accomplishment of objectives. \n \nH. To establish coordination and cooperation with the Indian Olympic association, \nnational sports association and other such organisation on the state and district basis \nfor the development of sports and betterment of sportsperson. \n \nI. To encourage, promote and conduct research for the sports, techniques of sports, \nphysiotherapy, biochemistry, psychology, sports diet, and manufacturing of \nequipment for sports. \n \nJ. To provide training and the required facilities for physical education, sports punch, \nsports medicine and other such techniques which are a part of sports and physical \neducation. \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 6 \n Application for Sports Authority of Jharkhand (SAJHA)     \n2. Terms & Conditions  \n \na. Due Diligence \n \nThe Bidder is expected to and shall be deemed to have examined all instructions, forms, \nterms and specifications and other information in this Tender Document. The bid should \nbe precise, complete and in the prescribed format as per the requirement of the Tender \nDocument. Failure to furnish all information required by the Tender Document or \nsubmission of a bid not responsive to the Tender Document in every respect will be at \nthe Bidder’s risk and may result in rejection of the bid. Sports Authority of Jharkhand \n(SAJHA) shall at its sole discretion be entitled to determine the adequacy/ sufficiency of \nthe information provided by the Bidder. \n \nb. Cost of Bidding \n \nThe Bidder will bear all costs associated with the preparation and submission of its bid \nand Sports Authority of Jharkhand (SAJHA) will in no event or circumstance be held \nresponsible or liable for these costs, regardless of the conduct or outcome of the bidding \nprocess. \n \nc. Bid Submission \n \nSeparate Sealed envelope offers prepared in accordance with the procedure \nenumerated in the RFP document should be submitted to Executive Director, Sports \nAuthority of Jharkhand, Birsa Munda football stadium Morabadi, Ranchi not later than \nthe date and time laid down, at the address given in the schedule for invitation for BID. \n \n• All bids must be accompanied by a non-refundable Bid fee/Tender Cost INR Rs. \n25,000/- (Rupees Twenty-Five Thousand Only) in form of Bank Draft and Earnest \nMoney Deposit (EMD) of INR 5,00,000 /- (Rupees Five Lakhs Only) in the form of \nDemand Draft valid for period of 3 months.  \n \n• The tenders will be opened on the date and time indicated in the presence of \nBidders if any present on the occasion. If the date of opening is declared to be a \nholiday the tenders will be opened on the next working day or as decided by \nauthority. \n \n• This tender document is not transferable. \n \nd. DELIVERY PERIOD \n \na. Development of the website and application shall be completed within 150 days \n(Phase I) of the date of the Award of Word-Order for this tender. \n \nb. Place of development and operation of the Website & Application: \nDIRECTORATE OF SPORTS AND YOUTH AFFAIRS CUM SPORTS \nAUTHORITY OF JHARKHAND, RANCHI, JHARKHAND. \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 7 \n Application for Sports Authority of Jharkhand (SAJHA)     \n3. KEY DEFINITIONS: \n \nIn this document, unless otherwise mentioned or expressed clearly, the terms ‘Competent \nAuthority’, ‘Tenderer’, ‘Bidder’, ‘Committee ’and ‘Supply of Equipment’s ’would have \nmeanings as given below: \n \na. Competent Authority: Sports Authority of Jharkhand acting through: \n1. Executive Director, Sports Authority of Jharkhand \n \nb. Bidder: The Firm/Company who buys the tender document, signs, and submits \nthe Tender document and bids for the contract and/or awarded the Contract to \nimplement Tender for “Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA)”, as the reference may \nindicate; it shall also include associates, license, collaborator, and agents. \n \nc. Supply: Supply of all the components of “Development of Integrated Website and \nMobile Application for Sports Authority of Jharkhand (SAJHA)” as per the \nTechnical Specifications specified in this document, for use in Sports Authority \nof Jharkhand \n \nd. Warranty: Warranty of all components of “Development of Integrated Website \nand Mobile Application for Sports Authority of Jharkhand (SAJHA)”, conditions \nand period of which are mentioned in the detail technical specification of items. \nThe period is specifically mentioned which would be deemed to be for one year \nfrom the date of installation of the item by the Tenderer at the desired places in \nthe areas of Sports Authority of Jharkhand. \n \ne. Maintenance : Maintenance of the components of “Development of Integrated \nWebsite and Mobile Application for Sports Authority of Jharkhand (SAJHA)” will \nbe for the period of 03 (Three) Years, from the date of Letter of Award. \n \nf. Purchaser: Purchaser means Sports Authority of Jharkhand acting through \nExecutive Director, Sports Authority of Jharkhand. \n \ng. Vendor: Tenderer who has been declared the successful tenderer (bidder) and \nhas been offered to enter into the agreement with the purchaser and who has \nentered into the agreement to execute the work/provide goods and services within \nthe scope of this tender. \n \n4. Instruction to Bidders \n \n   Detailed instruction & documents to be furnished for bidding \n \na) Interested bidders can download the bid documents from the website www.sajha.in  \n \nb) The bidders are required to submit the hardcopy (seal and signed) of the technical \nbid documents latest by the last date and time of submission of bids. Sports \nAuthority of Jharkhand will accept the hard copy of bid documents as authentic and \nfinal. This shall be binding to all parties. \n \nc) Bids will be opened as per time schedule mentioned. \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 8 \n Application for Sports Authority of Jharkhand (SAJHA)     \nd) Bidders have to submit original Demand Draft towards Tender Fee & Bids \nSecurity/EMD as mentioned in the RFP during the period & time as mentioned in \nthe RFP failing which bid will not be accepted. \n \ne) Provided documents of successful bidder will be verified with the original before \nsigning the agreement. The successful bidder has to provide the originals to the \nconcerned authority. \n \nf) Sports Authority of Jharkhand will not be responsible for delay in submission of bids \ndue to any reason, what so ever. \n \ng) All required information for bid must be filled and submitted. \n \n       Submission of Proposals \n  \n  The Agency shall be required to submit a Technical & Financial Bid in separate \nsealed envelopes put in a bigger sealed envelopes super scribed as “RFP for  –\n“Development of Integrated Website and Mobile Application for Sports Authority of \nJharkhand (SAJHA)” \n \nBids should be submitted in hard copy to be delivered by Courier/Registered \nPost/Speed Post/Hand delivery at Sports Authority of Jharkhand office up to \n28.03.2024, 11:00 AM on the Proposal Due Date as indicated. The documents \naccompanying the Proposal(s) submission shall include: \n \nA. “Technical Proposal”, consisting of the following: (Envelope-1) \n \na. Technical Bid Letter in the prescribed format at Annexure - I; \nb. Self-declaration in the prescribed format at Annexure –2 for not being \nblacklisted. \nc. Power of Attorney for signing of Proposal in the prescribed format at \nAnnexure – 3; \nd. In case of a company, copy of the Certificate of Incorporation, Copy of \nMemorandum and Articles of Association of the Bidder. \ne. In case of a Limited Liability Partnership firm, it should furnish copy of \nregistration certificate as a proof of identity. \nf. In case of a registered partnership firm, it should furnish a copy of the IT \nreturns/ copy of the registration certificate under the registrar of firms. \n \nB. “Financial Proposal:- (Envelope-2) \n \na. The Financial Proposal in the prescribed format at Annexure – 4, on the letter \nhead of the Bidder and signed by the authorised signatory. \n \nThe Financial Proposal should specify the amount of service fee (the “Service Fee” \ninclusive of all applicable taxes of work required by the Agency for undertaking the \nServices. The Financial Proposal clearly indicating the total Service Fee of work in \nboth figures and words, and signed by the Agency’s Authorised Representative. In \nthe event of any difference between figures and words, the amount indicated in \nwords shall prevail. \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 9 \n Application for Sports Authority of Jharkhand (SAJHA)     \nBidders may note that Sports Authority of Jharkhand will not entertain any \ndeviations to the RFP at the time of submission of the Proposal or thereafter. The \nProposal to be submitted by the Bidders should have to be unconditional and \nunqualified and the Bidders would be deemed to have accepted the terms and \nconditions of the RFP. Any conditional Proposal shall be regarded as non-\nresponsive and would be liable for rejection. \n \nExecutive Director, Sports Authority of Jharkhand reserves the right to seek original \ndocuments for verification of any of the documents or any other additional \ndocuments upon opening of the Bidding Documents. \n \nFormat and Signing of Proposal \n \nBidders would provide all the information as per this RFP in the specified format(s).  \nExecutive Director, Sports Authority of Jharkhand would evaluate only those \nProposals that are received in the required format and complete in all respects. \nIncomplete and/or conditional Proposals shall be liable to rejection. \n \nAll the documents of the Proposal under this RFP shall be typed or written in \nindelible ink and signed by the authorised signatory of the Bidder who shall also \ninitial each page. All the alterations, omissions, additions or any other amendments \nmade to the Proposal shall be initialed by the person(s) signing the Proposal. The \nperson signing the Proposal shall initial all the alterations, omissions, additions, or \nany other amendments made to the Proposal.  \n \nNumber of Proposals \n \n A bidder can submit one proposal at a time. Bidder submitting more than one \nproposal shall be rejected \n \nLanguage of Bid \n \n All proposals and various documents related to these proposals should be in English \nlanguage. All correspondence between Sports Authority of Jharkhand and the Bidders \nwould also be in English Language. Supporting Documents and Printed Literature \nfurnished by the Bidders may be in another Language provided they are accompanied \nby an accurate translation in English Language. \n \nConflict of Interest \n \nSports Authority of Jharkhand (SAJHA) requires that bidder must provide professional, \nobjective and impartial advice and at all times hold Sports authority of Jharkhand \n(SAJHA) interest’s paramount, strictly avoid conflicts with other assignments/jobs or their \nown corporate interests and act without any consideration for future work. In case the \nBidders have any subsisting interest, either by themselves or through their partners, that \nis likely to conflict the work specified in the Scope of Work, they shall declare such \ninterests as part of their proposal. \n \nValidity of Proposals (RFP) \n \n• The bid shall be valid for a period of 180 days from the closing date for \nsubmission of the bid. \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 10 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \n• In exceptional circumstances, prior to the expiration of the RFP (Tender) \nvalidity, the RFP inviting authority may request the bidders to extend the RFP \nvalidity for further period as deemed fit/appropriate. The request and the \nresponses there to shall be made in writing. A bidder may refuse the request \nwithout forfeiting its EMD. A bidder agreeing to the request will not be required \nor permitted to modify its RFP.  \n \n     Right to accept Proposal \n \n Sports Authority of Jharkhand reserves the right to accept or reject any Proposal, and \nto annul the Proposal process and reject all Proposals at any time prior to award of contract, \nwithout thereby incurring any liability to the affected bidder or any obligation to inform the \naffected bidder of the grounds for such decision. \n \nBid Opening \n \nSports Authority of Jharkhand will open all proposals, in the presence of bidders or their \nauthorised representatives who choose to attend, at the date and time mentioned in the \nRFP. \n \nThe bidders ’representatives who are present shall sign a register evidencing their \nattendance. In the event of the specified date being declared a holiday, the RFPs shall be \nopened at the appointed time and location on the next working day. \n \nFraud & Corruption \n \nSports Authority of Jharkhand requires that bidder is bidding for this RFP must observe the \nhighest standards of ethics during the performance and execution of such contract. \n \n✓ “Corrupt practice” means the offering, giving, receiving or soliciting of anything \nof value to influence the action of Sports Authority of Jharkhand official by any \npersonnel of bidder in procurement process or in contract execution. \n \n✓ “Fraudulent practice” means a misrepresentation of facts, in order to influence \na procurement process or the execution of a contract, to the detriment of \nSports Authority of Jharkhand and includes collusive practices among the \nbidders (prior to or after Proposal submission) designed to establish bids at \nartifi",
+      "documentMeta": {
+        "fileName": "1791180597850-679052949-1-RFP-for-Development-of-Integrated-Website-and-Mobile-Application-for-SAJHA (1).pdf",
+        "fileType": ".pdf",
+        "fileSizeBytes": 612872,
+        "pageCount": 32,
+        "isScanned": false,
+        "detectedSections": [
+          "Eligibility Criteria",
+          "Scope of Work",
+          "Terms and Conditions",
+          "Liquidated Damages & Penalties",
+          "Payment Milestones",
+          "EMD & Bid Security",
+          "BOQ / Financial Schedule",
+          "Submission Guidelines",
+          "Annexures & Undertakings",
+          "Mandatory Declarations"
+        ]
+      },
+      "uploadedFileName": "1-RFP-for-Development-of-Integrated-Website-and-Mobile-Application-for-SAJHA (1).pdf",
+      "status": "In Analysis",
+      "priority": "Medium",
+      "goNoGoAnalysis": {
+        "source": "AI Generated (Bid Intelligence Engine)",
+        "isCalculatedMetric": true,
+        "disclaimer": "Win Probability and Overall Score are AI-estimated predictive analytics based on qualification matching, not direct statements from the tender document.",
+        "decision": "GO",
+        "winProbability": 73,
+        "overallScore": 77,
+        "financialFitScore": 85,
+        "technicalFitScore": 80,
+        "experienceScore": 65,
+        "riskScore": 20,
+        "recommendationSummary": "Strong GO recommendation. With an overall qualification score of 77% and estimated Win Probability of 73%, the bidder profile satisfies technical, financial, and eligibility thresholds for \"“Development of Integrated Website and Mobile\".",
+        "swot": {
+          "strengths": [
+            "Bidder maintains strong financial solvency with certified turnover records (₹16.20 Cr).",
+            "No mandatory ISO / restrictive quality certifications mandated by RFP."
+          ],
+          "weaknesses": [
+            "Relevant past project completion certificates need to be uploaded to Company Vault."
+          ],
+          "opportunities": [
+            "Expansion of enterprise solution footprint with potential for long-term support & expansion.",
+            "Enhanced government reference credential for large-scale turnkey execution."
+          ],
+          "threats": [
+            "Execution and supply chain delivery milestone compliance."
+          ]
+        },
+        "keyClauses": [
+          {
+            "title": "Liquidated Damages (LD)",
+            "description": "Standard penalty for operational delay as specified in tender conditions.",
+            "riskLevel": "Medium"
+          },
+          {
+            "title": "Payment Milestones",
+            "description": "Disbursements structured against phased delivery milestones and satisfactory acceptance.",
+            "riskLevel": "Low"
+          }
+        ]
+      },
+      "boqItems": [],
+      "proposals": {
+        "executiveSummary": "J fermst ANA AHR is pleased to submit this comprehensive proposal in response to RFP SAJHA/69 for \"“Development of Integrated Website and Mobile\".",
+        "technicalApproach": "Our technical approach utilizes modular, standards-compliant architecture designed for high availability, security, and SLA excellence.",
+        "implementationPlan": "Phase 1: Mobilization & System Requirements (Weeks 1-3)\nPhase 2: Deployment & Configuration (Weeks 4-12)\nPhase 3: Integration & Testing (Weeks 13-16)\nPhase 4: Go-Live & SLA Handover (Weeks 17-20)"
+      },
+      "createdAt": "2026-10-05T06:10:04.912Z",
+      "updatedAt": "2026-10-05T06:10:04.912Z"
+    }
+  ],
   "settings": {
     "defaultCurrency": "INR",
     "defaultMarginPercent": 18,
