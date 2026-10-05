@@ -69,6 +69,10 @@ const TenderSchema = new mongoose.Schema(
       default: () => ({}),
     },
     complianceItems: [ComplianceItemSchema],
+    teamStructure: {
+      type: mongoose.Schema.Types.Mixed,
+      default: () => ({}),
+    },
     boqItems: [BOQItemSchema],
     proposals: {
       type: mongoose.Schema.Types.Mixed,

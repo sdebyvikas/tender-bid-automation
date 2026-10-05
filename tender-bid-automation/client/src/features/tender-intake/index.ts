@@ -8,3 +8,6 @@ export { TenderOverviewStep } from "./components/TenderOverviewStep";
 export { TenderStepFooter } from "./components/TenderStepFooter";
 export { TenderRepositoryTable } from "./components/TenderRepositoryTable";
 export { TenderCopilotDrawer } from "./components/TenderCopilotDrawer";
+export { TenderWinBoosterCard } from "./components/TenderWinBoosterCard";
+
+export { TenderAIAdvisoryCard } from "./components/TenderAIAdvisoryCard";

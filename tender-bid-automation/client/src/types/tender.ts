@@ -4,7 +4,12 @@ export interface ComplianceItem {
   requirement: string;
   category?: string;
   isMandatory?: boolean;
-  status?: "Complied" | "Partially Complied" | "Deviation" | "Not Complied" | string;
+  status?:
+    | "Complied"
+    | "Partially Complied"
+    | "Deviation"
+    | "Not Complied"
+    | string;
   justification?: string;
   deviationRemarks?: string;
   evidenceDoc?: string;
@@ -62,7 +67,13 @@ export interface EligibilityCriteria {
 export interface PaymentProof {
   referenceNumber?: string;
   bankName?: string;
-  paymentMode?: "NEFT" | "RTGS" | "UPI" | "Demand Draft" | "Bank Guarantee" | string;
+  paymentMode?:
+    | "NEFT"
+    | "RTGS"
+    | "UPI"
+    | "Demand Draft"
+    | "Bank Guarantee"
+    | string;
   amountINR?: number;
   amountDisplay?: string;
   transactionDate?: string;
@@ -93,6 +104,21 @@ export interface ProposalSections {
   [key: string]: string | undefined;
 }
 
+export interface TeamUnit {
+  teamName: string;
+  resourceCount: number;
+  roles?: string[];
+  description?: string;
+  [key: string]: any;
+}
+
+export interface TeamStructure {
+  totalResources?: number;
+  deploymentSummary?: string;
+  teams?: TeamUnit[];
+  [key: string]: any;
+}
+
 export interface Tender {
   _id?: string;
   id: string;
@@ -112,8 +138,25 @@ export interface Tender {
   submissionDeadline?: string;
   preBidMeetingDate?: string;
   due?: string;
-  status?: "In Analysis" | "Eligible" | "Bid Prepared" | "Submitted" | "Won" | "Lost" | "Archived" | string;
-  statusType?: "green" | "emerald" | "amber" | "yellow" | "red" | "blue" | "purple" | "gray" | string;
+  status?:
+    | "In Analysis"
+    | "Eligible"
+    | "Bid Prepared"
+    | "Submitted"
+    | "Won"
+    | "Lost"
+    | "Archived"
+    | string;
+  statusType?:
+    | "green"
+    | "emerald"
+    | "amber"
+    | "yellow"
+    | "red"
+    | "blue"
+    | "purple"
+    | "gray"
+    | string;
   priority?: "High" | "Medium" | "Low" | string;
   score?: number;
   technicalWeightage?: string;
@@ -130,6 +173,7 @@ export interface Tender {
   eligibilityCriteria?: EligibilityCriteria | Record<string, any>;
   goNoGoAnalysis?: GoNoGoAnalysis | Record<string, any>;
   complianceItems?: ComplianceItem[];
+  teamStructure?: TeamStructure;
   boqItems?: BOQItem[];
   proposals?: ProposalSections | Record<string, any>;
   paymentProof?: PaymentProof | null;

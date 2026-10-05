@@ -78,7 +78,7 @@ export const TenderRepositoryTable: React.FC<TenderRepositoryTableProps> = ({
       )}
 
       {/* Summary Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5">
+      {/* <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
           <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
             Total Ingested
@@ -116,7 +116,7 @@ export const TenderRepositoryTable: React.FC<TenderRepositoryTableProps> = ({
             High eligibility match
           </span>
         </div>
-      </div>
+      </div> */}
 
       {/* Table Container Panel */}
       <section className="panel tenders-panel bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">

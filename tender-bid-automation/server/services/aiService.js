@@ -5,48 +5,58 @@ import {
 } from "./documentParser.js";
 
 /**
- * AI Document Ingestion & Metadata Analysis
+ * Smart Universal Document Context Assembler for 50–150+ Page RFPs
+ * Never misses substantive chapters by scanning beyond Table of Contents.
  */
 function buildSmartDocumentContext(rawText) {
   if (!rawText) return "";
-  if (rawText.length <= 60000) {
+  if (rawText.length <= 90000) {
     return rawText;
   }
-
-  // Smart Context Assembler for 80-100+ page documents:
-  // 1. First 20,000 chars: NIT notice, important dates schedule, issuing entity, project title
-  const headerSection = `=== [STARTING PAGES: NIT & SCHEDULE] ===\n${rawText.slice(0, 20000)}`;
-
-  // 2. Middle page extraction: Eligibility, Turnover, Penalties, SLA, Scope
+  // 1. First 22,000 chars: NIT notice, important dates schedule, issuing entity, project title
+  const headerSection = `=== [STARTING PAGES: NIT & SCHEDULE OF DATES] ===\n${rawText.slice(0, 22000)}`;
+  // 2. Substantive Section Scanning (Targeting real chapters beyond Index/TOC)
   const middleSections = [];
-  const middlePatterns = [
+
+  // Ignore the first 6,000 characters when matching section bodies (to bypass Page 2 Index/TOC)
+  const bodyText = rawText.slice(5000);
+  const chapterPatterns = [
     {
-      name: "ELIGIBILITY & TURNOVER",
+      name: "SECTION-IV: BIDDER'S ELIGIBILITY & PRE-QUALIFICATION CRITERIA",
       regex:
-        /(?:eligibility\s*criteria|pre-?qualification|turnover\s*requirement|minimum\s*qualification)[\s\S]{100,10000}/i,
+        /(?:SECTION\s*[-–IVX\d]*\s*[:\-]?\s*(?:BIDDER['’]?S\s*)?(?:ELIGIBILITY|PRE-?QUALIFICATION|QUALIFYING\s*CRITERIA)|ELIGIBILITY\s*CRITERIA\s*AND\s*METHOD\s*OF\s*SELECTION|BIDDER['’]?S\s*ELIGIBILITY\s*CRITERIA)[\s\S]{200,25000}/i,
     },
     {
-      name: "PENALTIES, SLA & PAYMENTS",
+      name: "TECHNICAL EVALUATION CRITERIA & QCBS SCORING",
       regex:
-        /(?:liquidated\s*damages|penalt(?:y|ies)|sla\s*requirements|payment\s*milestones)[\s\S]{100,8000}/i,
+        /(?:TECHNICAL\s*EVALUATION\s*CRITERIA|EVALUATION\s*OF\s*BIDS\s*AND\s*SELECTION|CRITERIA\s*FOR\s*EVALUATION)[\s\S]{200,18000}/i,
     },
     {
-      name: "SCOPE & DELIVERABLES",
+      name: "TERMS OF REFERENCE (TOR) & SCOPE OF WORK",
       regex:
-        /(?:scope\s*of\s*work|technical\s*specifications|key\s*deliverables)[\s\S]{100,10000}/i,
+        /(?:SECTION\s*[-–IVX\d]*\s*[:\-]?\s*(?:TERMS\s*OF\s*REFERENCE|SCOPE\s*OF\s*WORK)|TERMS\s*OF\s*REFERENCE\s*\(TOR\)\s*AND\s*SCOPE\s*OF\s*WORK|SCOPE\s*OF\s*WORK\s*\(SOW\))[\s\S]{200,25000}/i,
+    },
+    {
+      name: "PAYMENT TERMS, SLA & LIQUIDATED DAMAGES",
+      regex:
+        /(?:PAYMENT\s*TERMS\s*WILL\s*BE\s*AS\s*UNDER|SERVICE\s*LEVEL\s*STANDARD\s*AND\s*PENALTY|LIQUIDATED\s*DAMAGES|PENALTY\s*CLAUSE)[\s\S]{200,12000}/i,
+    },
+    {
+      name: "PROPOSED TEAM STRUCTURE & KEY PERSONNEL DEPLOYMENT",
+      regex:
+        /(?:PROPOSED\s*TEAM\s*STRUCTURE|MANPOWER\s*REQUIREMENTS|KEY\s*PERSONNEL\s*DEPLOYMENT|PROJECT\s*TEAM\s*COMPOSITION|MINIMUM\s*MANPOWER)[\s\S]{200,15000}/i,
     },
   ];
-
-  middlePatterns.forEach((pat) => {
-    const match = rawText.match(pat.regex);
+  chapterPatterns.forEach((pat) => {
+    const match = bodyText.match(pat.regex);
     if (match) {
-      middleSections.push(`=== [MIDDLE SECTION: ${pat.name}] ===\n${match[0]}`);
+      middleSections.push(
+        `=== [SUBSTANTIVE SECTION: ${pat.name}] ===\n${match[0]}`,
+      );
     }
   });
-
   // 3. Ending 25,000 chars: Annexure formats, Manufacturer Authorizations, Non-Blacklisting declarations
   const endSection = `=== [END PAGES: ANNEXURES & STATUTORY FORMATS] ===\n${rawText.slice(-25000)}`;
-
   return [headerSection, ...middleSections, endSection].join(
     "\n\n--------------------------------------------\n\n",
   );
@@ -64,44 +74,58 @@ export async function analyzeTenderWithAI(
     const isScanned = options.isScanned || false;
     const fileBase64 = options.fileBase64 || null;
     const companyProfile = options.companyProfile || null;
+    const uploadedDocsList = (companyProfile?.statutoryDocuments || [])
+      .filter((d) => d.tag === "Verified" || d.fileName)
+      .map((d) => `"${d.name}" (${d.category || "General"}, File: ${d.originalName || d.fileName || "Uploaded"})`)
+      .join(", ");
 
     const companyContextStr = companyProfile
       ? `Bidder Company Profile:
 - Company Name: ${companyProfile.name || "Bidder Entity"}
-- CIN / Legal: ${companyProfile.cin || "Active MCA Registration"}
-- Annual / Avg Turnover: ${companyProfile.annualTurnover?.[0]?.amountDisplay || (companyProfile.averageTurnoverINR ? `₹${(companyProfile.averageTurnoverINR / 10000000).toFixed(2)} Cr` : "Verified in Vault")}
-- Net Worth: Positive net worth certified by CA
-- Technical Manpower: In-house certified engineers (B.Tech / MCA)
-- Active Certifications: ${(companyProfile.certifications || []).join(", ") || "ISO 9001:2015, ISO 27001:2022, CMMI"}
-- Statutory: Active PAN (${companyProfile.pan || "Active"}), GSTIN (${companyProfile.gstin || "Active"}), ESI, EPF`
-      : "Bidder: Reputed Indian IT Solutions & Systems Integration Company with active MCA, PAN, GSTIN, and multi-crore enterprise delivery credentials.";
+- CIN / Registration No: ${companyProfile.cin || companyProfile.registrationNo || "Not Verified"}
+- PAN Number in Profile: ${companyProfile.pan || "Not Provided"}
+- GSTIN in Profile: ${companyProfile.gstin || "Not Provided"}
+- Annual / Average Turnover in Profile: ${companyProfile.annualTurnover?.[0]?.amountDisplay || (companyProfile.averageTurnoverINR ? `₹${(companyProfile.averageTurnoverINR / 10000000).toFixed(2)} Cr` : "Not Provided")}
+- ACTUALLY UPLOADED & VERIFIED PHYSICAL DOCUMENTS IN COMPANY VAULT: [ ${uploadedDocsList || "PAN CARD only (No other certificates uploaded)"} ]
 
+STRICT VAULT VERIFICATION RULES (NEVER ASSUME VERIFIED UNLESS PHYSICAL FILE IS IN VAULT):
+- ONLY mark a clause as "Complied (Pass)" if its required physical document (e.g. "PAN CARD") is ACTUALLY present in the list of UPLOADED & VERIFIED PHYSICAL DOCUMENTS IN COMPANY VAULT above!
+- If a requirement demands a physical certificate/letter (such as GST Registration Certificate, ESI Certificate, EPF Certificate, CA Audited Balance Sheet with UDIN, CA Net Worth Certificate, Manpower Appointment Letters, Incorporation Certificate, Non-Debarment Affidavit) and that document file is NOT in the uploaded list above:
+  -> You MUST set "status": "Pending Verification" (or "Not Met").
+  -> In "justification", explicitly state: "Physical [Document Name] is not uploaded in Company Vault. Upload required in Vault to achieve Pass status."`
+      : "Bidder: Indian Commercial Entity. No verified statutory documents uploaded in Vault.";
     const systemPrompt = `You are an elite Government Procurement & Bid Automation Analyst. 
-Analyze the provided Tender / RFP document (which is a complete tender document PDF) and extract complete bid parameters and the FULL Eligibility Matrix.
-
-CRITICAL EXTRACTION RULES:
-- "title": Extract the full specific project/work title (e.g. "Selection of Agency for Strategy, Planning and Advisory Consultancy"), NOT generic strings like "REQUEST FOR PROPOSAL" or "RFP".
-- "organization": Extract the full exact issuing Government Ministry, Department, PSU, or Authority (e.g. "DEPARTMENT OF INFORMATION & PUBLIC RELATIONS (DIPR)"). Avoid OCR slips (e.g. "Public Relations", NOT "Public Rights").
+Analyze the provided Tender / RFP document and extract ALL authentic bid parameters and the COMPLETE, EXHAUSTIVE Eligibility Matrix directly from the document.
+CRITICAL EXTRACTION RULES (STRICT 1:1 REPRODUCTION):
+- "title": Extract the full specific project/work title from the Cover Page / NIT, NOT generic strings.
+- "organization": Extract the full issuing Government Ministry, Department, Corporation, or PSU (e.g. "Uttar Pradesh State Tourism Development Corporation Ltd. (UPSTDC Ltd.)"). Clean any time/prefix garbage.
 - "tenderNumber": Extract exact NIT No. / Tender No. / RFP Ref.
-- "submissionDeadline": Strictly extract "Last date and Time of Submission of bids" / "Bid Submission End Date" from the schedule table with time if provided. Convert to standard ISO string.
+- "submissionDeadline": Strictly extract "Last date and Time of Submission of bids" / "Bid Submission End Date" from the schedule table with time. Convert to standard ISO string.
 - "preBidMeetingDate": Strictly extract "Pre-bid Meeting" date/time from the schedule table. Convert to standard ISO string.
 - "publishDate": Strictly extract publication date (e.g. "YYYY-MM-DD").
-- "estimatedValueINR": Exact numeric value in INR (e.g. 30000000 for Rs. 3 Crore approx).
-- "estimatedValueDisplay": Formatted string (e.g. "₹3.00 Crore" or "₹50.00 Lakhs").
-- "emdAmountINR": Number in INR (e.g. 500000 for Rs. 5,00,000/-).
-- "emdDisplay": Formatted string (e.g. "₹5.00 Lakhs" or "₹5,00,000").
-- "tenderFeeINR": Tender document fee in INR (0 if NIL).
-- "scopeSummary": Comprehensive authentic summary of work, deliverables, and domain-specific terms of reference from the RFP.
-- "complianceItems": CAREFULLY examine the "Eligibility Criteria" / "Mandatory Criteria" section and extract EVERY distinct clause/rule into a structured array:
-  - "clauseNo": Exact clause identifier as written in the PDF (e.g. "Clause 1.1", "Clause 12.B", "Clause 3", "Section 4").
-  - "category": One of ["Financial Turnover", "Experience & Scale", "Net Worth", "Technical / Advisory Manpower", "Statutory Compliance", "Quality & Security", "Legal Status", "Commercial & Terms"]
-  - "requirement": Full, exact wording of the requirement from the PDF (e.g. "Minimum turnover of Rs. 3 Crore in last 3 FYs", "Experience of 3 years in strategic advisory/communication", "2 completed projects >= Rs. 50 Lakh").
-  - "evidenceDoc": Mandatory supporting document required (e.g. "CA Certificate with UDIN + Audited Balance Sheets", "Client Work Orders & Completion Certificates", "Non-Blacklisting Affidavit").
+- "estimatedValueINR": Exact numeric value in INR (null if not specified or left blank in RFP).
+- "estimatedValueDisplay": Formatted string or "-" if blank.
+- "emdAmountINR": Number in INR (e.g. 50000 for Rs. 50,000/-).
+- "emdDisplay": Formatted string (e.g. "₹50,000").
+- "tenderFeeINR": Tender document fee in INR.
+- "scopeSummary": Comprehensive authentic summary of deliverables and scope of work from Section-III.
+- "complianceItems": CAREFULLY examine "Section-IV: Bidder's Eligibility Criteria" or the "Pre-Qualification Criteria Table" in the document and extract EVERY SINGLE row/criterion verbatim into the array. DO NOT combine or invent generic clauses:
+  - "clauseNo": Exact clause / Sl No as written in the RFP table (e.g. "Clause 1.0 (Registration)", "Clause 2.0 (Turnover)", "Clause 4.0 (Technical Manpower)", "Clause 5.0 (Prior Experience)", "Clause 6.0 (GIGW Websites)").
+  - "category": Exact category from the table (e.g. "Registration / Incorporation", "Average Turnover", "Non-Blacklisting", "Technical Manpower", "Prior Experience", "GIGW Experience", "Certifications").
+  - "requirement": Full exact text from the 'Description' column of the RFP table (e.g. "Must have minimum 10 technical employees with B.Tech/BE/MCA/M.Tech/M.Sc degrees", "Executed at least ONE software project > Rs. 50 lakhs for Govt with Payment Gateway, API, Portal & Dashboard integration", "Developed & maintained at least 1 GIGW compliant website").
+  - "evidenceDoc": Mandatory supporting document required from the 'Documentary Evidence' column (e.g. "Certificate of Registration + GST + PAN", "Audited Balance Sheets by CA", "HR Declaration with employee qualifications", "Work Order & Completion Certificate").
   - "isMandatory": true
-  - "status": If company verified documents are attached in vault, set "Complied (Pass)"; if verification is incomplete, set "Pending Verification". If criteria not met, set "Deviation" or "Not Met".
-  - "justification": Detailed justification explaining how the bidder satisfies this requirement.
-- "annexures": List all required Annexures, Forms, and Undertakings from the end pages of the RFP.
-
+  - "status": If company verified documents exist in vault, set "Complied (Pass)"; if physical document upload is pending, set "Pending Verification".
+  - "justification": Concise explanation showing how the bidder profile matches or what document is needed.
+- "teamStructure": Extract any proposed team structure, key personnel, or manpower deployment requirements mentioned in the RFP (e.g. Section 6.1 "Proposed Team Structure - Total 20 Resources"):
+  - "totalResources": Total number of personnel/resources required (e.g. 20)
+  - "deploymentSummary": Brief summary of deployment model (e.g. "Deployment of 20 domain specialists across 5 functional teams")
+  - "teams": Array of team divisions or resource groups:
+    - "teamName": Exact name of the team/unit (e.g. "Central Strategy & Governance Team", "National & Strategic Liaison Team", "Data, Analytics & Intelligence Unit", "Research & Knowledge Support Pool", "Presentation & Knowledge Visualisation")
+    - "resourceCount": Exact count of resources required for this team/unit (e.g. 10, 4, 4, 2, 1)
+    - "roles": Array of role titles or specializations if mentioned
+- "detectedAnnexures": List all required Annexures and Forms from Section-VI (Annexure-I to Annexure-X).
+- "keyRisks": List key procurement risks, SLA penalties (e.g. 99% uptime, 10% penalty cap), and timelines.
 Return a STRICT valid JSON object matching this schema:
 {
   "tenderNumber": "string",
@@ -109,7 +133,7 @@ Return a STRICT valid JSON object matching this schema:
   "organization": "string",
   "category": "string",
   "portal": "string",
-  "estimatedValueINR": number,
+  "estimatedValueINR": number | null,
   "estimatedValueDisplay": "string",
   "emdAmountINR": number,
   "emdDisplay": "string",
@@ -117,7 +141,7 @@ Return a STRICT valid JSON object matching this schema:
   "publishDate": "YYYY-MM-DD",
   "submissionDeadline": "ISO string",
   "preBidMeetingDate": "ISO string",
-  "scopeSummary": "Comprehensive summary of deliverables and scope of work",
+  "scopeSummary": "string",
   "eligibilityCriteria": {
     "minAnnualTurnoverINR": number,
     "minTurnoverDisplay": "string",
@@ -136,8 +160,19 @@ Return a STRICT valid JSON object matching this schema:
       "justification": "string"
     }
   ],
+  "teamStructure": {
+    "totalResources": 20,
+    "deploymentSummary": "string",
+    "teams": [
+      {
+        "teamName": "string",
+        "resourceCount": 10,
+        "roles": ["string"]
+      }
+    ]
+  },
   "detectedAnnexures": [
-    { "formNumber": "Annexure-A", "title": "Affidavit Regarding Debarment", "description": "string" }
+    { "formNumber": "string", "title": "string", "description": "string" }
   ],
   "keyRisks": [
     { "title": "string", "description": "string", "riskLevel": "Low | Medium | High" }
@@ -247,6 +282,10 @@ Return a STRICT valid JSON object matching this schema:
       eligibilityCriteria:
         parsed.eligibilityCriteria || fallback.eligibilityCriteria,
       complianceItems: parsed.complianceItems || [],
+      teamStructure:
+        parsed.teamStructure && parsed.teamStructure.teams?.length > 0
+          ? parsed.teamStructure
+          : extractFallbackTeamStructure(rawText),
       detectedAnnexures:
         parsed.detectedAnnexures && parsed.detectedAnnexures.length > 0
           ? parsed.detectedAnnexures
@@ -257,14 +296,52 @@ Return a STRICT valid JSON object matching this schema:
     console.warn("AI analysis fallback triggered:", err.message);
     const fallback = extractFallbackTenderData(rawText, fileName);
     const detectedAnnexures = extractDynamicAnnexures(rawText);
+    const teamStructure = extractFallbackTeamStructure(rawText);
 
     return {
       ...fallback,
       complianceItems: [],
+      teamStructure,
       detectedAnnexures,
       keyRisks: [],
     };
   }
+}
+
+function extractFallbackTeamStructure(rawText) {
+  if (!rawText) return null;
+  const teams = [];
+  let totalResources = 0;
+
+  // Pattern matching for team definitions like "Central Strategy & Governance Team – 10 Resources" or "(Total 20 Resources)"
+  const totalMatch = rawText.match(/(?:Total\s*(\d+)\s*Resources|(\d+)\s*(?:Total\s*)?Resources)/i);
+  if (totalMatch) {
+    totalResources = parseInt(totalMatch[1] || totalMatch[2], 10);
+  }
+
+  const teamRegex = /([A-Za-z\s,&/]+(?:Team|Unit|Pool|Visualisation|Squad|Group|Wing))\s*[-–—:]?\s*(\d+)\s*(?:Resources?|Persons?|Members?|Headcount)/gi;
+  let match;
+  while ((match = teamRegex.exec(rawText)) !== null) {
+    const name = match[1].trim();
+    const count = parseInt(match[2], 10);
+    if (name.length >= 3 && count > 0 && !teams.some((t) => t.teamName === name)) {
+      teams.push({
+        teamName: name,
+        resourceCount: count,
+        roles: [],
+      });
+    }
+  }
+
+  if (teams.length > 0) {
+    const calcTotal = teams.reduce((acc, t) => acc + t.resourceCount, 0);
+    return {
+      totalResources: totalResources || calcTotal,
+      deploymentSummary: `Deployment of ${totalResources || calcTotal} domain specialists across ${teams.length} functional teams`,
+      teams,
+    };
+  }
+  return null;
 }
 
 function extractDynamicAnnexures(rawText) {

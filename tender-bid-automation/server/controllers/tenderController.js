@@ -75,32 +75,42 @@ export async function uploadAndCreateTender(req, res) {
       originalName,
     );
 
-    // =========================================================================
-    // (Validation):
-    // =========================================================================
-    if (!isScanned) {
-      const validation = validateTenderDocument(text);
-      if (!validation.isValid) {
-        return res.status(400).json({
-          success: false,
-          error: `Invalid Document: "${originalName}" does not appear to be a valid Tender or RFP notice. Please upload an authentic procurement document (NIT/RFP).`,
-        });
-      }
-    }
-    // =========================================================================
-
     let companyProfile = await CompanyProfile.findOne().lean();
     if (!companyProfile) {
       const db = readDB();
       companyProfile = db.companyProfile;
     }
 
-    // 2. AI Ingestion & Parameter Extraction (Passes direct PDF buffer & Company Profile for 100% accurate matching)
-    const extractedData = await analyzeTenderWithAI(text, originalName, {
-      isScanned,
-      fileBase64,
-      companyProfile,
-    });
+    // 2. AI Ingestion & Parameter Extraction (Attempts Multimodal Vision OCR for scanned PDFs)
+    let extractedData = null;
+    try {
+      extractedData = await analyzeTenderWithAI(text, originalName, {
+        isScanned,
+        fileBase64,
+        companyProfile,
+      });
+    } catch (aiErr) {
+      console.error("❌ AI Ingestion Error:", aiErr.message);
+    }
+
+    // Validation: If document is scanned/unreadable AND AI extraction could not process it
+    if (
+      (!extractedData || !extractedData.title || extractedData.title === "Tender Document") &&
+      isScanned &&
+      (!text || text.trim().length < 50)
+    ) {
+      return res.status(422).json({
+        success: false,
+        error: `Scanned Document Notice: "${originalName}" is an image-only scanned copy. Multimodal AI could not process the pages. Please ensure a valid Google Gemini API Key is configured in .env or upload an authentic searchable digital PDF (NIT/RFP).`,
+      });
+    }
+
+    if (!extractedData) {
+      return res.status(500).json({
+        success: false,
+        error: "Failed to extract tender data. Please check server logs for details.",
+      });
+    }
 
     // 3. Compute Go/No-Go Decision Matrix
     const goNoGo = calculateGoNoGoScore(extractedData, companyProfile);

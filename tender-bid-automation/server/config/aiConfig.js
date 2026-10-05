@@ -16,16 +16,20 @@ export async function callLLM({
   const geminiKey = process.env.GOOGLE_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
 
-  // 1. If inlineData (e.g. Scanned PDF / Image) is provided, prioritize Multimodal Gemini
+  // 1. If inlineData (e.g. Scanned PDF / Image) is provided or general Gemini text query
   if (geminiKey && !geminiKey.includes("your_gemini")) {
     const geminiModels = [
       "gemini-3.1-flash-lite",
-      "gemini-3.5-flash-lite",
+      "gemini-3.5-flash",
       "gemini-3.8-flash",
+      "gemini-3.1-pro-preview",
       "gemini-flash-latest",
     ];
     for (const model of geminiModels) {
       try {
+        console.log(
+          `🤖 Invoking Gemini Model: ${model} ${inlineData ? "(with Multimodal PDF/Image)" : "(Digital Text)"}`,
+        );
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
 
         const parts = [];
@@ -52,28 +56,32 @@ export async function callLLM({
                 : {}),
             },
           },
-          { timeout: 90000 },
+          { timeout: 120000 },
         );
 
         const content =
           response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (content) return content;
+        if (content) {
+          console.log(`✅ Gemini ${model} successfully extracted tender data.`);
+          return content;
+        }
       } catch (err) {
-        // try next model
+        const status = err.response?.status;
+        const msg = err.response?.data?.error?.message || err.message;
+        console.warn(`⚠️ [Gemini ${model} Failed]: Status ${status} - ${msg}`);
       }
     }
   }
 
   // 2. Try Groq models in sequence (for pure text prompts or text fallback)
-  if (groqKey && !groqKey.includes("your_groq")) {
+  if (groqKey && !groqKey.includes("your_groq") && !inlineData) {
     const groqModels = [
-      "openai/gpt-oss-120b",
-      "openai/gpt-oss-20b",
-      "qwen/qwen3.8-27b",
-      "allam-2-7b",
+      "llama-3.3-70b-versatile",
+      "llama-3.1-8b-instant",
     ];
     for (const model of groqModels) {
       try {
+        console.log(`⚡ Invoking Groq Model: ${model}`);
         const response = await axios.post(
           "https://api.groq.com/openai/v1/chat/completions",
           {
@@ -102,9 +110,14 @@ export async function callLLM({
         );
 
         const content = response.data?.choices?.[0]?.message?.content;
-        if (content) return content;
+        if (content) {
+          console.log(`✅ Groq ${model} successfully returned response.`);
+          return content;
+        }
       } catch (err) {
-        // try next model
+        const status = err.response?.status;
+        const msg = err.response?.data?.error?.message || err.message;
+        console.warn(`⚠️ [Groq ${model} Failed]: Status ${status} - ${msg}`);
       }
     }
   }
@@ -159,9 +172,9 @@ export async function callLLM({
       const content = response.data?.choices?.[0]?.message?.content;
       if (content) return content;
     } catch (err) {
-      // ignore
+      console.warn("OpenAI call failed:", err.message);
     }
   }
 
-  throw new Error("No working AI provider configured or quota reached.");
+  throw new Error("No working AI provider configured or all models failed.");
 }
