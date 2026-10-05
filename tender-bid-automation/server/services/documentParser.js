@@ -28,7 +28,16 @@ export async function parseTenderDocument(filePath, originalFilename) {
 
     if (ext === ".pdf") {
       const dataBuffer = fs.readFileSync(filePath);
-      fileBase64 = dataBuffer.toString("base64");
+      
+      // Only generate Base64 for Multimodal Gemini if file <= 15MB (Gemini 20MB inlineData limit safety)
+      if (stats.size <= 15 * 1024 * 1024) {
+        fileBase64 = dataBuffer.toString("base64");
+      } else {
+        console.log(
+          `📄 PDF size ${(stats.size / 1024 / 1024).toFixed(1)}MB > 15MB. Switching to High-Context Text Pipeline to protect payload limits.`,
+        );
+      }
+
       const pdfData = await pdfParse(dataBuffer);
       extractedText = pdfData.text || "";
       metadata.pageCount = pdfData.numpages || 1;
@@ -36,6 +45,10 @@ export async function parseTenderDocument(filePath, originalFilename) {
       // Scanned Document Detector: If PDF has pages but little/no selectable text layer
       if (extractedText.trim().length < 100) {
         metadata.isScanned = true;
+        // If it's a scanned PDF, ensure fileBase64 is available for Vision OCR
+        if (!fileBase64) {
+          fileBase64 = dataBuffer.toString("base64");
+        }
         console.log(
           `📸 Scanned / Image-only PDF detected for "${path.basename(filePath)}". Multimodal Vision OCR will be utilized.`,
         );
@@ -318,7 +331,9 @@ export function cleanOrganizationName(orgName, text = "") {
   }
 
   if (
-    /(?:DIPR|Directorate\s+of\s+Information|Information\s*&\s*Public)/i.test(text) &&
+    /(?:DIPR|Directorate\s+of\s+Information|Information\s*&\s*Public)/i.test(
+      text,
+    ) &&
     /information/i.test(clean) &&
     !/relations/i.test(clean)
   ) {

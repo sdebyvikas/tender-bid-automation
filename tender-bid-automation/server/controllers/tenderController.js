@@ -1,6 +1,8 @@
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
+import Tender from "../models/Tender.js";
+import CompanyProfile from "../models/CompanyProfile.js";
 import { readDB, writeDB, UPLOADS_DIR } from "../config/db.js";
 import {
   parseTenderDocument,
@@ -12,23 +14,45 @@ import { generateComplianceMatrix } from "../services/complianceEngine.js";
 
 export async function getAllTenders(req, res) {
   try {
-    const db = readDB();
-    res.json({ success: true, count: db.tenders.length, tenders: db.tenders });
+    let tenders = await Tender.find().sort({ createdAt: -1 }).lean();
+    if (!tenders || tenders.length === 0) {
+      const db = readDB();
+      tenders = db.tenders || [];
+      if (tenders.length > 0) {
+        await Tender.insertMany(tenders).catch(() => {});
+      }
+    }
+    res.json({
+      success: true,
+      source: "MongoDB",
+      count: tenders.length,
+      tenders,
+    });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.warn("MongoDB getAllTenders fallback to local:", err.message);
+    const db = readDB();
+    res.json({
+      success: true,
+      source: "Local Store",
+      count: db.tenders.length,
+      tenders: db.tenders,
+    });
   }
 }
 
 export async function getTenderById(req, res) {
   try {
-    const db = readDB();
-    const tender = db.tenders.find((t) => t.id === req.params.id);
+    let tender = await Tender.findOne({ id: req.params.id }).lean();
+    if (!tender) {
+      const db = readDB();
+      tender = db.tenders.find((t) => t.id === req.params.id);
+    }
     if (!tender) {
       return res
         .status(404)
         .json({ success: false, error: "Tender not found" });
     }
-    res.json({ success: true, tender });
+    res.json({ success: true, source: "MongoDB", tender });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -65,8 +89,11 @@ export async function uploadAndCreateTender(req, res) {
     }
     // =========================================================================
 
-    const db = readDB();
-    const companyProfile = db.companyProfile;
+    let companyProfile = await CompanyProfile.findOne().lean();
+    if (!companyProfile) {
+      const db = readDB();
+      companyProfile = db.companyProfile;
+    }
 
     // 2. AI Ingestion & Parameter Extraction (Passes direct PDF buffer & Company Profile for 100% accurate matching)
     const extractedData = await analyzeTenderWithAI(text, originalName, {
@@ -107,9 +134,12 @@ export async function uploadAndCreateTender(req, res) {
     }
 
     // 5. Domain-Aware Initial Proposal Stubs
-    const isConsultancy = `${extractedData.title || ""} ${extractedData.category || ""} ${extractedData.scopeSummary || ""}`
-      .toLowerCase()
-      .match(/consultan|advisory|planning|strategy|public relation|media|dipr|research|communication/);
+    const isConsultancy =
+      `${extractedData.title || ""} ${extractedData.category || ""} ${extractedData.scopeSummary || ""}`
+        .toLowerCase()
+        .match(
+          /consultan|advisory|planning|strategy|public relation|media|dipr|research|communication/,
+        );
 
     const proposals = {
       executiveSummary: `${companyProfile?.name || "Bidder Entity"} is pleased to submit this comprehensive proposal in response to RFP ${extractedData.tenderNumber || ""} for "${extractedData.title}".`,
@@ -139,7 +169,10 @@ export async function uploadAndCreateTender(req, res) {
       id: `tender_${uuidv4()}`,
       ...extractedData,
       hasBOQ: boqItems.length > 0,
-      boqType: boqItems.length > 0 ? "Itemized BOQ" : "Milestone / Retainer Based (No Itemized BOQ)",
+      boqType:
+        boqItems.length > 0
+          ? "Itemized BOQ"
+          : "Milestone / Retainer Based (No Itemized BOQ)",
       rawTextSnippet: text.slice(0, 20000), // store reference excerpt
       documentMeta: metadata,
       uploadedFileName: originalName,
@@ -154,6 +187,11 @@ export async function uploadAndCreateTender(req, res) {
       updatedAt: new Date().toISOString(),
     };
 
+    // Save to MongoDB
+    await Tender.create(newTender);
+
+    // Sync with local DB file
+    const db = readDB();
     db.tenders.unshift(newTender);
     writeDB(db);
 
@@ -161,6 +199,7 @@ export async function uploadAndCreateTender(req, res) {
       success: true,
       message:
         "Tender document successfully uploaded, parsed, and analyzed with AI!",
+      source: "MongoDB",
       tender: newTender,
     });
   } catch (err) {
@@ -171,10 +210,13 @@ export async function uploadAndCreateTender(req, res) {
 
 export async function createTenderManual(req, res) {
   try {
-    const db = readDB();
-    const tenderData = req.body;
-    const companyProfile = db.companyProfile;
+    let companyProfile = await CompanyProfile.findOne().lean();
+    if (!companyProfile) {
+      const db = readDB();
+      companyProfile = db.companyProfile;
+    }
 
+    const tenderData = req.body;
     const goNoGo = calculateGoNoGoScore(tenderData, companyProfile);
 
     const newTender = {
@@ -222,9 +264,15 @@ export async function createTenderManual(req, res) {
       updatedAt: new Date().toISOString(),
     };
 
+    await Tender.create(newTender);
+
+    const db = readDB();
     db.tenders.unshift(newTender);
     writeDB(db);
-    res.status(201).json({ success: true, tender: newTender });
+
+    res
+      .status(201)
+      .json({ success: true, source: "MongoDB", tender: newTender });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -232,22 +280,34 @@ export async function createTenderManual(req, res) {
 
 export async function updateTender(req, res) {
   try {
+    const updated = await Tender.findOneAndUpdate(
+      { id: req.params.id },
+      { ...req.body, updatedAt: new Date().toISOString() },
+      { new: true },
+    ).lean();
+
     const db = readDB();
     const idx = db.tenders.findIndex((t) => t.id === req.params.id);
-    if (idx === -1) {
+    if (idx !== -1) {
+      db.tenders[idx] = {
+        ...db.tenders[idx],
+        ...req.body,
+        updatedAt: new Date().toISOString(),
+      };
+      writeDB(db);
+    }
+
+    if (!updated && idx === -1) {
       return res
         .status(404)
         .json({ success: false, error: "Tender not found" });
     }
 
-    db.tenders[idx] = {
-      ...db.tenders[idx],
-      ...req.body,
-      updatedAt: new Date().toISOString(),
-    };
-
-    writeDB(db);
-    res.json({ success: true, tender: db.tenders[idx] });
+    res.json({
+      success: true,
+      source: "MongoDB",
+      tender: updated || db.tenders[idx],
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -255,17 +315,28 @@ export async function updateTender(req, res) {
 
 export async function deleteTender(req, res) {
   try {
+    const deleted = await Tender.findOneAndDelete({ id: req.params.id }).lean();
+
     const db = readDB();
     const idx = db.tenders.findIndex((t) => t.id === req.params.id);
-    if (idx === -1) {
+    let fallbackDeleted = null;
+    if (idx !== -1) {
+      fallbackDeleted = db.tenders.splice(idx, 1)[0];
+      writeDB(db);
+    }
+
+    if (!deleted && !fallbackDeleted) {
       return res
         .status(404)
         .json({ success: false, error: "Tender not found" });
     }
 
-    const deleted = db.tenders.splice(idx, 1)[0];
-    writeDB(db);
-    res.json({ success: true, message: "Tender deleted", tender: deleted });
+    res.json({
+      success: true,
+      source: "MongoDB",
+      message: "Tender deleted successfully",
+      tender: deleted || fallbackDeleted,
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

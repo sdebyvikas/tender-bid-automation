@@ -10,11 +10,22 @@ import complianceRoutes from "./routes/complianceRoutes.js";
 import proposalRoutes from "./routes/proposalRoutes.js";
 import boqRoutes from "./routes/boqRoutes.js";
 import annexureRoutes from "./routes/annexureRoutes.js";
-import companyProfileRoutes from "./routes/companyProfileRoutes.js";
+import companyProfileRoutes from "./modules/company-profile/company-profile.routes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
+import { connectDB } from "./config/mongo.js";
 
 dotenv.config();
+
+// Connect to MongoDB
+connectDB();
+
+process.on("uncaughtException", (err) => {
+  console.error("FATAL UNCAUGHT EXCEPTION:", err);
+});
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("UNHANDLED REJECTION:", reason);
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +34,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
+app.use((req, res, next) => {
+  console.log(`[HTTP ${req.method}] ${req.url}`);
+  next();
+});
 app.use(
   cors({
     origin: "*",
@@ -70,5 +85,6 @@ app.listen(PORT, () => {
   console.log(`====================================================`);
   console.log(`🚀 Tender Bid Automation AI Backend running on port ${PORT}`);
   console.log(`📡 Healthcheck: http://localhost:${PORT}/api/health`);
+  console.log(`🍃 Database: MongoDB`);
   console.log(`====================================================`);
 });

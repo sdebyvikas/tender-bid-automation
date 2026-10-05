@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5174",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "axios": "^1.7.9",
@@ -17,10 +18,14 @@
     "sonner": "^2.0.8"
   },
   "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.6.1",
     "postcss": "^8.5.28",
     "tailwindcss": "^3.4.19",
+    "typescript": "^7.0.2",
     "vite": "^5.4.11"
   }
 }

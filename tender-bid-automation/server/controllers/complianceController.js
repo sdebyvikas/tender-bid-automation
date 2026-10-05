@@ -1,13 +1,29 @@
-import { v4 as uuidv4 } from 'uuid';
-import { readDB, writeDB } from '../config/db.js';
-import { generateComplianceMatrix } from '../services/complianceEngine.js';
+import { v4 as uuidv4 } from "uuid";
+import Tender from "../models/Tender.js";
+import CompanyProfile from "../models/CompanyProfile.js";
+import { readDB, writeDB } from "../config/db.js";
+import { generateComplianceMatrix } from "../services/complianceEngine.js";
 
 export async function getComplianceItems(req, res) {
   try {
+    const tender = await Tender.findOne({ id: req.params.tenderId }).lean();
+    if (tender) {
+      return res.json({
+        success: true,
+        source: "MongoDB",
+        complianceItems: tender.complianceItems || [],
+      });
+    }
+
     const db = readDB();
-    const tender = db.tenders.find(t => t.id === req.params.tenderId);
-    if (!tender) return res.status(404).json({ success: false, error: 'Tender not found' });
-    res.json({ success: true, complianceItems: tender.complianceItems || [] });
+    const localTender = db.tenders.find((t) => t.id === req.params.tenderId);
+    if (!localTender)
+      return res.status(404).json({ success: false, error: "Tender not found" });
+    res.json({
+      success: true,
+      source: "Local",
+      complianceItems: localTender.complianceItems || [],
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -15,28 +31,44 @@ export async function getComplianceItems(req, res) {
 
 export async function addComplianceItem(req, res) {
   try {
-    const db = readDB();
-    const tender = db.tenders.find(t => t.id === req.params.tenderId);
-    if (!tender) return res.status(404).json({ success: false, error: 'Tender not found' });
-
     const newItem = {
       id: `comp_${uuidv4().slice(0, 8)}`,
-      clauseNo: req.body.clauseNo || 'Clause X',
-      requirement: req.body.requirement || 'Requirement description',
-      category: req.body.category || 'Technical',
-      isMandatory: req.body.isMandatory !== undefined ? req.body.isMandatory : true,
-      status: req.body.status || 'Complied',
-      justification: req.body.justification || 'Complied as per specifications',
-      deviationRemarks: req.body.deviationRemarks || 'None',
-      evidenceDoc: req.body.evidenceDoc || 'Technical Document'
+      clauseNo: req.body.clauseNo || "Clause X",
+      requirement: req.body.requirement || "Requirement description",
+      category: req.body.category || "Technical",
+      isMandatory:
+        req.body.isMandatory !== undefined ? req.body.isMandatory : true,
+      status: req.body.status || "Complied",
+      justification:
+        req.body.justification || "Complied as per specifications",
+      deviationRemarks: req.body.deviationRemarks || "None",
+      evidenceDoc: req.body.evidenceDoc || "Technical Document",
     };
 
-    if (!tender.complianceItems) tender.complianceItems = [];
-    tender.complianceItems.push(newItem);
-    tender.updatedAt = new Date().toISOString();
+    const tender = await Tender.findOneAndUpdate(
+      { id: req.params.tenderId },
+      {
+        $push: { complianceItems: newItem },
+        $set: { updatedAt: new Date().toISOString() },
+      },
+      { new: true }
+    ).lean();
 
-    writeDB(db);
-    res.status(201).json({ success: true, item: newItem, complianceItems: tender.complianceItems });
+    const db = readDB();
+    const localTender = db.tenders.find((t) => t.id === req.params.tenderId);
+    if (localTender) {
+      if (!localTender.complianceItems) localTender.complianceItems = [];
+      localTender.complianceItems.push(newItem);
+      localTender.updatedAt = new Date().toISOString();
+      writeDB(db);
+    }
+
+    res.status(201).json({
+      success: true,
+      source: "MongoDB",
+      item: newItem,
+      complianceItems: tender ? tender.complianceItems : localTender?.complianceItems || [newItem],
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -44,21 +76,44 @@ export async function addComplianceItem(req, res) {
 
 export async function updateComplianceItem(req, res) {
   try {
+    const { tenderId, itemId } = req.params;
+
+    const tender = await Tender.findOne({ id: tenderId });
+    if (tender) {
+      const idx = (tender.complianceItems || []).findIndex(
+        (i) => i.id === itemId
+      );
+      if (idx !== -1) {
+        tender.complianceItems[idx] = {
+          ...tender.complianceItems[idx].toObject(),
+          ...req.body,
+        };
+        tender.updatedAt = new Date().toISOString();
+        await tender.save();
+      }
+    }
+
     const db = readDB();
-    const tender = db.tenders.find(t => t.id === req.params.tenderId);
-    if (!tender) return res.status(404).json({ success: false, error: 'Tender not found' });
+    const localTender = db.tenders.find((t) => t.id === tenderId);
+    if (localTender) {
+      const idx = (localTender.complianceItems || []).findIndex(
+        (i) => i.id === itemId
+      );
+      if (idx !== -1) {
+        localTender.complianceItems[idx] = {
+          ...localTender.complianceItems[idx],
+          ...req.body,
+        };
+        localTender.updatedAt = new Date().toISOString();
+        writeDB(db);
+      }
+    }
 
-    const idx = (tender.complianceItems || []).findIndex(i => i.id === req.params.itemId);
-    if (idx === -1) return res.status(404).json({ success: false, error: 'Compliance item not found' });
-
-    tender.complianceItems[idx] = {
-      ...tender.complianceItems[idx],
-      ...req.body
-    };
-    tender.updatedAt = new Date().toISOString();
-
-    writeDB(db);
-    res.json({ success: true, item: tender.complianceItems[idx], complianceItems: tender.complianceItems });
+    res.json({
+      success: true,
+      source: "MongoDB",
+      complianceItems: tender ? tender.complianceItems : localTender?.complianceItems || [],
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -66,15 +121,33 @@ export async function updateComplianceItem(req, res) {
 
 export async function deleteComplianceItem(req, res) {
   try {
+    const { tenderId, itemId } = req.params;
+
+    const tender = await Tender.findOneAndUpdate(
+      { id: tenderId },
+      {
+        $pull: { complianceItems: { id: itemId } },
+        $set: { updatedAt: new Date().toISOString() },
+      },
+      { new: true }
+    ).lean();
+
     const db = readDB();
-    const tender = db.tenders.find(t => t.id === req.params.tenderId);
-    if (!tender) return res.status(404).json({ success: false, error: 'Tender not found' });
+    const localTender = db.tenders.find((t) => t.id === tenderId);
+    if (localTender) {
+      localTender.complianceItems = (localTender.complianceItems || []).filter(
+        (i) => i.id !== itemId
+      );
+      localTender.updatedAt = new Date().toISOString();
+      writeDB(db);
+    }
 
-    tender.complianceItems = (tender.complianceItems || []).filter(i => i.id !== req.params.itemId);
-    tender.updatedAt = new Date().toISOString();
-
-    writeDB(db);
-    res.json({ success: true, message: 'Item deleted', complianceItems: tender.complianceItems });
+    res.json({
+      success: true,
+      source: "MongoDB",
+      message: "Item deleted",
+      complianceItems: tender ? tender.complianceItems : localTender?.complianceItems || [],
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -82,18 +155,52 @@ export async function deleteComplianceItem(req, res) {
 
 export async function autoGenerateCompliance(req, res) {
   try {
+    let tender = await Tender.findOne({ id: req.params.tenderId }).lean();
     const db = readDB();
-    const tender = db.tenders.find(t => t.id === req.params.tenderId);
-    if (!tender) return res.status(404).json({ success: false, error: 'Tender not found' });
+    if (!tender) {
+      tender = db.tenders.find((t) => t.id === req.params.tenderId);
+    }
+    if (!tender)
+      return res.status(404).json({ success: false, error: "Tender not found" });
 
-    const sourceText = tender.rawTextSnippet || tender.scopeSummary || `${tender.title} ${tender.organization}`;
-    const generated = await generateComplianceMatrix(sourceText, tender.title, db.companyProfile);
+    let companyProfile = await CompanyProfile.findOne().lean();
+    if (!companyProfile) {
+      companyProfile = db.companyProfile;
+    }
 
-    tender.complianceItems = generated;
-    tender.updatedAt = new Date().toISOString();
+    const sourceText =
+      tender.rawTextSnippet ||
+      tender.scopeSummary ||
+      `${tender.title} ${tender.organization}`;
+    const generated = await generateComplianceMatrix(
+      sourceText,
+      tender.title,
+      companyProfile
+    );
 
-    writeDB(db);
-    res.json({ success: true, message: 'Compliance Matrix automatically generated with AI!', complianceItems: generated });
+    await Tender.findOneAndUpdate(
+      { id: req.params.tenderId },
+      {
+        $set: {
+          complianceItems: generated,
+          updatedAt: new Date().toISOString(),
+        },
+      }
+    );
+
+    const localTender = db.tenders.find((t) => t.id === req.params.tenderId);
+    if (localTender) {
+      localTender.complianceItems = generated;
+      localTender.updatedAt = new Date().toISOString();
+      writeDB(db);
+    }
+
+    res.json({
+      success: true,
+      source: "MongoDB",
+      message: "Compliance Matrix automatically generated with AI!",
+      complianceItems: generated,
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

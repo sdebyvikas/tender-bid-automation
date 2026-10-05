@@ -1,0 +1,12 @@
+{
+  "watch": ["."],
+  "ignore": [
+    "uploads/*",
+    "data/*",
+    "*.json",
+    "*.traineddata",
+    "node_modules/*",
+    ".tesseract/*"
+  ],
+  "ext": "js,mjs,cjs"
+}
