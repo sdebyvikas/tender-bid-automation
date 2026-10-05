@@ -164,7 +164,10 @@ Return a STRICT valid JSON object matching this schema:
           },
         });
       } catch (mmErr) {
-        console.warn("Multimodal PDF analysis failed, falling back to text parsing:", mmErr.message);
+        console.warn(
+          "Multimodal PDF analysis failed, falling back to text parsing:",
+          mmErr.message,
+        );
       }
     }
 
@@ -297,7 +300,8 @@ export async function generateProposalSection({
   companyProfile,
   customInstructions = "",
 }) {
-  const domainText = `${tender.title || ""} ${tender.category || ""} ${tender.scopeSummary || ""}`.toLowerCase();
+  const domainText =
+    `${tender.title || ""} ${tender.category || ""} ${tender.scopeSummary || ""}`.toLowerCase();
   const isConsultancy =
     domainText.includes("consultan") ||
     domainText.includes("advisory") ||

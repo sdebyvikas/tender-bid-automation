@@ -3,7 +3,7 @@
     "_id": "6aba00d4becbb963a93b46cf",
     "id": "comp_techsolutions",
     "name": "J fermst ANA AHR",
-    "pan": "AXDPR2606K",
+    "pan": "BWZPS1234R",
     "gstin": "18AABCT1234F1ZP",
     "cin": "U72900AS2012PTC011234",
     "registrationNo": "U72900AS2012PTC011234",
@@ -38,18 +38,18 @@
     ],
     "statutoryDocuments": [
       {
-        "id": "doc_1790859599034",
-        "name": "PAN Card",
-        "meta": "Uploaded 01 Oct 2026 · 25 KB",
+        "id": "doc_1791177398832",
+        "name": "PAN CARD ",
+        "meta": "Uploaded 05 Oct 2026 · 825 KB · Exp: 2027-01-02",
         "tag": "Verified",
         "category": "Tax",
         "icon": "CircleDollarSign",
-        "fileName": "vault-1790859400150-811584433-images.jpg",
-        "fileUrl": "/uploads/vault-1790859400150-811584433-images.jpg",
+        "fileName": "vault-1791177394004-701106649-PAN_CARD_DUMMT.jfif",
+        "fileUrl": "/uploads/vault-1791177394004-701106649-PAN_CARD_DUMMT.jfif",
         "fileType": "image/jpeg",
-        "originalName": "images.jpg",
-        "expiryDate": null,
-        "uploadedAt": "2026-10-01T12:59:59.034Z"
+        "originalName": "PAN CARD DUMMT.jfif",
+        "expiryDate": "2027-01-02",
+        "uploadedAt": "2026-10-05T05:16:38.832Z"
       }
     ],
     "authorizedSignatory": {
@@ -85,7 +85,7 @@
       }
     ],
     "createdAt": "2026-09-28T05:53:24.183Z",
-    "updatedAt": "2026-10-01T12:59:59.035Z",
+    "updatedAt": "2026-10-05T05:16:38.832Z",
     "__v": 6
   },
   "tenders": [],
