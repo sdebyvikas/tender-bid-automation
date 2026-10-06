@@ -686,3 +686,128 @@ export function validateTenderDocument(text) {
       : "Document me zaroori Tender/RFP keywords (NIT, EMD, Scope, etc.) nahi mile.",
   };
 }
+
+/**
+ * Generates domain-aware dynamic disqualification gates when AI is unavailable or as baseline
+ */
+export function extractFallbackDisqualificationGates(rawText = "", eligibilityCriteria = {}, tenderMeta = {}) {
+  const lower = (rawText || "").toLowerCase();
+  const gates = [];
+
+  // 1. Debarment & Non-Blacklisting
+  gates.push({
+    id: "gate-blacklisting",
+    title: "Debarment & Non-Blacklisting Undertaking",
+    category: "Legal Standing",
+    clauseRef: "NIT Sec 1.4 / RFP Cl 2.1",
+    mandatoryRequirement: "Bidder must not be barred, blacklisted or debarred by any Central/State Govt or PSU as on bid submission date.",
+    evidenceDoc: "Non-Blacklisting Undertaking Affidavit (100 Rs Notarized Stamp)",
+    evidenceDocName: "Non-Blacklisting Undertaking Affidavit",
+    threatLevel: "CRITICAL",
+    status: "PENDING_DOC"
+  });
+
+  // 2. Financial Turnover Floor
+  const turnoverDisplay =
+    eligibilityCriteria?.minTurnoverDisplay ||
+    (eligibilityCriteria?.minAnnualTurnoverINR
+      ? `₹${(eligibilityCriteria.minAnnualTurnoverINR / 10000000).toFixed(2)} Cr`
+      : "₹10.00 Cr");
+
+  gates.push({
+    id: "gate-turnover-floor",
+    title: "Financial Turnover Floor",
+    category: "Financial PQC",
+    clauseRef: "PQC Sec 3.1 (A)",
+    mandatoryRequirement: `Minimum average annual turnover of ${turnoverDisplay} in last 3 Audited Financial Years (with valid UDIN).`,
+    evidenceDoc: "CA Audited Turnover Certificate with UDIN & Audited Financial Statements",
+    evidenceDocName: "CA Audited Turnover Certificate with UDIN",
+    threatLevel: "CRITICAL",
+    status: "PENDING_DOC"
+  });
+
+  // 3. Statutory Registration & Active Tax Status
+  gates.push({
+    id: "gate-statutory-ids",
+    title: "Statutory Tax & Company Incorporation",
+    category: "Statutory Compliance",
+    clauseRef: "PQC Sec 3.1 (B)",
+    mandatoryRequirement: "Valid Permanent Account Number (PAN), active GSTIN Registration, and Certificate of Incorporation.",
+    evidenceDoc: "Self-Attested PAN Card, GST Registration Certificate & MCA COI",
+    evidenceDocName: "GST & PAN Registration Certificate",
+    threatLevel: "CRITICAL",
+    status: "PENDING_DOC"
+  });
+
+  // 4. Sole Prime Entity vs Consortium
+  gates.push({
+    id: "gate-jv-consortium",
+    title: "Sole Entity vs Consortium Gate",
+    category: "Bidding Model",
+    clauseRef: "RFP Sec 1.8 / Eligibility",
+    mandatoryRequirement: "Bidder must submit as Sole Prime Entity. Subcontracting/Consortium without prior written approval is restricted.",
+    evidenceDoc: "Certificate of Incorporation & Board Resolution for Direct Execution",
+    evidenceDocName: "Certificate of Incorporation",
+    threatLevel: "HIGH",
+    status: "PENDING_DOC"
+  });
+
+  // 5. OEM Manufacturer Authorization Form (MAF) if IT / Surveillance / Hardware
+  const isITorHardware =
+    lower.includes("oem") ||
+    lower.includes("manufacturer authorization") ||
+    lower.includes("maf") ||
+    lower.includes("hardware") ||
+    lower.includes("cctv") ||
+    lower.includes("camera") ||
+    lower.includes("server") ||
+    (tenderMeta?.category && tenderMeta.category.toLowerCase().includes("surveillance"));
+
+  if (isITorHardware) {
+    gates.push({
+      id: "gate-oem-maf",
+      title: "OEM Manufacturer Authorization (MAF)",
+      category: "Technical Qualification",
+      clauseRef: "PQC Cl 4.2 / OEM Gate",
+      mandatoryRequirement: "Tender-specific Manufacturer Authorization Form (MAF) from OEM on original OEM letterhead for core active components.",
+      evidenceDoc: "Manufacturer Authorization Form (MAF) on OEM Letterhead",
+      evidenceDocName: "OEM Authorization Letter (MAF)",
+      threatLevel: "CRITICAL",
+      status: "PENDING_DOC"
+    });
+  }
+
+  // 6. Make in India (MII) / Local Content Declaration
+  if (lower.includes("make in india") || lower.includes("local content") || lower.includes("mii")) {
+    gates.push({
+      id: "gate-make-in-india",
+      title: "Make in India (MII) Local Content Declaration",
+      category: "Govt Mandate",
+      clauseRef: "DPIIT Order / RFP Cl 1.15",
+      mandatoryRequirement: "Class-I Local Supplier undertaking certifying minimum 50% domestic value addition.",
+      evidenceDoc: "Self-Declaration on Local Content Percentage signed by Authorized Signatory",
+      evidenceDocName: "Make in India (MII) Undertaking",
+      threatLevel: "HIGH",
+      status: "PENDING_DOC"
+    });
+  }
+
+  // 7. Proven Similar Experience / Track Record
+  const minYears = eligibilityCriteria?.minExperienceYears;
+  if (minYears && minYears > 0) {
+    gates.push({
+      id: "gate-past-experience",
+      title: "Prior Work & Domain Track Record",
+      category: "Technical Experience",
+      clauseRef: "PQC Sec 3.2",
+      mandatoryRequirement: `Minimum ${minYears} years of proven operational track record and satisfactory completion certificates for similar scope.`,
+      evidenceDoc: "Client Completion Certificates / Work Orders with Satisfactory Performance Reports",
+      evidenceDocName: "Client Work Orders & Completion Certificates",
+      threatLevel: "CRITICAL",
+      status: "PENDING_DOC"
+    });
+  }
+
+  return gates;
+}
+

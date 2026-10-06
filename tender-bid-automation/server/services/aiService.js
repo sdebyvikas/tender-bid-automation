@@ -2,6 +2,7 @@ import { callLLM } from "../config/aiConfig.js";
 import {
   extractFallbackTenderData,
   cleanOrganizationName,
+  extractFallbackDisqualificationGates,
 } from "./documentParser.js";
 
 /**
@@ -149,6 +150,17 @@ Return a STRICT valid JSON object matching this schema:
     "requiredCertifications": ["string"],
     "pastProjectRequirement": "string"
   },
+  "disqualificationGates": [
+    {
+      "id": "gate-1",
+      "title": "string",
+      "category": "Financial PQC | Legal Standing | Technical Qualification | Statutory Compliance | Govt Mandate",
+      "clauseRef": "string",
+      "mandatoryRequirement": "string",
+      "evidenceDoc": "string",
+      "threatLevel": "CRITICAL | HIGH"
+    }
+  ],
   "complianceItems": [
     {
       "clauseNo": "string",
@@ -241,6 +253,12 @@ Return a STRICT valid JSON object matching this schema:
       minute: "2-digit",
     });
 
+    const finalEligibility = parsed.eligibilityCriteria || fallback.eligibilityCriteria;
+    const finalGates =
+      Array.isArray(parsed.disqualificationGates) && parsed.disqualificationGates.length > 0
+        ? parsed.disqualificationGates
+        : extractFallbackDisqualificationGates(rawText, finalEligibility, { category: parsed.category || fallback.category });
+
     return {
       tenderNumber:
         parsed.tenderNumber && !parsed.tenderNumber.includes("______")
@@ -279,8 +297,8 @@ Return a STRICT valid JSON object matching this schema:
       preBidMeetingDate: finalPreBid,
       due: dueFormatted,
       scopeSummary: parsed.scopeSummary || fallback.scopeSummary,
-      eligibilityCriteria:
-        parsed.eligibilityCriteria || fallback.eligibilityCriteria,
+      eligibilityCriteria: finalEligibility,
+      disqualificationGates: finalGates,
       complianceItems: parsed.complianceItems || [],
       teamStructure:
         parsed.teamStructure && parsed.teamStructure.teams?.length > 0
@@ -297,9 +315,11 @@ Return a STRICT valid JSON object matching this schema:
     const fallback = extractFallbackTenderData(rawText, fileName);
     const detectedAnnexures = extractDynamicAnnexures(rawText);
     const teamStructure = extractFallbackTeamStructure(rawText);
+    const disqualificationGates = extractFallbackDisqualificationGates(rawText, fallback.eligibilityCriteria, { category: fallback.category });
 
     return {
       ...fallback,
+      disqualificationGates,
       complianceItems: [],
       teamStructure,
       detectedAnnexures,

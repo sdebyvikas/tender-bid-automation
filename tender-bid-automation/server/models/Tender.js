@@ -28,6 +28,27 @@ const BOQItemSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const DisqualificationGateSchema = new mongoose.Schema(
+  {
+    id: { type: String, required: true },
+    title: { type: String, required: true },
+    category: { type: String, default: "Pre-Qualification" },
+    clauseRef: { type: String, default: "RFP Eligibility" },
+    mandatoryRequirement: { type: String, required: true },
+    evidenceDoc: { type: String, default: "" },
+    evidenceDocName: { type: String, default: "" },
+    threatLevel: { type: String, default: "CRITICAL" },
+    isPassed: { type: Boolean, default: false },
+    bidderStatus: { type: String, default: "" },
+    surplusDetail: { type: String, default: "" },
+    status: { type: String, default: "PENDING_DOC" },
+    attachedDocId: { type: String, default: "" },
+    attachedDocName: { type: String, default: "" },
+    userOverride: { type: Boolean, default: false },
+  },
+  { _id: false }
+);
+
 const TenderSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true, index: true },
@@ -68,6 +89,7 @@ const TenderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       default: () => ({}),
     },
+    disqualificationGates: [DisqualificationGateSchema],
     complianceItems: [ComplianceItemSchema],
     teamStructure: {
       type: mongoose.Schema.Types.Mixed,

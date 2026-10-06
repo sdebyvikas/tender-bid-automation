@@ -64,6 +64,25 @@ export interface EligibilityCriteria {
   [key: string]: any;
 }
 
+export interface DisqualificationGate {
+  id: string;
+  title: string;
+  category: string;
+  clauseRef?: string;
+  mandatoryRequirement: string;
+  evidenceDoc?: string;
+  evidenceDocName?: string;
+  threatLevel?: "CRITICAL" | "HIGH" | "MEDIUM" | "NONE" | string;
+  isPassed?: boolean;
+  bidderStatus?: string;
+  surplusDetail?: string;
+  attachedDocId?: string;
+  attachedDocName?: string;
+  status?: "PASSED" | "DISQUALIFIED" | "PENDING_DOC" | "DEVIATION" | string;
+  userOverride?: boolean;
+  [key: string]: any;
+}
+
 export interface PaymentProof {
   referenceNumber?: string;
   bankName?: string;
@@ -172,6 +191,7 @@ export interface Tender {
   documentMeta?: DocumentMeta;
   eligibilityCriteria?: EligibilityCriteria | Record<string, any>;
   goNoGoAnalysis?: GoNoGoAnalysis | Record<string, any>;
+  disqualificationGates?: DisqualificationGate[];
   complianceItems?: ComplianceItem[];
   teamStructure?: TeamStructure;
   boqItems?: BOQItem[];

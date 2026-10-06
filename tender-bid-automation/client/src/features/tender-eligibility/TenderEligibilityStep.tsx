@@ -68,12 +68,13 @@ export default function TenderEligibilityStep({
         onOpenSignatoriesModal={onOpenSignatoriesModal}
       />
 
-      {/* 2. HARD DISQUALIFICATION GATES (4 PASS/FAIL RED LINES) */}
+      {/* 2. HARD DISQUALIFICATION GATES (PASS/FAIL RED LINES) */}
       <TenderDisqualificationGates
         tender={tender}
         companyProfile={companyProfile}
-        onOpenVaultUpload={() =>
-          onOpenVaultUpload && onOpenVaultUpload("Non-Blacklisting Affidavit")
+        onOpenVaultUpload={(docName?: string) =>
+          onOpenVaultUpload &&
+          onOpenVaultUpload(docName || "Statutory Document")
         }
       />
 
@@ -105,8 +106,9 @@ export default function TenderEligibilityStep({
             </strong>
           </div>
           <p className="text-xs text-slate-500">
-            All 4 Hard Gates are verified (0% Disqualification Risk) and{" "}
-            {complianceList.length} clauses are mapped with Master Vault.
+            All {tender.disqualificationGates?.length || 4} Hard Gates are
+            verified (0% Disqualification Risk) and {complianceList.length}{" "}
+            clauses are mapped with Master Vault.
           </p>
         </div>
 

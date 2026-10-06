@@ -85,147 +85,181 @@
       }
     ],
     "createdAt": "2026-09-28T05:53:24.183Z",
-    "updatedAt": "2026-10-06T07:40:03.974Z",
+    "updatedAt": "2026-10-06T11:01:46.403Z",
     "__v": 6,
     "authorizedSignatories": []
   },
   "tenders": [
     {
-      "id": "tender_4ced4d18-b566-4535-a1f3-32aebb7a7710",
-      "tenderNumber": "SAJHA/69",
-      "title": "Development of Integrated Website and Mobile Application for Sports Authority of Jharkhand (SAJHA)",
-      "organization": "Sports Authority of Jharkhand (SAJHA)",
-      "category": "IT Services / Software Development",
-      "portal": "www.sajha.in",
-      "estimatedValueINR": null,
-      "estimatedValueDisplay": "-",
-      "emdAmountINR": 500000,
-      "emdDisplay": "₹5,00,000",
-      "tenderFeeINR": 25000,
-      "publishDate": "2024-03-07",
-      "submissionDeadline": "2024-03-28T11:00:00",
-      "preBidMeetingDate": "2024-03-18T16:00:00",
-      "due": "28 Mar 2024, 11:00 am",
-      "scopeSummary": "Design, development, testing, deployment, and maintenance of an integrated website and mobile application (Android & IOS) hosted on a dedicated cloud-based server. Includes centralized sports repositories, athlete management, verification/nomination, communication, academy management, training programs, venue/infrastructure, booking, attendance tracking, accreditation, comprehensive sports management (TMS), digital certificate issuance, chatbot, grievance redressal, and grants/scholarship management.",
+      "id": "tender_fd7e52e5-26af-4d71-9e97-7e208149fc39",
+      "tenderNumber": "2024/IRCTC/e-Catering/Hiring of IT firm",
+      "title": "HIRING OF SERVICE PROVIDER FOR DEVELOPMENT, MAINTENANCE AND OPERATIONS OF e-CATERING WEBSITE FOR IRCTC",
+      "organization": "INDIAN RAILWAY CATERING AND TOURISM CORPORATION LIMITED",
+      "category": "IT Services / Website Development & Maintenance",
+      "portal": "www.tenderwizard.com/IRCTC",
+      "estimatedValueINR": 306269928,
+      "estimatedValueDisplay": "₹30,62,69,928 approx.",
+      "emdAmountINR": 2000000,
+      "emdDisplay": "₹20,00,000",
+      "tenderFeeINR": 0,
+      "publishDate": "2024-07-24",
+      "submissionDeadline": "2024-08-20T12:00:00",
+      "preBidMeetingDate": "2024-08-08T15:00:00",
+      "due": "20 Aug 2024, 12:00 pm",
+      "scopeSummary": "Development, maintenance, and operations of the IRCTC e-Catering website and associated applications (PWA, Android/iOS apps, admin panels). Includes cloud hosting on AWS, managing a Customer Support Centre, transactional SMS/email services, and marketing activities (SEO, social media, promotional campaigns). The system must be highly scalable, fault-tolerant, and support multiple channels (web, mobile, call centre).",
       "eligibilityCriteria": {
-        "minAnnualTurnoverINR": 15000000,
-        "minTurnoverDisplay": "1.5 Cr",
-        "minExperienceYears": 5,
+        "minAnnualTurnoverINR": 153200000,
+        "minTurnoverDisplay": "Rs 15.32 Cr average per year",
+        "minExperienceYears": 3,
         "requiredCertifications": [
-          "CMMI Level 3 or above (SVC or DEV)",
-          "ISO 27001",
-          "ISO 9001"
+          "GST Registration",
+          "ESI Registration",
+          "EPF Registration",
+          "PAN Card"
         ],
-        "pastProjectRequirement": "Order worth more than 1 crore in field of IT / Software based product for central Govt / State PSU / Software based product for Sports Data Management in last two financial years."
+        "pastProjectRequirement": "Scoping, developing, operating and maintaining end to end system for a B2C (market place with min. 50 active vendors) and B2B ecommerce website dealing in sale and delivery of commodities and services with capacity to handle >25,000 transactions/day or 1 million registered users."
       },
+      "disqualificationGates": [
+        {
+          "id": "gate-1",
+          "title": "Debarment Status",
+          "category": "Legal Standing",
+          "clauseRef": "Clause 6",
+          "mandatoryRequirement": "Bidder must not have been debarred by any Govt. authority.",
+          "evidenceDoc": "Affidavit as per Annexure-A",
+          "threatLevel": "CRITICAL"
+        },
+        {
+          "id": "gate-2",
+          "title": "Net Worth Requirement",
+          "category": "Financial PQC",
+          "clauseRef": "Clause C",
+          "mandatoryRequirement": "Minimum net worth of Rs. 1 cr as on 31.03.2024.",
+          "evidenceDoc": "Certificate from CA/Statutory Auditor with UDIN",
+          "threatLevel": "HIGH"
+        }
+      ],
       "complianceItems": [
         {
-          "id": "comp_77e40227",
-          "clauseNo": "5.A",
-          "requirement": "Bidder must be an Indian Company.",
-          "category": "Registration / Incorporation",
+          "id": "comp_a23dd77e",
+          "clauseNo": "Clause 7",
+          "requirement": "Permanent Account Number (PAN)",
+          "category": "Statutory Compliance",
           "isMandatory": true,
-          "status": "Pending Verification",
-          "justification": "Physical Certificate of Incorporation is not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
+          "status": "Complied",
+          "justification": "Verified in Vault: PAN CARD  (vault-1791177394004-701106649-PAN_CARD_DUMMT.jfif)",
           "deviationRemarks": "None",
-          "evidenceDoc": "Certificate of Incorporation"
+          "evidenceDoc": "PAN CARD "
         },
         {
-          "id": "comp_5b3a4a76",
-          "clauseNo": "5.C",
-          "requirement": "Bidder should have order worth more than 1 crore in field of IT / Software based product for central Govt / State PSU / Software based product for Sports Data Management in last two financial years.",
-          "category": "Prior Experience",
+          "id": "comp_676cecf8",
+          "clauseNo": "Clause 8",
+          "requirement": "Copy of ESI certificate",
+          "category": "Statutory Compliance",
           "isMandatory": true,
-          "status": "Pending Verification",
-          "justification": "Physical Work Order and Completion Certificates are not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
+          "status": "Complied",
+          "justification": "Verified in Vault: PAN CARD  (vault-1791177394004-701106649-PAN_CARD_DUMMT.jfif)",
           "deviationRemarks": "None",
-          "evidenceDoc": "Work Order and Completion Certificates"
+          "evidenceDoc": "PAN CARD "
         },
         {
-          "id": "comp_bbf114ed",
-          "clauseNo": "5.G",
-          "requirement": "Last three financial average Turnover should be more than 1.5 cr.",
-          "category": "Average Turnover",
+          "id": "comp_5483d94a",
+          "clauseNo": "Clause 9",
+          "requirement": "Copy of EPF registration certificate",
+          "category": "Statutory Compliance",
           "isMandatory": true,
           "status": "Pending Verification",
-          "justification": "Physical CA Audited Balance Sheet is not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
+          "justification": "Physical EPF certificate is not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
           "deviationRemarks": "None",
-          "evidenceDoc": "Audited Balance Sheets / CA Certificate"
+          "evidenceDoc": "EPF A/c No."
         },
         {
-          "id": "comp_db71584f",
-          "clauseNo": "5.H",
-          "requirement": "Agency must have CMMI Level 3 or above (SVC or DEV), ISO 27001 & ISO 9001.",
-          "category": "Certifications",
+          "id": "comp_e29eba6c",
+          "clauseNo": "Clause 10",
+          "requirement": "Copy of GST registration certificate",
+          "category": "Statutory Compliance",
           "isMandatory": true,
           "status": "Pending Verification",
-          "justification": "Physical certification documents are not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
+          "justification": "Physical GST certificate is not uploaded in Company Vault. Upload required in Vault to achieve Pass status.",
           "deviationRemarks": "None",
-          "evidenceDoc": "CMMI, ISO 27001, ISO 9001 Certificates"
+          "evidenceDoc": "GST Reg. No."
         }
       ],
       "teamStructure": {
-        "totalResources": 0,
-        "deploymentSummary": "The RFP requires specific manpower experience for Chief Technology Officer, Project Head, and Sports Automation/Digitization Subject Matter Experts, but does not define a total headcount.",
+        "totalResources": 6,
+        "deploymentSummary": "Minimum of 06 core members working as a team with specified educational qualifications.",
         "teams": [
           {
-            "teamName": "Key Personnel",
-            "resourceCount": 3,
+            "teamName": "Core Technical Team",
+            "resourceCount": 6,
             "roles": [
-              "Chief Technology Officer",
-              "Project Head",
-              "Sports Automation and Digitization (Subject Matter Experts)"
+              "B.Tech./B.Eng./M.Tech. in Computer Science/Information Technology or BCA/MCA"
             ]
           }
         ]
       },
       "detectedAnnexures": [
         {
-          "formNumber": "Annexure - 1",
-          "title": "Technical Bid Letter for Agency",
-          "description": "Format for technical bid submission"
+          "formNumber": "Annexure-A",
+          "title": "Affidavit Debarment Declaration",
+          "description": "Notarized affidavit regarding debarment status"
         },
         {
-          "formNumber": "Annexure - 2",
-          "title": "Self Declaration",
-          "description": "Declaration for not being blacklisted"
+          "formNumber": "Annexure-B",
+          "title": "Integrity Pact",
+          "description": "Pre-bid pre-contract agreement"
         },
         {
-          "formNumber": "Annexure - 3",
-          "title": "Format for Power of Attorney for Signing of Proposal",
-          "description": "Authorization for signing the bid"
+          "formNumber": "Annexure-C",
+          "title": "Turnover Certificate",
+          "description": "CA certified turnover and net worth certificate"
         },
         {
-          "formNumber": "Annexure - 4",
-          "title": "BILL OF QUANTITIES",
-          "description": "Financial bid format"
+          "formNumber": "Annexure-D",
+          "title": "Financial Bid",
+          "description": "Online commercial offer form"
+        },
+        {
+          "formNumber": "Annexure-E",
+          "title": "Confidentiality Agreement",
+          "description": "Non-disclosure agreement"
+        },
+        {
+          "formNumber": "Annexure-F",
+          "title": "Compliance and Penalties",
+          "description": "SLA and penalty structure"
+        },
+        {
+          "formNumber": "Annexure-G",
+          "title": "Format of Performance Guarantee",
+          "description": "Bank guarantee format"
         }
       ],
       "keyRisks": [
         {
-          "title": "Penalty for Delay",
-          "description": "Penalty of 0.25% per week of material cost for delays in completion.",
+          "title": "Penalty for SLA Breach",
+          "description": "Penalties apply for call answer time, first call resolution, abandonment rate, and fatal errors, ranging from 0.15% to 1% of monthly billed value.",
           "riskLevel": "High"
         },
         {
-          "title": "Performance Guarantee",
-          "description": "Successful bidder must furnish 5% of Contract Cost as Performance Guarantee.",
+          "title": "Lock-in Period",
+          "description": "One-year lock-in period where the bidder cannot exit the project.",
           "riskLevel": "Medium"
         },
         {
-          "title": "Warranty Penalty",
-          "description": "Penalty of Rs. 100/- per day per device for failure to provide services within 7 days during warranty.",
-          "riskLevel": "Medium"
+          "title": "Liquidated Damages",
+          "description": "25% of quoted percentage per day after 16 weeks for development delays.",
+          "riskLevel": "High"
         }
       ],
       "hasBOQ": false,
       "boqType": "Milestone / Retainer Based (No Itemized BOQ)",
-      "rawTextSnippet": "\n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 1 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \n \n \n \n \n \n \n \n \n \n \n \n \nReference No: SAJHA/69 \n \n \n \n \nRequest For Proposal (RFP): Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA) \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nSports Authority of Jharkhand (SAJHA) \nBirsa Munda Football Stadium, Morabadi, Ranchi - 834 008 \n \n \n \n \n \n \n \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 2 \n Application for Sports Authority of Jharkhand (SAJHA)     \nTable of Contents \n \n \nNotice For Request for Proposal 3 \n1. Introduction 5 \n2. Terms & Conditions 6 \n3. KEY DEFINITIONS: 7 \n4. Instruction to Bidders 7 \n5. ELIGIBILITY CRITERIA FOR BIDDER 16 \n6. Scope of Work: 17 \n8. PROPOSAL EVALUATION 19 \n9. Technical Bid Evaluation Criteria 19 \nTECHNICAL BID EVALUATION CRITERIA 19 \n10. EVALUATION OF FINANCIAL PROPOSALS 21 \n11. GENERAL TERMS & CONDITIONS 22 \n12. PERFORMA & ANNEXURE 27 \nAnnexure - 1: Technical Bid Letter for Agency 27 \nAnnexure - 2 : Self Declaration 29 \nAnnexure - 3 : Format for Power of Attorney for Signing of Proposal 30 \nAnnexure - 4: BILL OF QUANTITIES 32 \n  \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 3 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \nNotice For Request for Proposal \n \nSports Authority of Jharkhand (SAJHA) \nBirsa Munda Football Stadium, Morabadi, Ranchi - 834 008 \n \nRFP No: SAJHA/69                 Date:07/03/2024 \n \nSports Authority of Jharkhand invites sealed Bids under two bid-bases, i.e., Technical \nBid and Financial Bid from reputed Agencies for “Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA)”. \n \nDescription of work Location \nBid Document Cost \n(Non-Refundable) \nEarnest Money Deposit \n(Rs.) (Refundable) \nPeriod of \nContract \n“Selection of Agency for the \nDevelopment of Integrated \nWebsite and Mobile Application \nfor Sports Authority of Jharkhand \n(SAJHA)” \nSports Authority of \nJharkhand, First floor, \nGate No.-28/29, Birsa \nMunda Football \nStadium, Morabadi, \nRanchi. \n₹25,000/- \n \n[Rupees Twenty-Five \nThousand Only] \n \nBOQ cost in the form of \nDemand Draft in favour of   \n\"Sports Authority of \nJharkhand, Morabadi\" \nPayable at Ranchi. \n₹5,00,000/- \n(Rupees Five Lakh Only) \nEMD in the form of Demand \nDraft in favour of   Sports \nAuthority of Jharkhand, \nMorabadi Payable at Ranchi. \n3 Years \nfrom LOA, \nSubject to \nextension. \n \n \n1. Time Schedule of Tender \n \n \nS.No. Particulars Date \n1 Name of RFP \nRequest For Proposal (RFP): Development of Integrated Website and \nMobile Application for Sports Authority of Jharkhand (SAJHA) \n2 Type of RFP \nOpen Tender \n3 \nLast date for sending queries \nto SAJHA Office \nDate: 15.03.2024, Time: 11:00 AM \nQueries may be sent by email to: sajha9@gmail.com \n4 Pre - bid meeting \nDate: 18.03.2024, Time: 04:00 PM \nLink will be provided on the website. \n5 Bid Due Date Date: 28.03.2024, Time: 11:00 AM \n6 Opening of Technical Bid \nDate: 28.03.2024, Time: 04:00 PM \n(Directorate of Sports & Youth Affairs cum Sports Authority of \nJharkhand, Birsa Munda Football Stadium, Gate No: 28/29, Morabadi, \nRanchi, Jharkhand - 834 008. \n7 Opening of Financial Bid After Technical Bid evaluation. \n8 \nEarnest Money Deposit \n(EMD) \nBID SECURITY DECLARATION as per the above table in prescribed \nformat (Given in RFP), duly filled by the bidder to be submitted along with \nbid document. \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 4 \n Application for Sports Authority of Jharkhand (SAJHA)     \n1. Tender documents can be downloaded from the SAJHA Website (www.sajha.in) from \n08.03.2024 10:00 AM onwards.  \n2. The interested bidders should submit their bids in SAJHA office by Hand/Registered \nPost/ Speed Post before the prescribed time. Details regarding the tender can be \naccessed through the RFP document as uploaded on the website. \n3. Sports Authority of Jharkhand (SAJHA) reserves the right to cancel the bid at any time \nor amend/ withdraw any ion the terms and conditions in the RFP Document without \nassigning any reason thereof.  \n \nSd/- \nExecutive Director, \nSports Authority of Jharkhand. \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 5 \n Application for Sports Authority of Jharkhand (SAJHA)     \n1. Introduction  \n \nAbout Sports Authority of Jharkhand \n \nSports Authority of Jharkhand, (A Unit of Jharkhand Government) was incorporated on \n07.06.2006 by Department of Sports to promote Sports in the State of Jharkhand. SAJHA \nhas played a greater role for development of sports in Jharkhand State. This is important \nthat the SAJHA is supported by the government in the form of share capital and grants. \nThe main objective of the SAJHA is: \n \nA. To promote and develop the sports activities and to prepare the concerned policies \nin the light of sports policy of Jharkhand Government, and to implement them in \nJharkhand for the sake of improving sports level. \n \nB. To instill a sense of health consciousness and physical well-being in the minds of \npublic and to provide opportunities to and create awareness among all the age group \nto attain physical fitness through sports, yoga, and other such techniques. \n \nC. To give advice to the State Government for the growth of sports and thereby \nimplement them with the help of state government. \n \nD. To implement the policies proposed by Jharkhand Government. Government of \nIndia, or other such organisation for the development of sports with the passage of \ntime. \n \nE. To prepare proposal for providing sports facilities and structure, land sports field, and \naccommodation for the players, coach, and authorities and to develop, build up, \nprocure, and take under the its purview, manage, conserve and make the optimal \nuse of the aforesaid entities. \n \nF. To organise competition, sports exhibition, training camps and other such sports \nactivities that encourage sports, sportsperson and physical well-being and also make \nthem easily accessible to public on single point responsibility basis or with the help \nof other organisations. \n \nG. Inception of sports organisation, management of new as well as existing organisation \nand to give direction for accomplishment of objectives. \n \nH. To establish coordination and cooperation with the Indian Olympic association, \nnational sports association and other such organisation on the state and district basis \nfor the development of sports and betterment of sportsperson. \n \nI. To encourage, promote and conduct research for the sports, techniques of sports, \nphysiotherapy, biochemistry, psychology, sports diet, and manufacturing of \nequipment for sports. \n \nJ. To provide training and the required facilities for physical education, sports punch, \nsports medicine and other such techniques which are a part of sports and physical \neducation. \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 6 \n Application for Sports Authority of Jharkhand (SAJHA)     \n2. Terms & Conditions  \n \na. Due Diligence \n \nThe Bidder is expected to and shall be deemed to have examined all instructions, forms, \nterms and specifications and other information in this Tender Document. The bid should \nbe precise, complete and in the prescribed format as per the requirement of the Tender \nDocument. Failure to furnish all information required by the Tender Document or \nsubmission of a bid not responsive to the Tender Document in every respect will be at \nthe Bidder’s risk and may result in rejection of the bid. Sports Authority of Jharkhand \n(SAJHA) shall at its sole discretion be entitled to determine the adequacy/ sufficiency of \nthe information provided by the Bidder. \n \nb. Cost of Bidding \n \nThe Bidder will bear all costs associated with the preparation and submission of its bid \nand Sports Authority of Jharkhand (SAJHA) will in no event or circumstance be held \nresponsible or liable for these costs, regardless of the conduct or outcome of the bidding \nprocess. \n \nc. Bid Submission \n \nSeparate Sealed envelope offers prepared in accordance with the procedure \nenumerated in the RFP document should be submitted to Executive Director, Sports \nAuthority of Jharkhand, Birsa Munda football stadium Morabadi, Ranchi not later than \nthe date and time laid down, at the address given in the schedule for invitation for BID. \n \n• All bids must be accompanied by a non-refundable Bid fee/Tender Cost INR Rs. \n25,000/- (Rupees Twenty-Five Thousand Only) in form of Bank Draft and Earnest \nMoney Deposit (EMD) of INR 5,00,000 /- (Rupees Five Lakhs Only) in the form of \nDemand Draft valid for period of 3 months.  \n \n• The tenders will be opened on the date and time indicated in the presence of \nBidders if any present on the occasion. If the date of opening is declared to be a \nholiday the tenders will be opened on the next working day or as decided by \nauthority. \n \n• This tender document is not transferable. \n \nd. DELIVERY PERIOD \n \na. Development of the website and application shall be completed within 150 days \n(Phase I) of the date of the Award of Word-Order for this tender. \n \nb. Place of development and operation of the Website & Application: \nDIRECTORATE OF SPORTS AND YOUTH AFFAIRS CUM SPORTS \nAUTHORITY OF JHARKHAND, RANCHI, JHARKHAND. \n \n \n \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 7 \n Application for Sports Authority of Jharkhand (SAJHA)     \n3. KEY DEFINITIONS: \n \nIn this document, unless otherwise mentioned or expressed clearly, the terms ‘Competent \nAuthority’, ‘Tenderer’, ‘Bidder’, ‘Committee ’and ‘Supply of Equipment’s ’would have \nmeanings as given below: \n \na. Competent Authority: Sports Authority of Jharkhand acting through: \n1. Executive Director, Sports Authority of Jharkhand \n \nb. Bidder: The Firm/Company who buys the tender document, signs, and submits \nthe Tender document and bids for the contract and/or awarded the Contract to \nimplement Tender for “Development of Integrated Website and Mobile \nApplication for Sports Authority of Jharkhand (SAJHA)”, as the reference may \nindicate; it shall also include associates, license, collaborator, and agents. \n \nc. Supply: Supply of all the components of “Development of Integrated Website and \nMobile Application for Sports Authority of Jharkhand (SAJHA)” as per the \nTechnical Specifications specified in this document, for use in Sports Authority \nof Jharkhand \n \nd. Warranty: Warranty of all components of “Development of Integrated Website \nand Mobile Application for Sports Authority of Jharkhand (SAJHA)”, conditions \nand period of which are mentioned in the detail technical specification of items. \nThe period is specifically mentioned which would be deemed to be for one year \nfrom the date of installation of the item by the Tenderer at the desired places in \nthe areas of Sports Authority of Jharkhand. \n \ne. Maintenance : Maintenance of the components of “Development of Integrated \nWebsite and Mobile Application for Sports Authority of Jharkhand (SAJHA)” will \nbe for the period of 03 (Three) Years, from the date of Letter of Award. \n \nf. Purchaser: Purchaser means Sports Authority of Jharkhand acting through \nExecutive Director, Sports Authority of Jharkhand. \n \ng. Vendor: Tenderer who has been declared the successful tenderer (bidder) and \nhas been offered to enter into the agreement with the purchaser and who has \nentered into the agreement to execute the work/provide goods and services within \nthe scope of this tender. \n \n4. Instruction to Bidders \n \n   Detailed instruction & documents to be furnished for bidding \n \na) Interested bidders can download the bid documents from the website www.sajha.in  \n \nb) The bidders are required to submit the hardcopy (seal and signed) of the technical \nbid documents latest by the last date and time of submission of bids. Sports \nAuthority of Jharkhand will accept the hard copy of bid documents as authentic and \nfinal. This shall be binding to all parties. \n \nc) Bids will be opened as per time schedule mentioned. \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 8 \n Application for Sports Authority of Jharkhand (SAJHA)     \nd) Bidders have to submit original Demand Draft towards Tender Fee & Bids \nSecurity/EMD as mentioned in the RFP during the period & time as mentioned in \nthe RFP failing which bid will not be accepted. \n \ne) Provided documents of successful bidder will be verified with the original before \nsigning the agreement. The successful bidder has to provide the originals to the \nconcerned authority. \n \nf) Sports Authority of Jharkhand will not be responsible for delay in submission of bids \ndue to any reason, what so ever. \n \ng) All required information for bid must be filled and submitted. \n \n       Submission of Proposals \n  \n  The Agency shall be required to submit a Technical & Financial Bid in separate \nsealed envelopes put in a bigger sealed envelopes super scribed as “RFP for  –\n“Development of Integrated Website and Mobile Application for Sports Authority of \nJharkhand (SAJHA)” \n \nBids should be submitted in hard copy to be delivered by Courier/Registered \nPost/Speed Post/Hand delivery at Sports Authority of Jharkhand office up to \n28.03.2024, 11:00 AM on the Proposal Due Date as indicated. The documents \naccompanying the Proposal(s) submission shall include: \n \nA. “Technical Proposal”, consisting of the following: (Envelope-1) \n \na. Technical Bid Letter in the prescribed format at Annexure - I; \nb. Self-declaration in the prescribed format at Annexure –2 for not being \nblacklisted. \nc. Power of Attorney for signing of Proposal in the prescribed format at \nAnnexure – 3; \nd. In case of a company, copy of the Certificate of Incorporation, Copy of \nMemorandum and Articles of Association of the Bidder. \ne. In case of a Limited Liability Partnership firm, it should furnish copy of \nregistration certificate as a proof of identity. \nf. In case of a registered partnership firm, it should furnish a copy of the IT \nreturns/ copy of the registration certificate under the registrar of firms. \n \nB. “Financial Proposal:- (Envelope-2) \n \na. The Financial Proposal in the prescribed format at Annexure – 4, on the letter \nhead of the Bidder and signed by the authorised signatory. \n \nThe Financial Proposal should specify the amount of service fee (the “Service Fee” \ninclusive of all applicable taxes of work required by the Agency for undertaking the \nServices. The Financial Proposal clearly indicating the total Service Fee of work in \nboth figures and words, and signed by the Agency’s Authorised Representative. In \nthe event of any difference between figures and words, the amount indicated in \nwords shall prevail. \n \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 9 \n Application for Sports Authority of Jharkhand (SAJHA)     \nBidders may note that Sports Authority of Jharkhand will not entertain any \ndeviations to the RFP at the time of submission of the Proposal or thereafter. The \nProposal to be submitted by the Bidders should have to be unconditional and \nunqualified and the Bidders would be deemed to have accepted the terms and \nconditions of the RFP. Any conditional Proposal shall be regarded as non-\nresponsive and would be liable for rejection. \n \nExecutive Director, Sports Authority of Jharkhand reserves the right to seek original \ndocuments for verification of any of the documents or any other additional \ndocuments upon opening of the Bidding Documents. \n \nFormat and Signing of Proposal \n \nBidders would provide all the information as per this RFP in the specified format(s).  \nExecutive Director, Sports Authority of Jharkhand would evaluate only those \nProposals that are received in the required format and complete in all respects. \nIncomplete and/or conditional Proposals shall be liable to rejection. \n \nAll the documents of the Proposal under this RFP shall be typed or written in \nindelible ink and signed by the authorised signatory of the Bidder who shall also \ninitial each page. All the alterations, omissions, additions or any other amendments \nmade to the Proposal shall be initialed by the person(s) signing the Proposal. The \nperson signing the Proposal shall initial all the alterations, omissions, additions, or \nany other amendments made to the Proposal.  \n \nNumber of Proposals \n \n A bidder can submit one proposal at a time. Bidder submitting more than one \nproposal shall be rejected \n \nLanguage of Bid \n \n All proposals and various documents related to these proposals should be in English \nlanguage. All correspondence between Sports Authority of Jharkhand and the Bidders \nwould also be in English Language. Supporting Documents and Printed Literature \nfurnished by the Bidders may be in another Language provided they are accompanied \nby an accurate translation in English Language. \n \nConflict of Interest \n \nSports Authority of Jharkhand (SAJHA) requires that bidder must provide professional, \nobjective and impartial advice and at all times hold Sports authority of Jharkhand \n(SAJHA) interest’s paramount, strictly avoid conflicts with other assignments/jobs or their \nown corporate interests and act without any consideration for future work. In case the \nBidders have any subsisting interest, either by themselves or through their partners, that \nis likely to conflict the work specified in the Scope of Work, they shall declare such \ninterests as part of their proposal. \n \nValidity of Proposals (RFP) \n \n• The bid shall be valid for a period of 180 days from the closing date for \nsubmission of the bid. \n\nRequest For Proposal (RFP): Development of Integrated Website and Mobile  Page 10 \n Application for Sports Authority of Jharkhand (SAJHA)     \n \n• In exceptional circumstances, prior to the expiration of the RFP (Tender) \nvalidity, the RFP inviting authority may request the bidders to extend the RFP \nvalidity for further period as deemed fit/appropriate. The request and the \nresponses there to shall be made in writing. A bidder may refuse the request \nwithout forfeiting its EMD. A bidder agreeing to the request will not be required \nor permitted to modify its RFP.  \n \n     Right to accept Proposal \n \n Sports Authority of Jharkhand reserves the right to accept or reject any Proposal, and \nto annul the Proposal process and reject all Proposals at any time prior to award of contract, \nwithout thereby incurring any liability to the affected bidder or any obligation to inform the \naffected bidder of the grounds for such decision. \n \nBid Opening \n \nSports Authority of Jharkhand will open all proposals, in the presence of bidders or their \nauthorised representatives who choose to attend, at the date and time mentioned in the \nRFP. \n \nThe bidders ’representatives who are present shall sign a register evidencing their \nattendance. In the event of the specified date being declared a holiday, the RFPs shall be \nopened at the appointed time and location on the next working day. \n \nFraud & Corruption \n \nSports Authority of Jharkhand requires that bidder is bidding for this RFP must observe the \nhighest standards of ethics during the performance and execution of such contract. \n \n✓ “Corrupt practice” means the offering, giving, receiving or soliciting of anything \nof value to influence the action of Sports Authority of Jharkhand official by any \npersonnel of bidder in procurement process or in contract execution. \n \n✓ “Fraudulent practice” means a misrepresentation of facts, in order to influence \na procurement process or the execution of a contract, to the detriment of \nSports Authority of Jharkhand and includes collusive practices among the \nbidders (prior to or after Proposal submission) designed to establish bids at \nartifi",
+      "rawTextSnippet": "\n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 1                           \n \n  \n \n \nCIN -U74899DL1999GOI101707 \nWebsite -www.irctc.com; e-mail- info@irctc.com \nINDIAN RAILWAY CATERING AND TOURISM CORPORATION LIMITED \nTENDER DOCUMENT \n \nOPEN E-TENDER FOR HIRING OF SERVICE PROVIDER FOR DEVELOPMENT, \nMAINTENANCE AND OPERATIONS O    F  e-CATERING WEBSITE FOR IRCTC \n \nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm \nNIT No. 2024/IRCTC/e-Catering/Hiring of IT firm \n \n \nPre- Bid Meeting (At below mentioned Address): 08.08.2024 at 15:00 Hrs \nLast date and Time of Submission of bids: 20.08.2024 at 12:00 Hrs  \nDate and Time of Opening of Tender Documents: 20.08.2024 at 12:15 Hrs \n \nEMD : Rs.20,00,000/- \nContract Period : Three Years (03) \nE-tender Form Price: NIL \nEstimated Total Contract Value (in Rs.) 30, 62,69,928 approx. \n \nIn case tender opening date is declared holiday, the tender will be opened at the \nsame time on the  next working day. \n \n \nAddress for communication: \n           General Manager/Q & P \nIndian Railway Catering and Tourism Corporation Limited, \n11\nth \nFloor, ‘A’ Wing, Statesman House, B-148, \nBarakhamba Road, Connaught Place, \nNew Delhi-110001 \nTel: 011-23311263, 64 \nFax: 011-23311259 \n \n \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 2                           \n \nNote: This Tender Document can only be viewed at http://www.tenderwizard.com/IRCTC \nand will be submitted/ received online at http://www.tenderwizard.com/IRCTC only. \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 3                           \n \nThe  bidder  will  be  responsible  for  development  and  maintenance  of  e-Catering \nwebsite  of  IRCTC  platform  based  on  Java  Play  framework,  react  based  PWA  and \ndesktop  website,  use  LWP  (light weight  process)  angular  based  admin  panel  and \ncustomer  and  vendor  android  applications.  Future  development  of  any  and  every \nmodules/feature  as  well  as  new  applications  shall  be  done  by  the  bidder  which \nimpacts  e-Catering  platform  based  upon  mutual agreement  with  IRCTC  e-Catering \nteam. Bidder will also provide stabilization support. The e-Catering platform \nshould  follow highly  scalable, robust, fault  tolerant  and  redundant architecture \ncapable to serve customer service requests through multiple channels viz. \nresponsive mobile website, desktop website, mobile application and call \ncentre/alternative customer support system. The bidder will also be responsible \nfor  managing  Customer  Support  Centre,  sending  transactional  SMSs  and  emails  to \ncustomers/vendors/aggregators etc. as well as bear cost of hosting e-Catering data \non Amazon Web Services (AWS). \nBrief Scope of Work \nINDIAN RAILWAY CATERING AND TOURSIM CORPORATION LIMITED \nNOTICE INVITING OPEN E-TENDER \n \nSub: OPEN E-TENDER FOR HIRING OF SERVICE PROVIDER FOR DEVELOPMENT, \nMAINTENANCE AND OPERATIONS OF e-CATERING WEBSITE FOR IRCTC \n \nIRCTC  invites  open  e-tender  for hiring of  service  provider  for  development  of e-\nCatering website for IRCTC from eligible companies or partnership firms or \nproprietors \n \n \n1. Period of the license - Three Years, may be extended by one year on \nsatisfactory performance. \n2. Bidders    are    required    to    deposit    EMD    of    Rs    Twenty  Lakh \nthrough tenderwizard.com  site  itself  prior  to  submission  of  E-Tender.  EMD \ndeposited in  any  other  account  of  IRCTC  by  any  other  process  will  not  be \nadjusted and such offers will be summarily rejected. \n3. The  bids  will  consist  of  two part bids  i.e.  Technical  and  Financial  Bids. \nTechnical Bid  will  consist  of  Technical  and  other  conditions  as  laid  down  in \nthe  Bid document. Financial bid shall consist of the financial aspects as per \nconditions laid down in the Bid document. \n4. The successful Bidders shall be intimated about the Award of Work and EMD \nof  other  Bidders  shall  be  returned  without  any  interest  within  one  month \nfrom the date of award of license. No interest shall be payable on EMD. \n5. The bid  shall remain open for  acceptance for  120 days from the date of \nopening of E-Tender. \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 4                           \n \n6. IRCTC  reserves  the  right  to  reject  any/all  E-Tenders  without  assigning  any \nreason. \n7. The Notice Inviting E-Tender and Instructions to bidders including Eligibility \nCriteria,  General/Special  Conditions,  Financial  bid  (Annexure D),  E- Tender \nSchedule shall form the part of Tender Documents. This document consists of \n62 pages including one cover page, one NIT page and one index page. \n \n8. The E-Tenders received will be evaluated as per eligibility criteria to \nascertain the lowest acceptable quoted rate. \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 5                           \n \nList of Contents \n \n \n \n \nS. no. Particulars Page No. \n \n1. Disclaimer 5 \n2. Scope of Work 6-17 \n3. Obligations of IRCTC 18 \n4. Instructions to Bidder  & Eligibility Criteria 19-30 \n5. General Conditions 31-42 \n6. \nAffidavit Regarding Debarment (Annexure A) 43 \n7. \nIntegrity pact (Annexure B) 44-48 \n8. Turnover Certificate(Annexure C) 49 \n9. Financial Bid (Annexure-D ) 50-52 \n10. Confidentiality Agreement (Annexure – E) 53-56 \n11. Compliance and penalties(Annexure – F) 57-59 \n12.    Format of Performance Guarantee (Annexure-G) 60-61 \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 6                           \n \n1. DISCLAIMER \n \n1. The information contained in this Tender is being provided by IRCTC for the \nlimited purposes  of  enabling  the  Bidders  to  participate  and  submit  a Bid  in \nresponse  to  this  Tender  for  Hiring  of  Bidder  in  E-Catering  business. In  no \ncircumstances shall IRCTC, or its respective advisors, consultants, Aggregator \ns, servants and/or agents incur any liability arising out of or in respect  of \nthe issue of this Tender, or the Bidding Process. \n2. The  objective  of  the  Bid  document  is  to  provide  the  prospective  Bidder(s) \nwith all relevant information to assist the formulation of proposals or bids. \n3. This Tender may not be appropriate for all persons, and it is not possible for \nIRCTC, its employees or advisors to consider the investment objectives, \nfinancial situation and particular needs of each party who reads or uses this \nTender. The assumptions, assessments,    statements and    information \ncontained in this Tender may not be complete, accurate, adequate or correct. \nEach Bidder  should therefore, conduct its own due-diligence, investigations \nand analysis and should check the accuracy,   adequacy, correctness, \nreliability and completeness of the assumptions, assessments, statements \nand information  contained in this Tender and obtain independent advice \nfrom appropriate sources. \n4. Nothing  in  this  Tender  shall  be  construed  as  legal,  financial  or  tax  advice. \nIRCTC will  not  be  liable  for  any  costs,  expenses,  however  so  incurred  by the \nBidders in connection with the preparation or submission of their Bid. \nIRCTC   reserves   the   right   to   amend   this   Tender   or   its   terms   and   any \ninformation contained herein or to cancel the Bidding Process or altogether \nabandon the Project at any time by notice, in writing, to the Bidders. Further, \nit  may  in  no  event  be  assumed  that  there  shall  be  no deviation or  change in \nany of the herein-mentioned information. \n5. IRCTC may, in its absolute discretion but without being under any obligation \nto do so, update, amend or supplement the information, assessment or \nassumptions contained in this Tender. \n6. Laws of the Republic of India are applicable to this Tender. \n7. Each Bidder’s participation in the tender constitutes its agreement to, and \nacceptance  of  the  terms  set  forth  in  this  Disclaimer.  By  acceptance  of this \nTender,  the  recipient  agrees  that  this  Tender  and  any  information herewith \nsupersedes document(s) or earlier information, if any, in relation to the \nsubject matter hereof and agree to the exclusive jurisdiction of   courts \nsituated at New Delhi. \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 7                           \n \n2. Scope of Work \n \nA. Brief of the project:- \n \n e-Catering service allows passengers to book food of choice from partner \nrestaurants.  Food  is  delivered  on  their  seat.  Booking  has  to  be  done  in \nadvance.   Services   are   available   through   select   stations   to   bona-fide \npassengers in reserved trains only i.e. based on PNR.  \n \n e-Catering   has   been   introduced   for   widening   the   range   of   options \navailable  to  passengers  for  ordering  food  of  their  choice.  The  prices  of \nfood  booked  under  e-Catering  are  market  driven.  Menu  is  freely  set  by \nrestaurant.  Ordered  Food  will  be  delivered  on  train  at  stations  of  his \nchoice.  \n \n e-Catering  services  were  started  on  Indian  Railways  in  the  year  2014 \nwith  limited  vendors  and  in  28  trains.  Subsequently  it  was  made  station \nbased  and  has  been  expanded  to  407  stations  and  as  of  now  with  4153 \nnumber of vendors. \n \n Growth of e-Catering \n \n \n \nB. Introduction: \n \n Railway  Board  has  given  exclusive  mandate  to  IRCTC  for  management  of  e- \ncatering  for  providing  pre  booked  meals  on  board  the  trains  operated  by \nIndian Railways.\n The  e-Catering  services  allow  the  bonafide passengers  of  the  Trains  to  book \nfood of their choice in  advance through  IRCTC website and Mobile app from \nassociated restaurants for delivery on their seats/berths.\n Services,  at  present,  are  available  through  select  stations  in  reserved  trains \n21100\n1488\n17864\n40669\n55127\n7166\n457\n6971\n16133\n23036\n0\n10000\n20000\n30000\n40000\n50000\n60000\nFY 20FY 21FY 22FY 23FY 24\nMeals per day\nOrders per day\n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 8                           \n \nonly based on PNR.\n In order to achieve the mandate in its letter  and spirit, IRCTC facilitates \npassengers for booking of meals through following channels:\n \n Desktop Website – www.e-Catering.irctc.co.in \n Mobile Website -- www.e-Catering.irctc.co.in \n Android App -- Food on Track ( from Google play store) \n IOS -- Food on Track (from App store) \n 1323 –Voice(through call centre) \n E-catering Web services to B2C partners/Vendors \n Bulk order: Customer approaches IRCTC for bulk booking or by \nchoosing Booking facility in e-catering portal. \n \n The entities associated with e-catering with brief description of their role is \nhereunder:\ni. Food Aggregator, \nii. Food Vendor, \niii. Delivery aggregator, \niv. Payment gateways, \nv. Customer \nvi. IRCTC, and \nvii. Information technology team \n \ni. Food Aggregator: \n \n E-catering dashboard- to view upcoming orders.\n IRCTC provides PNR related API to operate their web services.\n All orders booked in aggregator’s platform are shared on e-catering \ndatabase on real time.\n All orders booked in Aggregator’s platform have e-catering  order \nnumber.\n Outlet  closing  date:  A  module  has  been  developed  which  allows \naggregator  to  close  the  outlet  for  any  future  dates.  On  the  selected \ndate the vendor will not be visible to e-Catering customers for \nbooking of orders.\n Feedback module: To maintain standards of food and service, \nfeedback module is implemented. On any complaint raised by \ncustomer,  Aggregator  can  give  explanation  within  24  hrs  to  avoid \npenalty.\n RDS  module:  For  financial  transparency  in  e-catering  system  RDS \nmodule is implemented, this module reconciles receivable and \npayable - both calculations against every order. This is available in \naggregator admin panel also. On the basis of balance in RDS \naccount,  payment  is  made.  Aggregator  need  to  maintain  minimum \nbalance of Rs. 10,000/- to operate.\n Penalty  can  be  imposed  as  per  terms  and  conditions  of  IRCTC  for \nnon-delivery,  complaints  etc.  which  would  be  deducted  from  the \nRDS.\n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 9                           \n \n Food Aggregator shall  not indulge in running any parallel business \nthat  will  harm  the  interest  of  IRCTC  /Indian  Railways.  However,  a \npolicy for aggregators on tie up with any external website has been \nformulated  wherein  traffic  can  be  diverted  from  sites  with  heavy \ntraffic.\n No aggregator can make any station/vendor at station LIVE on \ntheir website till the time it is approved and made LIVE on IRCTC e- \nCatering website.\n \n The system has to recognize, interact and  enable diverse partners \nsuch as offline restaurants, online restaurants, food aggregators, \ndelivery  agency,  delivery  boys,  call  centres,  payment  gateways  and \nIRCTC Zones/Admin etc. \n The system shall interact with each user in predefined ways. The \nsystem shall offer a common interface that integrates well with a \ndiverse set of external system of users System should maintain end to \nend  financial  accounting  of  all  interactions  amongst  various  partners \nagainst each event with 99.99% accuracy and High concurrency. \n \n For serving associate, the following applications are required to \neffectively conduct operation: \n● Vendor Panel \n● Vendor Android App \n● Delivery Partner Panel \n● Call center Panel \n \nii. Food Vendor: Independent vendor may have single or more outlets. \n Vendor’s mobile application and e-catering dashboard- to view \nupcoming orders.\n API integration: On the basis of ability in IT field, IRCTC may \nintegrate with vendor, for which:\na. Vendor to have its own website and/or mobile application \nb. Vendor to book orders in vendor’s platform and have to \nshare with e-catering database on real time. \nc. All orders booked in Vendor’s platform to have e-catering \norder number. \n Outlet closing date: Same as in Food aggregator module, \nVendor is allowed to close the outlet for any future dates. On \nthe selected date  the  vendor  will  not  be  visible  to e-Catering \ncustomers for booking of orders. \n Feedback  module:  To  maintain  standards  of  food  and  service, \nfeedback module is implemented. On any complaint raised by \ncustomer, vendor can give explanation within 24  hrs to avoid \npenalty.\n RDS module: Similar to Aggregator RDS module reconciles \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 10                           \n \nreceivable and payable both calculations against every order. \nThis is available in vendor admin panel also. On the basis of \nbalance in RDS account, payment is made. Vendor need to \nmaintain minimum balance of Rs. 10,000/- to operate.\n \niii. Delivery aggregator: A Delivery Aggregator who would collect \nthe  food  from  the  vendors/Aggregators  and  supply  the  same  to \nthe passenger at a particular station or multiple stations. \n E-catering dashboard/API integration- to view upcoming \norders.\n Delivery aggregator have right to check the quantity and \npackaging of food before delivery of food.\n In case of not delivery or partial delivery, Penalty will be \nimposed on delivery aggregator.\n RDS module: Similar to all other RDS module, calculated \ndelivery charge is credited and vendor commission is debited \nfrom RDS account for each order. Delivery aggregator needs to \nmaintain minimum RDS balance as per agreement with IRCTC. \nThe terms and conditions would be provided by IRCTCThere \nwill be no cash dealing between Delivery aggregator and Food \nvendor/Aggregator.\n \niv. Payment Options : \n The e-catering site must have two payment options COD and \nprepaid. For pre payment integration with payment gateways \nfor which commercials shall be decided by IRCTC will have to \nbe done. IRCTC reserves the rights to have 2-3 payment \ngateways/wallets or any other mode of payment integrated on \nthis site.\n PG to maintain minimum balance as per agreement. For \nsuccessful booking PG RDS is debited by order value and for \nsuccessful refund the same amount is credited.\n If PG wishes, e-catering orders could be through their platforms \nusing Mobile app or web site. For this PG need to have API \nintegration accordingly.\n IRCTC is not responsible for PG charges levied on customer \nabove order value.\n \nv. Customer: Bonafide Indian railway passenger having valid PNR can \nbook meal through e-catering module. Passenger can book meal \nthrough e-catering web, mobile app and trough our partners. \n Passenger  may  book  order  after  generation  of  PNR  and  before \nbooking cut off time of that outlet (ideally 2hrs).\n Passenger  can  cancel  order  before  booking  cut  off  time  of  that \noutlet (Ideally 2hrs).\n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 11                           \n \n E-invoice is sent on registered email ID after successful delivery \nof  meal  on as  per  GST  rules for  meals ordered through  e-\nCatering.\n Passenger  may  register  his  feedback  in  e-catering  system  after \ndelivery  time  and  before  5  days  of  delivery  time  to  improve \nquality of service.\n In  case  of  not  delivery  of  meal.  Discount  coupon  of  Rs.  100/- is \ngiven  to  customer  as  a  token  and  the  same amount  is  debited \nfrom respective vendor as penalty.\n A  modular  e-commerce  platform  for  placing orders  is  to  be designed \nand listed  for a  customer  who  is  traveling.  Each  type  of smart  phone \nuser shall be able to book the order without much variation in:\n● Ease of use \n● Time to execute the order. \n● The order has to be created with low internet connectivity and in the \nshortest possible time. \n● ETA  calculation  with  maximum  possible  accuracy  upon  publicly  available \ninformation i.e. train status. \n \nThere are three applications to serve customers: \n● Customer website: This needs to be highly lightweight, \ndesigned to open on customer’s phone and desktops even on \nlowest speed connections with good success rate. This includes \nmobile as well as desktop website. \n● Customer Android App \n● Customer iOS App \nvi. IRCTC – IRCTC  Zones  /Corporate  would  be  monitoring  all  the  process \nand the financial reconciliation of all the participants through the \nadmin panel. \nThe system should produce accurate and performance data for analysis by IRCTC \nusers. There are a bunch of reports to be generated, from order to financial reports. \nFollowing interface is required:- \n● Admin  Panel- for  IRCTC  Management,  operations,  maintenance  teams.  The \ndashboard should be able to portray the status of orders and all the \ncomponents  of  the  platform  and  provide  all  the  relevant  reports  (in  desired \nformat) as and when required. \n● Update Schedules: Daily, weekly, monthly updates to be shared with \nassociate. \nDevelopment  of  Website:- Successful  bidder  will  be  responsible  for development \nand maintenance of e- catering website of IRCTC in view the information provided \nherein  and  as  per  the  domain  information  provided  by  IRCTC.  It  may  choose  to \ndevelop  a  new  system  or  may  upgrade  the  existing  system  within  stipulated  time \nlines. \n \n\nOpen E-Tender No. 2024/IRCTC/e-Catering/Hiring of IT firm                Page 12                           \n \n The flow chart to understand the e catering process is hereunder: \nFlow-Chart of e-Catering service \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n *- 2 hours is standard timing which may vary as per requirement of vendors. \n \n \n  \nPassenger may book the meal from the time of booking a rail ticket  up to  2* hours \nbefore the  scheduled  a",
       "documentMeta": {
-        "fileName": "1791271650357-807927743-1-RFP-for-Development-of-Integrated-Website-and-Mobile-Application-for-SAJHA (1).pdf",
+        "fileName": "1791281929773-712404871-IRCTC Tender_Document.pdf",
         "fileType": ".pdf",
-        "fileSizeBytes": 612872,
-        "pageCount": 32,
+        "fileSizeBytes": 1846882,
+        "pageCount": 61,
         "isScanned": false,
         "detectedSections": [
           "Eligibility Criteria",
@@ -234,34 +268,33 @@
           "Liquidated Damages & Penalties",
           "Payment Milestones",
           "EMD & Bid Security",
-          "BOQ / Financial Schedule",
           "Submission Guidelines",
           "Annexures & Undertakings",
           "Mandatory Declarations"
         ]
       },
-      "uploadedFileName": "1-RFP-for-Development-of-Integrated-Website-and-Mobile-Application-for-SAJHA (1).pdf",
+      "uploadedFileName": "IRCTC Tender_Document.pdf",
       "status": "In Analysis",
       "priority": "Medium",
       "goNoGoAnalysis": {
         "source": "AI Generated (Bid Intelligence Engine)",
         "isCalculatedMetric": true,
         "disclaimer": "Win Probability and Overall Score are AI-estimated predictive analytics based on qualification matching, not direct statements from the tender document.",
-        "decision": "GO",
-        "winProbability": 72,
-        "overallScore": 76,
-        "financialFitScore": 95,
+        "decision": "CONDITIONAL GO",
+        "winProbability": 51,
+        "overallScore": 55,
+        "financialFitScore": 35,
         "technicalFitScore": 65,
         "experienceScore": 65,
         "riskScore": 20,
-        "recommendationSummary": "Strong GO recommendation. With an overall qualification score of 76% and estimated Win Probability of 72%, the bidder profile satisfies technical, financial, and eligibility thresholds for \"Development of Integrated Website and Mobile Application for Sports Authority of Jharkhand (SAJHA)\".",
+        "recommendationSummary": "Conditional recommendation. Bidder satisfies primary technical scope, but should verify specific past-contract thresholds or key personnel requirements.",
         "swot": {
           "strengths": [
-            "Bidder average turnover (₹16.2 Cr) comfortably exceeds RFP threshold of 1.5 Cr.",
-            "Meets the requirement of minimum 5 years of proven industry track record."
+            "Meets the requirement of minimum 3 years of proven industry track record."
           ],
           "weaknesses": [
-            "Missing specific required certifications: CMMI Level 3 or above (SVC or DEV).",
+            "Bidder turnover (₹14.80 Cr) is below the mandatory RFP requirement of Rs 15.32 Cr average per year.",
+            "Missing specific required certifications: GST Registration, ESI Registration, EPF Registration, PAN Card.",
             "Relevant past project completion certificates need to be uploaded to Company Vault."
           ],
           "opportunities": [
@@ -269,35 +302,36 @@
             "Opportunity to establish long-term government stakeholder advisory & media planning footprint."
           ],
           "threats": [
-            "Strict deliverable timelines with multi-stakeholder review and milestone acceptance requirements."
+            "Strict deliverable timelines with multi-stakeholder review and milestone acceptance requirements.",
+            "Liquidity impact: EMD / Bid Security of ₹20,00,000 required during evaluation."
           ]
         },
         "keyClauses": [
           {
-            "title": "Penalty for Delay",
-            "description": "Penalty of 0.25% per week of material cost for delays in completion.",
+            "title": "Penalty for SLA Breach",
+            "description": "Penalties apply for call answer time, first call resolution, abandonment rate, and fatal errors, ranging from 0.15% to 1% of monthly billed value.",
             "riskLevel": "High"
           },
           {
-            "title": "Performance Guarantee",
-            "description": "Successful bidder must furnish 5% of Contract Cost as Performance Guarantee.",
+            "title": "Lock-in Period",
+            "description": "One-year lock-in period where the bidder cannot exit the project.",
             "riskLevel": "Medium"
           },
           {
-            "title": "Warranty Penalty",
-            "description": "Penalty of Rs. 100/- per day per device for failure to provide services within 7 days during warranty.",
-            "riskLevel": "Medium"
+            "title": "Liquidated Damages",
+            "description": "25% of quoted percentage per day after 16 weeks for development delays.",
+            "riskLevel": "High"
           }
         ]
       },
       "boqItems": [],
       "proposals": {
-        "executiveSummary": "Vikas Kumar Company is pleased to submit this comprehensive proposal in response to RFP SAJHA/69 for \"Development of Integrated Website and Mobile Application for Sports Authority of Jharkhand (SAJHA)\".",
-        "technicalApproach": "Our proposed methodology centers on structured research, strategic advisory, multi-stakeholder communication planning, and measurable impact tracking tailored to Sports Authority of Jharkhand (SAJHA).",
+        "executiveSummary": "Vikas Kumar Company is pleased to submit this comprehensive proposal in response to RFP 2024/IRCTC/e-Catering/Hiring of IT firm for \"HIRING OF SERVICE PROVIDER FOR DEVELOPMENT, MAINTENANCE AND OPERATIONS OF e-CATERING WEBSITE FOR IRCTC\".",
+        "technicalApproach": "Our proposed methodology centers on structured research, strategic advisory, multi-stakeholder communication planning, and measurable impact tracking tailored to INDIAN RAILWAY CATERING AND TOURISM CORPORATION LIMITED.",
         "implementationPlan": "Phase 1: Inception & Stakeholder Mapping (Weeks 1-3)\nPhase 2: Strategy Formulation & Advisory Roadmap (Weeks 4-8)\nPhase 3: Campaign Execution & Media Rollout (Months 3-6)\nPhase 4: Impact Evaluation & Deliverable Review (Ongoing)"
       },
-      "createdAt": "2026-10-06T07:27:44.287Z",
-      "updatedAt": "2026-10-06T07:27:44.287Z"
+      "createdAt": "2026-10-06T10:19:00.483Z",
+      "updatedAt": "2026-10-06T11:02:24.548Z"
     }
   ],
   "settings": {

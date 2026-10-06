@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   FileText,
   Search,
@@ -17,12 +17,12 @@ import {
   Edit2,
   Save,
   X,
-  HelpCircle
-} from 'lucide-react';
-import { Tender, ComplianceItem } from '../../types/tender';
-import { CompanyProfile, StatutoryDocument } from '../../types/company';
-import { complianceAPI } from '../../services/api';
-import { toast } from 'sonner';
+  HelpCircle,
+} from "lucide-react";
+import { Tender, ComplianceItem } from "../../types/tender";
+import { CompanyProfile, StatutoryDocument } from "../../types/company";
+import { complianceAPI } from "../../services/api";
+import { toast } from "sonner";
 
 interface TenderInteractiveComplianceMatrixProps {
   tender: Tender;
@@ -39,19 +39,22 @@ export default function TenderInteractiveComplianceMatrix({
   onComplianceUpdated,
   onOpenVaultUpload,
 }: TenderInteractiveComplianceMatrixProps) {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
-  const [editNotes, setEditNotes] = useState<string>('');
-  const [activeVaultPickerClauseId, setActiveVaultPickerClauseId] = useState<string | null>(null);
-  const [isAddClauseModalOpen, setIsAddClauseModalOpen] = useState<boolean>(false);
+  const [editNotes, setEditNotes] = useState<string>("");
+  const [activeVaultPickerClauseId, setActiveVaultPickerClauseId] = useState<
+    string | null
+  >(null);
+  const [isAddClauseModalOpen, setIsAddClauseModalOpen] =
+    useState<boolean>(false);
   const [newClauseData, setNewClauseData] = useState({
-    clauseNo: '',
-    category: 'Technical',
-    requirement: '',
-    status: 'Complied',
-    evidenceDoc: 'Technical Proposal',
-    justification: '',
+    clauseNo: "",
+    category: "Technical",
+    requirement: "",
+    status: "Complied",
+    evidenceDoc: "Technical Proposal",
+    justification: "",
     isMandatory: true,
   });
 
@@ -61,23 +64,23 @@ export default function TenderInteractiveComplianceMatrix({
 
   // Check if a clause has a physical file uploaded in the vault
   const getVaultStatus = (item: ComplianceItem) => {
-    const evidence = (item.evidenceDoc || '').toLowerCase();
-    const req = (item.requirement || '').toLowerCase();
-    const cat = (item.category || '').toLowerCase();
+    const evidence = (item.evidenceDoc || "").toLowerCase();
+    const req = (item.requirement || "").toLowerCase();
+    const cat = (item.category || "").toLowerCase();
 
     const matchedDoc = vaultDocs.find((doc) => {
-      const docName = (doc.name || '').toLowerCase();
+      const docName = (doc.name || "").toLowerCase();
       return (
         doc.fileName &&
         (evidence.includes(docName) ||
           docName.includes(evidence) ||
-          (cat.includes('statutory') && docName.includes('pan')) ||
-          (req.includes('pan') && docName.includes('pan')) ||
-          (req.includes('gst') && docName.includes('gst')) ||
-          (req.includes('turnover') && docName.includes('turnover')) ||
-          (req.includes('net worth') && docName.includes('net worth')) ||
-          (req.includes('iso') && docName.includes('iso')) ||
-          (req.includes('incorporation') && docName.includes('incorporation')))
+          (cat.includes("statutory") && docName.includes("pan")) ||
+          (req.includes("pan") && docName.includes("pan")) ||
+          (req.includes("gst") && docName.includes("gst")) ||
+          (req.includes("turnover") && docName.includes("turnover")) ||
+          (req.includes("net worth") && docName.includes("net worth")) ||
+          (req.includes("iso") && docName.includes("iso")) ||
+          (req.includes("incorporation") && docName.includes("incorporation")))
       );
     });
 
@@ -104,7 +107,7 @@ export default function TenderInteractiveComplianceMatrix({
     complianceList.forEach((c) => {
       if (c.category) set.add(c.category);
     });
-    return ['All', 'Mandatory (PQC)', 'Action Required', ...Array.from(set)];
+    return ["All", "Mandatory (PQC)", "Action Required", ...Array.from(set)];
   }, [complianceList]);
 
   // Filtered clauses
@@ -112,19 +115,30 @@ export default function TenderInteractiveComplianceMatrix({
     return complianceList.filter((item) => {
       const matchSearch =
         !searchTerm ||
-        (item.clauseNo || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.requirement || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.category || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.evidenceDoc || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.justification || '').toLowerCase().includes(searchTerm.toLowerCase());
+        (item.clauseNo || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (item.requirement || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (item.category || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (item.evidenceDoc || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (item.justification || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
 
       if (!matchSearch) return false;
 
-      if (selectedCategory === 'All') return true;
-      if (selectedCategory === 'Mandatory (PQC)') return item.isMandatory !== false;
-      if (selectedCategory === 'Action Required') {
+      if (selectedCategory === "All") return true;
+      if (selectedCategory === "Mandatory (PQC)")
+        return item.isMandatory !== false;
+      if (selectedCategory === "Action Required") {
         const vs = getVaultStatus(item);
-        return !vs.isPhysical && item.status !== 'Complied';
+        return !vs.isPhysical && item.status !== "Complied";
       }
       return item.category === selectedCategory;
     });
@@ -133,29 +147,32 @@ export default function TenderInteractiveComplianceMatrix({
   // Update Status handler
   const handleStatusChange = async (itemId: string, newStatus: string) => {
     const updated = complianceList.map((c) =>
-      c.id === itemId ? { ...c, status: newStatus } : c
+      c.id === itemId ? { ...c, status: newStatus } : c,
     );
     onComplianceUpdated(updated);
 
     try {
       await complianceAPI.updateItem(tender.id, itemId, { status: newStatus });
-      toast.success('Compliance status updated');
+      toast.success("Compliance status updated");
     } catch (err: any) {
-      toast.error('Failed to sync status with server');
+      toast.error("Failed to sync status with server");
     }
   };
 
   // Attach Vault Doc to Clause
-  const handleAttachVaultDoc = async (itemId: string, doc: StatutoryDocument) => {
+  const handleAttachVaultDoc = async (
+    itemId: string,
+    doc: StatutoryDocument,
+  ) => {
     const updated = complianceList.map((c) =>
       c.id === itemId
         ? {
             ...c,
             evidenceDoc: doc.name,
-            justification: `Verified in Vault: ${doc.name} (${doc.fileName || 'Attached'})`,
-            status: 'Complied',
+            justification: `Verified in Vault: ${doc.name} (${doc.fileName || "Attached"})`,
+            status: "Complied",
           }
-        : c
+        : c,
     );
     onComplianceUpdated(updated);
     setActiveVaultPickerClauseId(null);
@@ -163,28 +180,30 @@ export default function TenderInteractiveComplianceMatrix({
     try {
       await complianceAPI.updateItem(tender.id, itemId, {
         evidenceDoc: doc.name,
-        justification: `Verified in Vault: ${doc.name} (${doc.fileName || 'Attached'})`,
-        status: 'Complied',
+        justification: `Verified in Vault: ${doc.name} (${doc.fileName || "Attached"})`,
+        status: "Complied",
       });
       toast.success(`Attached "${doc.name}" to clause`);
     } catch (err: any) {
-      toast.error('Failed to update clause doc');
+      toast.error("Failed to update clause doc");
     }
   };
 
   // Save Justification Notes
   const handleSaveNotes = async (itemId: string) => {
     const updated = complianceList.map((c) =>
-      c.id === itemId ? { ...c, justification: editNotes } : c
+      c.id === itemId ? { ...c, justification: editNotes } : c,
     );
     onComplianceUpdated(updated);
     setEditingItemId(null);
 
     try {
-      await complianceAPI.updateItem(tender.id, itemId, { justification: editNotes });
-      toast.success('Justification saved');
+      await complianceAPI.updateItem(tender.id, itemId, {
+        justification: editNotes,
+      });
+      toast.success("Justification saved");
     } catch (err) {
-      toast.error('Failed to save justification');
+      toast.error("Failed to save justification");
     }
   };
 
@@ -192,29 +211,33 @@ export default function TenderInteractiveComplianceMatrix({
   const handleAddClauseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newClauseData.requirement.trim()) {
-      toast.error('Please enter requirement text');
+      toast.error("Please enter requirement text");
       return;
     }
 
     try {
       const payload = {
         ...newClauseData,
-        clauseNo: newClauseData.clauseNo || `Sec ${complianceList.length + 1}.0`,
+        clauseNo:
+          newClauseData.clauseNo || `Sec ${complianceList.length + 1}.0`,
       };
       const res = await complianceAPI.addItem(tender.id, payload);
-      const updatedList = res.data?.complianceItems || [...complianceList, { ...payload, id: `item-${Date.now()}` }];
+      const updatedList = res.data?.complianceItems || [
+        ...complianceList,
+        { ...payload, id: `item-${Date.now()}` },
+      ];
       onComplianceUpdated(updatedList);
       setIsAddClauseModalOpen(false);
       setNewClauseData({
-        clauseNo: '',
-        category: 'Technical',
-        requirement: '',
-        status: 'Complied',
-        evidenceDoc: 'Technical Proposal',
-        justification: '',
+        clauseNo: "",
+        category: "Technical",
+        requirement: "",
+        status: "Complied",
+        evidenceDoc: "Technical Proposal",
+        justification: "",
         isMandatory: true,
       });
-      toast.success('Custom clause added to compliance matrix');
+      toast.success("Custom clause added to compliance matrix");
     } catch (err: any) {
       toast.error(`Failed to add clause: ${err.message}`);
     }
@@ -235,7 +258,8 @@ export default function TenderInteractiveComplianceMatrix({
               </h3>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Attach physical documents directly from your Master Vault, verify compliance status, and manage evidence notes.
+              Attach physical documents directly from your Master Vault, verify
+              compliance status, and manage evidence notes.
             </p>
           </div>
 
@@ -256,7 +280,10 @@ export default function TenderInteractiveComplianceMatrix({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
           {/* Search Box */}
           <div className="relative flex-1 max-w-md">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search
+              size={14}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
             <input
               type="text"
               placeholder="Search clause, requirement, certificate..."
@@ -267,7 +294,7 @@ export default function TenderInteractiveComplianceMatrix({
             {searchTerm && (
               <button
                 type="button"
-                onClick={() => setSearchTerm('')}
+                onClick={() => setSearchTerm("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <X size={13} />
@@ -284,8 +311,8 @@ export default function TenderInteractiveComplianceMatrix({
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-[#18794e] text-white shadow-2xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? "bg-[#18794e] text-white shadow-2xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 {cat}
@@ -300,26 +327,46 @@ export default function TenderInteractiveComplianceMatrix({
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-slate-100/90 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
-              <th className="py-3 px-4 w-28 border-r border-slate-200/80">Clause / Ref</th>
-              <th className="py-3 px-4 min-w-[280px] border-r border-slate-200/80">RFP Tender Requirement</th>
-              <th className="py-3 px-4 min-w-[240px] border-r border-slate-200/80">Master Vault Document Linkage</th>
-              <th className="py-3 px-4 w-44 border-r border-slate-200/80">Compliance Status</th>
-              <th className="py-3 px-4 min-w-[200px]">Remarks / Justification</th>
+              <th className="py-3 px-4 w-28 border-r border-slate-200/80">
+                Clause / Ref
+              </th>
+              <th className="py-3 px-4 min-w-[280px] border-r border-slate-200/80">
+                RFP Tender Requirement
+              </th>
+              <th className="py-3 px-4 min-w-[240px] border-r border-slate-200/80">
+                Master Vault Document Linkage
+              </th>
+              <th className="py-3 px-4 w-44 border-r border-slate-200/80">
+                Compliance Status
+              </th>
+              <th className="py-3 px-4 min-w-[200px]">
+                Remarks / Justification
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
             {filteredClauses.length === 0 ? (
               <tr>
                 <td colSpan={5} className="py-12 text-center text-slate-400">
-                  <FolderOpen size={30} className="mx-auto text-slate-300 mb-2" />
-                  <p className="font-medium text-slate-600">No matching compliance clauses found</p>
-                  <p className="text-[11px] text-slate-400">Try clearing filters or search term.</p>
+                  <FolderOpen
+                    size={30}
+                    className="mx-auto text-slate-300 mb-2"
+                  />
+                  <p className="font-medium text-slate-600">
+                    No matching compliance clauses found
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    Try clearing filters or search term.
+                  </p>
                 </td>
               </tr>
             ) : (
               filteredClauses.map((item, index) => {
                 const vaultStatus = getVaultStatus(item);
-                const isPassed = item.status === 'Complied' || item.status === 'Complied (Pass)' || item.status === 'Pass';
+                const isPassed =
+                  item.status === "Complied" ||
+                  item.status === "Complied (Pass)" ||
+                  item.status === "Pass";
                 const isEditing = editingItemId === item.id;
 
                 return (
@@ -334,7 +381,7 @@ export default function TenderInteractiveComplianceMatrix({
                           {item.clauseNo || `Sec ${index + 1}.0`}
                         </strong>
                         <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
-                          {item.category || 'General'}
+                          {item.category || "General"}
                         </span>
                         {item.isMandatory !== false && (
                           <span className="inline-block px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-rose-50 text-rose-700 border border-rose-200 block w-fit">
@@ -358,12 +405,18 @@ export default function TenderInteractiveComplianceMatrix({
                         <div className="flex items-center gap-1.5">
                           {vaultStatus.isPhysical ? (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                              <CheckCircle2 size={11} className="text-emerald-600" />
+                              <CheckCircle2
+                                size={11}
+                                className="text-emerald-600"
+                              />
                               Physical File in Vault
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                              <AlertTriangle size={11} className="text-amber-600" />
+                              <AlertTriangle
+                                size={11}
+                                className="text-amber-600"
+                              />
                               Missing Physical File
                             </span>
                           )}
@@ -371,9 +424,26 @@ export default function TenderInteractiveComplianceMatrix({
 
                         {/* Document Name */}
                         <div className="text-[11px] font-medium text-slate-800 flex items-center gap-1.5">
-                          <FileCheck2 size={13} className={vaultStatus.isPhysical ? 'text-[#18794e]' : 'text-slate-400'} />
-                          <span className="truncate max-w-[200px]" title={item.evidenceDoc || vaultStatus.docName || 'No document mapped'}>
-                            {vaultStatus.fileName || item.evidenceDoc || vaultStatus.docName || 'Document not attached'}
+                          <FileCheck2
+                            size={13}
+                            className={
+                              vaultStatus.isPhysical
+                                ? "text-[#18794e]"
+                                : "text-slate-400"
+                            }
+                          />
+                          <span
+                            className="truncate max-w-[200px]"
+                            title={
+                              item.evidenceDoc ||
+                              vaultStatus.docName ||
+                              "No document mapped"
+                            }
+                          >
+                            {vaultStatus.fileName ||
+                              item.evidenceDoc ||
+                              vaultStatus.docName ||
+                              "Document not attached"}
                           </span>
                         </div>
 
@@ -381,7 +451,13 @@ export default function TenderInteractiveComplianceMatrix({
                         <div className="flex items-center gap-2 pt-1 relative">
                           <button
                             type="button"
-                            onClick={() => setActiveVaultPickerClauseId(activeVaultPickerClauseId === item.id ? null : item.id)}
+                            onClick={() =>
+                              setActiveVaultPickerClauseId(
+                                activeVaultPickerClauseId === item.id
+                                  ? null
+                                  : item.id,
+                              )
+                            }
                             className="text-[11px] font-bold text-[#18794e] hover:text-[#156a45] flex items-center gap-1 cursor-pointer"
                           >
                             <span>Pick from Vault</span>
@@ -393,7 +469,9 @@ export default function TenderInteractiveComplianceMatrix({
                               <span className="text-slate-300">|</span>
                               <button
                                 type="button"
-                                onClick={() => onOpenVaultUpload(item.requirement)}
+                                onClick={() =>
+                                  onOpenVaultUpload(item.requirement)
+                                }
                                 className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
                               >
                                 <Upload size={11} />
@@ -418,12 +496,18 @@ export default function TenderInteractiveComplianceMatrix({
                                     <button
                                       key={doc.id || doc.name}
                                       type="button"
-                                      onClick={() => handleAttachVaultDoc(item.id, doc)}
+                                      onClick={() =>
+                                        handleAttachVaultDoc(item.id, doc)
+                                      }
                                       className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs hover:bg-emerald-50 text-slate-800 flex flex-col cursor-pointer transition-colors"
                                     >
-                                      <span className="font-semibold truncate">{doc.name}</span>
+                                      <span className="font-semibold truncate">
+                                        {doc.name}
+                                      </span>
                                       <span className="text-[10px] text-slate-400 truncate">
-                                        {doc.fileName ? `📁 ${doc.fileName}` : 'No file uploaded'}
+                                        {doc.fileName
+                                          ? `📁 ${doc.fileName}`
+                                          : "No file uploaded"}
                                       </span>
                                     </button>
                                   ))}
@@ -438,21 +522,25 @@ export default function TenderInteractiveComplianceMatrix({
                     {/* Column 4: Compliance Status */}
                     <td className="py-3.5 px-4 align-top border-r border-slate-100">
                       <select
-                        value={item.status || 'Complied'}
-                        onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                        value={item.status || "Complied"}
+                        onChange={(e) =>
+                          handleStatusChange(item.id, e.target.value)
+                        }
                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#18794e] ${
                           isPassed
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                            : item.status === 'Review Required'
-                            ? 'bg-amber-50 text-amber-800 border-amber-300'
-                            : item.status === 'Exemption Claimed'
-                            ? 'bg-blue-50 text-blue-800 border-blue-300'
-                            : 'bg-rose-50 text-rose-800 border-rose-300'
+                            ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                            : item.status === "Review Required"
+                              ? "bg-amber-50 text-amber-800 border-amber-300"
+                              : item.status === "Exemption Claimed"
+                                ? "bg-blue-50 text-blue-800 border-blue-300"
+                                : "bg-rose-50 text-rose-800 border-rose-300"
                         }`}
                       >
                         <option value="Complied">Complied (Pass)</option>
                         <option value="Review Required">Review Required</option>
-                        <option value="Exemption Claimed">Exemption Claimed</option>
+                        <option value="Exemption Claimed">
+                          Exemption Claimed
+                        </option>
                         <option value="Not Complied">Not Complied (Gap)</option>
                       </select>
                     </td>
@@ -489,13 +577,19 @@ export default function TenderInteractiveComplianceMatrix({
                       ) : (
                         <div className="group/notes relative">
                           <p className="text-slate-600 text-xs italic leading-relaxed">
-                            {item.justification || item.deviationRemarks || 'Complied in full as per RFP requirements.'}
+                            {item.justification ||
+                              item.deviationRemarks ||
+                              "Complied in full as per RFP requirements."}
                           </p>
                           <button
                             type="button"
                             onClick={() => {
                               setEditingItemId(item.id);
-                              setEditNotes(item.justification || item.deviationRemarks || '');
+                              setEditNotes(
+                                item.justification ||
+                                  item.deviationRemarks ||
+                                  "",
+                              );
                             }}
                             className="mt-1 text-[11px] text-[#18794e] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer opacity-70 group-hover/notes:opacity-100 transition-opacity"
                           >
@@ -531,7 +625,10 @@ export default function TenderInteractiveComplianceMatrix({
               </button>
             </div>
 
-            <form onSubmit={handleAddClauseSubmit} className="space-y-3.5 text-xs">
+            <form
+              onSubmit={handleAddClauseSubmit}
+              className="space-y-3.5 text-xs"
+            >
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">
                   Clause Reference / Number
@@ -540,7 +637,12 @@ export default function TenderInteractiveComplianceMatrix({
                   type="text"
                   placeholder="e.g. Sec 4.2 / Cl. 7.1"
                   value={newClauseData.clauseNo}
-                  onChange={(e) => setNewClauseData({ ...newClauseData, clauseNo: e.target.value })}
+                  onChange={(e) =>
+                    setNewClauseData({
+                      ...newClauseData,
+                      clauseNo: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800"
                 />
               </div>
@@ -551,7 +653,12 @@ export default function TenderInteractiveComplianceMatrix({
                 </label>
                 <select
                   value={newClauseData.category}
-                  onChange={(e) => setNewClauseData({ ...newClauseData, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewClauseData({
+                      ...newClauseData,
+                      category: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800"
                 >
                   <option value="Statutory">Statutory & Tax</option>
@@ -570,7 +677,12 @@ export default function TenderInteractiveComplianceMatrix({
                   rows={3}
                   placeholder="Enter exact RFP condition or criteria..."
                   value={newClauseData.requirement}
-                  onChange={(e) => setNewClauseData({ ...newClauseData, requirement: e.target.value })}
+                  onChange={(e) =>
+                    setNewClauseData({
+                      ...newClauseData,
+                      requirement: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800"
                   required
                 />
@@ -584,7 +696,12 @@ export default function TenderInteractiveComplianceMatrix({
                   type="text"
                   placeholder="e.g. ISO 27001 Certificate / CA Certificate"
                   value={newClauseData.evidenceDoc}
-                  onChange={(e) => setNewClauseData({ ...newClauseData, evidenceDoc: e.target.value })}
+                  onChange={(e) =>
+                    setNewClauseData({
+                      ...newClauseData,
+                      evidenceDoc: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800"
                 />
               </div>
