@@ -258,16 +258,6 @@ export default function TenderBidderIdentityHero({
 
             {/* Actions: Switch Dropdown & Manage Button */}
             <div className="flex items-center gap-2">
-              {onOpenSignatoriesModal && (
-                <button
-                  type="button"
-                  onClick={onOpenSignatoriesModal}
-                  className="text-[11px] font-bold text-emerald-300 hover:text-white underline cursor-pointer"
-                >
-                  Manage Signatories
-                </button>
-              )}
-
               {/* Dropdown Toggle for Signatories from Vault */}
               <div className="relative">
                 <button
@@ -381,7 +371,7 @@ export default function TenderBidderIdentityHero({
         </div>
 
         {/* Dynamic QCBS Readiness Mini-Card */}
-        <div className="bg-white/10 p-3.5 rounded-xl border border-white/15 backdrop-blur-xs flex items-center justify-between">
+        {/* <div className="bg-white/10 p-3.5 rounded-xl border border-white/15 backdrop-blur-xs flex items-center justify-between">
           <div>
             <span className="text-[9px] uppercase font-bold text-emerald-200 block">
               QCBS TECH READINESS
@@ -400,7 +390,7 @@ export default function TenderBidderIdentityHero({
           <div className="w-12 h-12 rounded-full border-3 border-emerald-400/60 border-t-emerald-300 flex items-center justify-center font-extrabold text-xs text-white bg-white/5">
             {score}%
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
