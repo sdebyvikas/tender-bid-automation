@@ -1,15 +1,8 @@
-import React, { useState, useMemo } from "react";
-import { toast } from "sonner";
-import {
-  AlertTriangle,
-  Check,
-  ChevronRight,
-  ExternalLink,
-  FileText,
-  X,
-} from "lucide-react";
-import { StatusPill, SectionTitle } from "../components/Common";
-import { Tender, CompanyProfile } from "../types";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight, FileSearch, ShieldCheck } from 'lucide-react';
+import { Tender, CompanyProfile } from '../types';
+import { TenderEligibilityStep } from '../features/tender-eligibility';
 
 export interface EligibilityProps {
   activeTender?: Tender | null;
@@ -17,13 +10,10 @@ export interface EligibilityProps {
   setActive?: (tab: string) => void;
   isEmbedded?: boolean;
   onNextStep?: () => void;
-}
-
-interface GateItem {
-  name: string;
-  requirement: string;
-  result: string;
-  pass: boolean;
+  onOpenProfileModal?: () => void;
+  onOpenSignatoriesModal?: () => void;
+  onOpenVaultUpload?: (suggestedDocName?: string) => void;
+  onTenderUpdated?: (updatedTender: Tender) => void;
 }
 
 export default function Eligibility({
@@ -32,264 +22,79 @@ export default function Eligibility({
   setActive,
   isEmbedded = false,
   onNextStep,
+  onOpenProfileModal,
+  onOpenSignatoriesModal,
+  onOpenVaultUpload,
+  onTenderUpdated,
 }: EligibilityProps) {
-  const [selected, setSelected] = useState<string>("overview");
+  const navigate = useNavigate();
 
-  const gates: GateItem[] = useMemo(() => {
-    if (
-      activeTender?.complianceItems &&
-      activeTender.complianceItems.length > 0
-    ) {
-      return activeTender.complianceItems.map((c) => ({
-        name: `${c.clauseNo || 'Clause'} · ${c.category || "Compliance"}`,
-        requirement: c.requirement,
-        result: c.justification || c.status || "Evaluated",
-        pass:
-          c.status === "Complied" ||
-          c.status === "Complied (Pass)" ||
-          c.status === "Pass",
-      }));
+  if (!activeTender) {
+    return (
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center max-w-xl mx-auto my-12 space-y-4 shadow-sm">
+        <div className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 mx-auto flex items-center justify-center">
+          <FileSearch size={32} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+          No Active Tender Selected
+        </h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          Please select a tender from the repository to run the eligibility verification and compliance audit.
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate('/intake')}
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md"
+        >
+          <span>Go to Tenders Repository</span>
+          <ChevronRight size={14} />
+        </button>
+      </div>
+    );
+  }
+
+  const handleNavigateStep = (stepNumber: number) => {
+    if (onNextStep) {
+      onNextStep();
+    } else if (setActive) {
+      if (stepNumber === 3) setActive('Payment Proof');
+      else if (stepNumber === 4) setActive('Proposal Desk');
+      else if (stepNumber === 5) setActive('PDF Binder');
     }
-
-    const bidderTurnoverStr =
-      companyProfile?.averageTurnoverDisplay ||
-      (companyProfile?.averageTurnoverINR
-        ? `₹${(companyProfile.averageTurnoverINR / 10000000).toFixed(2)} Cr`
-        : "₹14.80 Cr");
-
-    const reqTurnover =
-      activeTender?.eligibilityCriteria?.minTurnoverDisplay ||
-      (activeTender?.eligibilityCriteria?.minAnnualTurnoverINR
-        ? `₹${(activeTender.eligibilityCriteria.minAnnualTurnoverINR / 10000000).toFixed(2)} Cr`
-        : "₹10.00 Cr");
-
-    const bidderTurnoverINR =
-      companyProfile?.averageTurnoverINR || 148000000;
-    const reqTurnoverINR =
-      activeTender?.eligibilityCriteria?.minAnnualTurnoverINR || 100000000;
-    const turnoverPass = bidderTurnoverINR >= reqTurnoverINR;
-
-    const certs = companyProfile?.certifications || [
-      "ISO 9001:2015",
-      "ISO 27001",
-    ];
-    const reqCerts = activeTender?.eligibilityCriteria
-      ?.requiredCertifications || ["ISO 9001", "ISO 27001"];
-
-    return [
-      {
-        name: "Average annual turnover",
-        requirement: `Minimum ${reqTurnover} in last 3 years`,
-        result: `${bidderTurnoverStr} verified (${companyProfile?.name || "Company Vault"})`,
-        pass: turnoverPass,
-      },
-      {
-        name: "Relevant experience",
-        requirement: `${activeTender?.eligibilityCriteria?.experienceYearsRequired || 5}+ years in relevant public sector projects`,
-        result: `Verified via statutory incorporation records`,
-        pass: true,
-      },
-      {
-        name: "Mandatory certificates",
-        requirement: reqCerts.join(" + "),
-        result: certs.join(", "),
-        pass: true,
-      },
-      {
-        name: "Authorized Bidder Registration",
-        requirement: "Valid GSTIN, PAN & Incorporation Certificates",
-        result: `GSTIN: ${companyProfile?.gstin || "Verified"} · PAN: ${companyProfile?.pan || "Verified"}`,
-        pass: Boolean(companyProfile?.gstin || companyProfile?.pan),
-      },
-    ];
-  }, [activeTender, companyProfile]);
-
-  const score =
-    activeTender?.goNoGoAnalysis?.overallScore || activeTender?.score || "82.5";
-  const preQual = (activeTender?.goNoGoAnalysis as any)?.financialFitScore
-    ? ((activeTender?.goNoGoAnalysis as any).financialFitScore / 2).toFixed(1)
-    : "37.5";
-  const techQual = (activeTender?.goNoGoAnalysis as any)?.technicalFitScore
-    ? ((activeTender?.goNoGoAnalysis as any).technicalFitScore / 2).toFixed(1)
-    : "45.0";
+  };
 
   return (
-    <>
+    <div className="space-y-6">
+      {/* Standalone Page Header if accessed directly via /eligibility */}
       {!isEmbedded && (
         <div className="page-heading fade-up">
           <div>
-            <div className="breadcrumb">
-              <span>Bid workspace</span>
+            <div className="breadcrumb flex items-center gap-1 text-xs text-slate-500 mb-1">
+              <span>Bid Workspace</span>
               <ChevronRight size={13} />
-              <strong>Eligibility</strong>
+              <strong className="text-indigo-600 font-bold">Step 2: Eligibility &amp; Gates</strong>
             </div>
-            <h1>Can you win this bid?</h1>
-            <p>
-              Transparent, deterministic checks against your verified company
-              vault for <strong>{activeTender?.title}</strong>.
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              Pre-Qualification &amp; Technical Compliance Audit
+            </h1>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Deterministic verification against your verified Master Company Vault for{' '}
+              <strong>{activeTender.title}</strong>.
             </p>
-          </div>
-          <div className="heading-actions">
-            <button
-              className="button button-secondary cursor-pointer"
-              onClick={() =>
-                toast.success("Scorecard exported", {
-                  description: "Eligibility report generated.",
-                })
-              }
-            >
-              <ExternalLink size={16} /> Export scorecard
-            </button>
-            <button
-              className="button button-primary cursor-pointer"
-              onClick={() => {
-                if (onNextStep) {
-                  onNextStep();
-                } else if (setActive) {
-                  setActive("Payment Proof");
-                }
-                toast.success("Moving to payment proof");
-              }}
-            >
-              Continue to payment <ChevronRight size={16} />
-            </button>
           </div>
         </div>
       )}
 
-      <div className="eligibility-top fade-up delay-1">
-        <div className="score-card-large">
-          <div className="score-ring score-ring-large">
-            <div>
-              <strong>{score}</strong>
-              <small>/ 100</small>
-            </div>
-          </div>
-          <div>
-            <span className="eyebrow">DECISION & READINESS</span>
-            <h2>
-              {activeTender?.goNoGoAnalysis?.decision || activeTender?.goNoGoAnalysis?.recommendation || "Good to proceed"}
-            </h2>
-            <p>
-              {(activeTender?.goNoGoAnalysis as any)?.recommendationSummary ||
-                "Pass the gate, close one document gap, then build your proposal."}
-            </p>
-          </div>
-        </div>
-
-        <div className="score-breakdown">
-          <div>
-            <span>Financial & Pre-qualification</span>
-            <strong>
-              {preQual} <small>/ 50</small>
-            </strong>
-            <div className="mini-bar">
-              <i style={{ width: `${(Number(preQual) / 50) * 100}%` }} />
-            </div>
-          </div>
-          <div>
-            <span>Technical Fit & Experience</span>
-            <strong>
-              {techQual} <small>/ 50</small>
-            </strong>
-            <div className="mini-bar mini-purple">
-              <i style={{ width: `${(Number(techQual) / 50) * 100}%` }} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="content-grid eligibility-grid fade-up delay-2">
-        <section className="panel">
-          <SectionTitle
-            eyebrow={`RULE ENGINE · ${gates.length} CHECKPOINTS`}
-            title="Eligibility checklist"
-            detail="Every result is traceable to a vault document or tender clause."
-          />
-          <div className="gate-list">
-            {gates.map((gate, idx) => (
-              <div
-                className={`gate-row ${gate.pass ? "gate-pass" : "gate-fail"}`}
-                key={gate.name + idx}
-              >
-                <span className="gate-icon">
-                  {gate.pass ? (
-                    <Check size={17} />
-                  ) : (
-                    <AlertTriangle size={17} />
-                  )}
-                </span>
-                <div>
-                  <strong>{gate.name}</strong>
-                  <small>{gate.requirement}</small>
-                </div>
-                <div className="gate-result">
-                  <strong>{gate.result}</strong>
-                  <StatusPill tone={gate.pass ? "green" : "amber"}>
-                    {gate.pass ? "Passed" : "Review"}
-                  </StatusPill>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel gap-panel">
-          <SectionTitle
-            eyebrow="RISK & GAP ANALYSIS"
-            title="Key tender risks"
-          />
-          <div className="gap-callout">
-            <AlertTriangle size={20} />
-            <div>
-              <strong>
-                {(activeTender?.goNoGoAnalysis as any)?.swot?.threats?.[0] ||
-                  activeTender?.goNoGoAnalysis?.riskFactors?.[0] ||
-                  "Liquidated damages (LD) penalties apply"}
-              </strong>
-              <p>
-                {(activeTender as any)?.keyRisks?.[0]?.description ||
-                  "0.5% per week delay up to 10% maximum. Milestone tracking recommended."}
-              </p>
-              <button
-                className="cursor-pointer"
-                onClick={() => setSelected("document")}
-              >
-                See affected clauses <ChevronRight size={14} />
-              </button>
-            </div>
-          </div>
-
-          <div className="gap-detail">
-            <div>
-              <span>Turnover Ratio</span>
-              <strong>Robust (108%)</strong>
-            </div>
-            <div>
-              <span>Suggested owner</span>
-              <strong>Technical & Legal</strong>
-            </div>
-            <div>
-              <span>Last checked</span>
-              <strong>Live AI engine</strong>
-            </div>
-          </div>
-
-          {selected === "document" && (
-            <div className="selected-clause">
-              <FileText size={15} />
-              <span>
-                Clause 5.4 · Liquidated damages & milestone delivery governance.
-              </span>
-              <X
-                size={14}
-                className="cursor-pointer"
-                onClick={() => setSelected("overview")}
-              />
-            </div>
-          )}
-        </section>
-      </div>
-    </>
+      {/* Tender Eligibility Step Engine */}
+      <TenderEligibilityStep
+        tender={activeTender}
+        companyProfile={companyProfile || null}
+        onNavigateStep={handleNavigateStep}
+        onOpenProfileModal={onOpenProfileModal}
+        onOpenSignatoriesModal={onOpenSignatoriesModal}
+        onOpenVaultUpload={onOpenVaultUpload}
+        onTenderUpdated={onTenderUpdated}
+      />
+    </div>
   );
 }

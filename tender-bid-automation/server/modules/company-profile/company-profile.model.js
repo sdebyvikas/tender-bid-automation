@@ -79,8 +79,10 @@ const CompanyProfileSchema = new mongoose.Schema(
   },
 );
 
-const CompanyProfile =
-  mongoose.models.CompanyProfile ||
-  mongoose.model("CompanyProfile", CompanyProfileSchema);
+if (mongoose.models && mongoose.models.CompanyProfile) {
+  delete mongoose.models.CompanyProfile;
+}
+
+const CompanyProfile = mongoose.model("CompanyProfile", CompanyProfileSchema);
 
 export default CompanyProfile;

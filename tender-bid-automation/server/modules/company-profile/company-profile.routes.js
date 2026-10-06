@@ -24,4 +24,11 @@ router.put("/vault/documents/:docId", upload.single("document"), CompanyProfileC
 router.delete("/documents/:docId", CompanyProfileController.deleteDocument);
 router.delete("/vault/documents/:docId", CompanyProfileController.deleteDocument);
 
+// Authorized Signatories routes (with PDF/Image Specimen Signature Upload)
+router.get("/signatories", CompanyProfileController.getSignatories);
+router.post("/signatories", upload.single("signatureFile"), CompanyProfileController.addSignatory);
+router.put("/signatories/:id", upload.single("signatureFile"), CompanyProfileController.updateSignatory);
+router.delete("/signatories/:id", CompanyProfileController.deleteSignatory);
+router.put("/signatories/:id/primary", CompanyProfileController.setPrimarySignatory);
+
 export default router;

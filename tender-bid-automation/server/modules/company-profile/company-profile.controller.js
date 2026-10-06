@@ -89,4 +89,86 @@ export class CompanyProfileController {
       res.status(500).json({ success: false, error: err.message });
     }
   }
+
+  static async getSignatories(req, res) {
+    try {
+      const result = await CompanyProfileService.getSignatories();
+      res.json({
+        success: true,
+        source: result.source,
+        signatories: result.signatories,
+        companyProfile: result.profile,
+      });
+    } catch (err) {
+      console.error("getSignatories error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  static async addSignatory(req, res) {
+    try {
+      console.log("--> addSignatory called! File:", req.file ? req.file.originalname : "none", "Body:", req.body);
+      const result = await CompanyProfileService.addSignatory(req.file, req.body);
+      res.json({
+        success: true,
+        message: `Authorized Signatory "${result.signatory.name}" added successfully to MongoDB!`,
+        signatory: result.signatory,
+        companyProfile: result.profile,
+        source: result.source,
+      });
+    } catch (err) {
+      console.error("addSignatory error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  static async updateSignatory(req, res) {
+    try {
+      const result = await CompanyProfileService.updateSignatory(
+        req.params.id,
+        req.file,
+        req.body
+      );
+      res.json({
+        success: true,
+        message: `Authorized Signatory "${result.signatory.name}" updated successfully!`,
+        signatory: result.signatory,
+        companyProfile: result.profile,
+        source: result.source,
+      });
+    } catch (err) {
+      console.error("updateSignatory error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  static async deleteSignatory(req, res) {
+    try {
+      const result = await CompanyProfileService.deleteSignatory(req.params.id);
+      res.json({
+        success: true,
+        message: "Authorized Signatory removed from MongoDB registry",
+        companyProfile: result.profile,
+        source: result.source,
+      });
+    } catch (err) {
+      console.error("deleteSignatory error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  static async setPrimarySignatory(req, res) {
+    try {
+      const result = await CompanyProfileService.setPrimarySignatory(req.params.id);
+      res.json({
+        success: true,
+        message: "Default Primary Signatory updated successfully!",
+        companyProfile: result.profile,
+        source: result.source,
+      });
+    } catch (err) {
+      console.error("setPrimarySignatory error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
 }

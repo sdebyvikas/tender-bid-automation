@@ -11,6 +11,7 @@ import proposalRoutes from "./routes/proposalRoutes.js";
 import boqRoutes from "./routes/boqRoutes.js";
 import annexureRoutes from "./routes/annexureRoutes.js";
 import companyProfileRoutes from "./modules/company-profile/company-profile.routes.js";
+import signatoryRoutes from "./modules/signatories/authorized-signatory.routes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
 import { connectDB } from "./config/mongo.js";
@@ -58,7 +59,8 @@ app.use("/api/compliance", complianceRoutes);
 app.use("/api/proposals", proposalRoutes);
 app.use("/api/boq", boqRoutes);
 app.use("/api/annexures", annexureRoutes);
-app.use("/api/company-profile", companyProfileRoutes);
+app.use("/api/company-profile", companyProfileRoutes); // Company Profile MongoDB API
+app.use("/api/signatories", signatoryRoutes); // Dedicated Authorized Signatories MongoDB API
 app.use("/api/chat", chatRoutes);
 app.use("/api/export", exportRoutes);
 

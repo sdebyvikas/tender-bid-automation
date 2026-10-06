@@ -14,6 +14,9 @@ import {
 import DocumentPreviewModal from "../components/DocumentPreviewModal";
 import TenderUploadModal from "../components/TenderUploadModal";
 import ConfirmDialog from "../components/ConfirmDialog";
+import VaultDocumentUploadModal from "../components/VaultDocumentUploadModal";
+import CompanyProfileModal from "../components/CompanyProfileModal";
+import AuthorizedSignatoriesModal from "../components/AuthorizedSignatoriesModal";
 import Eligibility from "./Eligibility";
 import PaymentProof from "./PaymentProof";
 import ProposalDesk from "./ProposalDesk";
@@ -31,6 +34,7 @@ interface TenderIntakeProps {
   onTenderCreated: (newTender: Tender) => void;
   onDeleteTender?: (id: string | number) => Promise<void> | void;
   companyProfile?: CompanyProfile | null;
+  onProfileUpdated?: (profile: CompanyProfile) => void;
 }
 
 export default function TenderIntake({
@@ -41,6 +45,7 @@ export default function TenderIntake({
   onTenderCreated,
   onDeleteTender,
   companyProfile,
+  onProfileUpdated,
 }: TenderIntakeProps) {
   const { tenderId } = useParams<{ tenderId?: string }>();
   const navigate = useNavigate();
@@ -60,6 +65,10 @@ export default function TenderIntake({
   const [tableFilter, setTableFilter] = useState<string>("All");
   const [previewDoc, setPreviewDoc] = useState<any>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
+  const [isVaultUploadOpen, setIsVaultUploadOpen] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const [isSignatoriesModalOpen, setIsSignatoriesModalOpen] = useState<boolean>(false);
+  const [suggestedVaultDocName, setSuggestedVaultDocName] = useState<string>("");
 
   // Reset step to 1 whenever tenderId changes
   useEffect(() => {
@@ -176,11 +185,21 @@ export default function TenderIntake({
               <div className="fade-up">
                 <Eligibility
                   activeTender={currentTender}
+                  companyProfile={companyProfile}
                   setActive={setActive}
                   isEmbedded={true}
                   onNextStep={() => {
                     setActiveStep(3);
                     window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  onOpenProfileModal={() => setIsProfileModalOpen(true)}
+                  onOpenSignatoriesModal={() => setIsSignatoriesModalOpen(true)}
+                  onOpenVaultUpload={(suggestedDocName) => {
+                    setSuggestedVaultDocName(suggestedDocName || "");
+                    setIsVaultUploadOpen(true);
+                  }}
+                  onTenderUpdated={(updated) => {
+                    onSelectTender(updated);
                   }}
                 />
               </div>
@@ -299,6 +318,52 @@ export default function TenderIntake({
           toast.success("RFP Ingested successfully!", {
             description: `${newTender.title || newTender.tenderNumber} is now ready in command center.`,
           });
+        }}
+      />
+
+      {/* Vault Document Upload Modal */}
+      <VaultDocumentUploadModal
+        isOpen={isVaultUploadOpen}
+        onClose={() => {
+          setIsVaultUploadOpen(false);
+          setSuggestedVaultDocName("");
+        }}
+        onDocumentUploaded={(updatedProfile) => {
+          if (onProfileUpdated) {
+            onProfileUpdated(updatedProfile);
+          }
+          setIsVaultUploadOpen(false);
+          toast.success("Document uploaded to Master Vault!");
+        }}
+      />
+
+      {/* Company Profile Edit Modal */}
+      <CompanyProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        companyProfile={companyProfile || undefined}
+        onOpenSignatories={() => {
+          setIsProfileModalOpen(false);
+          setIsSignatoriesModalOpen(true);
+        }}
+        onUpdateProfile={(updatedProfile) => {
+          if (onProfileUpdated && updatedProfile) {
+            onProfileUpdated(updatedProfile as any);
+          }
+          setIsProfileModalOpen(false);
+          toast.success("Master Vault Profile updated!");
+        }}
+      />
+
+      {/* Authorized Signatories Modal */}
+      <AuthorizedSignatoriesModal
+        isOpen={isSignatoriesModalOpen}
+        onClose={() => setIsSignatoriesModalOpen(false)}
+        companyProfile={companyProfile || undefined}
+        onSave={async (updatedProfile) => {
+          if (onProfileUpdated && updatedProfile) {
+            onProfileUpdated(updatedProfile as any);
+          }
         }}
       />
 

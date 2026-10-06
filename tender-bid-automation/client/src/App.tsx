@@ -31,6 +31,7 @@ import { CompanyProfile, StatutoryDocument } from "./types/company";
 import TenderAIChatDrawer from "./components/TenderAIChatDrawer";
 import TenderUploadModal from "./components/TenderUploadModal";
 import CompanyProfileModal from "./components/CompanyProfileModal";
+import AuthorizedSignatoriesModal from "./components/AuthorizedSignatoriesModal";
 import VaultDocumentUploadModal from "./components/VaultDocumentUploadModal";
 
 // Common Primitives
@@ -95,6 +96,7 @@ export default function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isVaultUploadOpen, setIsVaultUploadOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isSignatoriesModalOpen, setIsSignatoriesModalOpen] = useState(false);
 
   const activeLabel = useMemo(() => {
     if (
@@ -492,6 +494,7 @@ export default function App() {
                 <CompanyVault
                   companyProfile={companyProfile}
                   onEditProfile={() => setIsProfileModalOpen(true)}
+                  onOpenSignatoriesModal={() => setIsSignatoriesModalOpen(true)}
                   onUploadDoc={() => setIsVaultUploadOpen(true)}
                   onDocumentUpdated={(updated) => setCompanyProfile(updated)}
                   onDeleteDoc={handleDeleteVaultDoc}
@@ -504,6 +507,7 @@ export default function App() {
                 <CompanyVault
                   companyProfile={companyProfile}
                   onEditProfile={() => setIsProfileModalOpen(true)}
+                  onOpenSignatoriesModal={() => setIsSignatoriesModalOpen(true)}
                   onUploadDoc={() => setIsVaultUploadOpen(true)}
                   onDocumentUpdated={(updated) => setCompanyProfile(updated)}
                   onDeleteDoc={handleDeleteVaultDoc}
@@ -637,6 +641,8 @@ export default function App() {
                   activeTender={activeTender}
                   companyProfile={companyProfile}
                   setActive={setActive}
+                  onOpenProfileModal={() => setIsProfileModalOpen(true)}
+                  onOpenSignatoriesModal={() => setIsSignatoriesModalOpen(true)}
                 />
               }
             />
@@ -718,6 +724,18 @@ export default function App() {
         onClose={() => setIsProfileModalOpen(false)}
         companyProfile={companyProfile}
         onUpdateProfile={handleUpdateProfile}
+        onOpenSignatories={() => {
+          setIsProfileModalOpen(false);
+          setIsSignatoriesModalOpen(true);
+        }}
+      />
+
+      {/* AUTHORIZED SIGNATORIES MODAL */}
+      <AuthorizedSignatoriesModal
+        isOpen={isSignatoriesModalOpen}
+        onClose={() => setIsSignatoriesModalOpen(false)}
+        companyProfile={companyProfile}
+        onSave={handleUpdateProfile}
       />
     </div>
   );

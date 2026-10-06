@@ -284,7 +284,7 @@ export default function VaultDocumentEditModal({
           <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100 flex items-start gap-2 text-slate-700">
             <ShieldCheck size={16} className="text-[#18794e] shrink-0 mt-0.5" />
             <span className="text-[11px] leading-tight text-slate-600">
-              Changes will be synchronized in MongoDB and auto-reflected across all RFP eligibility gates.
+              Changes will be synchronized and auto-reflected across all RFP eligibility gates.
             </span>
           </div>
 

@@ -2,7 +2,7 @@
   "companyProfile": {
     "_id": "6aba00d4becbb963a93b46cf",
     "id": "comp_techsolutions",
-    "name": "J fermst ANA AHR",
+    "name": "Vikas Kumar Company",
     "pan": "BWZPS1234R",
     "gstin": "18AABCT1234F1ZP",
     "cin": "U72900AS2012PTC011234",
@@ -14,21 +14,21 @@
       {
         "year": "2023-24",
         "amountINR": 162000000,
-        "amountDisplay": "₹16.20 Cr"
+        "amountDisplay": "₹16.2 Cr"
       },
       {
         "year": "2022-23",
         "amountINR": 145000000,
-        "amountDisplay": "₹14.50 Cr"
+        "amountDisplay": "₹14.5 Cr"
       },
       {
         "year": "2021-22",
         "amountINR": 137000000,
-        "amountDisplay": "₹13.70 Cr"
+        "amountDisplay": "₹13.7 Cr"
       }
     ],
     "averageTurnoverINR": 148000000,
-    "averageTurnoverDisplay": "₹14.8 Cr",
+    "averageTurnoverDisplay": "₹14.80 Cr",
     "netWorthINR": 42000000,
     "certifications": [
       "ISO 9001:2015 (Quality Management System)",
@@ -53,10 +53,10 @@
       }
     ],
     "authorizedSignatory": {
-      "name": "Arjun Mehta",
-      "designation": "Managing Director & Authorized Signatory",
-      "email": "arjun.mehta@techsolutions.example.com",
-      "phone": "+91-9876543210"
+      "name": "Rahul Kumar",
+      "designation": "Director & Authorized Signatory",
+      "email": "rahul@gmail.com",
+      "phone": "7011719443"
     },
     "keyPersonnel": [
       {
@@ -85,8 +85,9 @@
       }
     ],
     "createdAt": "2026-09-28T05:53:24.183Z",
-    "updatedAt": "2026-10-05T05:16:38.832Z",
-    "__v": 6
+    "updatedAt": "2026-10-05T12:35:46.903Z",
+    "__v": 6,
+    "authorizedSignatories": []
   },
   "tenders": [
     {
@@ -421,5 +422,49 @@
     "defaultMarginPercent": 18,
     "taxPercent": 18,
     "autoAiAnalysis": true
-  }
+  },
+  "authorizedSignatories": [
+    {
+      "_id": "6ac38df1bda9e36a2d29607f",
+      "id": "sig_1791200753383",
+      "name": "Rahul Kumar",
+      "designation": "Director & Authorized Signatory",
+      "email": "rahul@gmail.com",
+      "phone": "7011719443",
+      "pan": "ABCDEF5698",
+      "din": "DIN5946697",
+      "poaRef": "Board Res. No. 01/2024",
+      "dscType": "Class 3 DSC (Signing & Encryption)",
+      "signatureFileName": "signatory-1791200753377-603920493-images__1_.jpg",
+      "signatureFileUrl": "/uploads/signatory-1791200753377-603920493-images__1_.jpg",
+      "signatureFileType": "image/jpeg",
+      "specimenSignatureUrl": "/uploads/signatory-1791200753377-603920493-images__1_.jpg",
+      "isPrimary": true,
+      "status": "Active",
+      "createdAt": "2026-10-05T11:45:53.395Z",
+      "updatedAt": "2026-10-05T11:45:58.790Z",
+      "__v": 0
+    },
+    {
+      "_id": "6ac384fe3f9a32dfa9823c1b",
+      "id": "sig_1791198462151",
+      "name": "Vikas",
+      "designation": "Director & Authorized Signatory",
+      "email": "vikasfrontenddeveloper007@gmail.com",
+      "phone": "7011719443",
+      "pan": "ABCD89756",
+      "din": "DJJJLK45789654",
+      "poaRef": "Board Res. No. 01/2024",
+      "dscType": "Class 3 DSC (Signing & Encryption)",
+      "signatureFileName": "signatory-1791198462132-187600618-images__1_.jpg",
+      "signatureFileUrl": "/uploads/signatory-1791198462132-187600618-images__1_.jpg",
+      "signatureFileType": "image/jpeg",
+      "specimenSignatureUrl": "/uploads/signatory-1791198462132-187600618-images__1_.jpg",
+      "isPrimary": false,
+      "status": "Active",
+      "createdAt": "2026-10-05T11:07:42.164Z",
+      "updatedAt": "2026-10-05T11:45:58.786Z",
+      "__v": 0
+    }
+  ]
 }

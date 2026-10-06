@@ -67,7 +67,24 @@ export const companyProfileAPI = {
   updateDocument: (docId: string | number, formData: FormData): Promise<AxiosResponse<any>> => api.put(`/company-profile/documents/${docId}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
-  deleteDocument: (docId: string | number): Promise<AxiosResponse<any>> => api.delete(`/company-profile/documents/${docId}`)
+  deleteDocument: (docId: string | number): Promise<AxiosResponse<any>> => api.delete(`/company-profile/documents/${docId}`),
+};
+
+export const signatoryAPI = {
+  getAll: (): Promise<AxiosResponse<{ success?: boolean; source?: string; signatories: any[] } | any>> =>
+    api.get('/signatories'),
+  create: (formData: FormData): Promise<AxiosResponse<{ success?: boolean; signatory: any; signatories: any[] } | any>> =>
+    api.post('/signatories', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+  update: (id: string, formData: FormData): Promise<AxiosResponse<{ success?: boolean; signatory: any; signatories: any[] } | any>> =>
+    api.put(`/signatories/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+  delete: (id: string): Promise<AxiosResponse<{ success?: boolean; signatories: any[] } | any>> =>
+    api.delete(`/signatories/${id}`),
+  setPrimary: (id: string): Promise<AxiosResponse<{ success?: boolean; signatories: any[] } | any>> =>
+    api.put(`/signatories/${id}/primary`),
 };
 
 export const chatAPI = {

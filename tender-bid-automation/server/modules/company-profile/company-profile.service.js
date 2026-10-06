@@ -542,4 +542,266 @@ export class CompanyProfileService {
 
     return await CompanyProfileRepository.saveProfile(updatedProfile);
   }
+
+  /**
+   * Fetches all Authorized Signatories directly from MongoDB
+   */
+  static async getSignatories() {
+    const { profile, source } = await CompanyProfileRepository.getProfile();
+    let signatories = profile.authorizedSignatories || [];
+
+    // Fallback: If empty, seed from primary signatory or key personnel
+    if (signatories.length === 0 && profile.authorizedSignatory?.name) {
+      signatories = [
+        {
+          id: "sig_primary_initial",
+          name: profile.authorizedSignatory.name,
+          designation: profile.authorizedSignatory.designation || "Managing Director & Authorized Signatory",
+          email: profile.authorizedSignatory.email || "",
+          phone: profile.authorizedSignatory.phone || "",
+          din: "DIN: 08912345",
+          poaRef: "Board Res. No. 01/2024",
+          dscType: "Class 3 DSC (Signing & Encryption)",
+          isPrimary: true,
+          status: "Active",
+          addedAt: new Date().toISOString(),
+        },
+      ];
+    }
+
+    return { source, signatories, profile };
+  }
+
+  /**
+   * Adds an Authorized Signatory with optional PDF/image Specimen Signature or PoA upload
+   */
+  static async addSignatory(file, bodyData) {
+    const { profile } = await CompanyProfileRepository.getProfile();
+    let currentSignatories = [...(profile.authorizedSignatories || [])];
+
+    let savedFileName = null;
+    let savedFileUrl = null;
+    let savedFileType = null;
+
+    if (file && file.buffer) {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      const safeName = (file.originalname || "signature.pdf").replace(/[^a-zA-Z0-9.-]/g, "_");
+      savedFileName = `signatory-${uniqueSuffix}-${safeName}`;
+      savedFileUrl = `/uploads/${savedFileName}`;
+      savedFileType = file.mimetype || "application/pdf";
+      try {
+        fs.writeFileSync(path.join(UPLOADS_DIR, savedFileName), file.buffer);
+      } catch (writeErr) {
+        console.warn("Could not save signature file to uploads dir:", writeErr.message);
+      }
+    }
+
+    const isPrimary =
+      bodyData.isPrimary === true ||
+      bodyData.isPrimary === "true" ||
+      currentSignatories.length === 0;
+
+    const newSignatory = {
+      id: bodyData.id || `sig_${Date.now()}`,
+      name: bodyData.name || "Authorized Signatory",
+      designation: bodyData.designation || "Director & Authorized Signatory",
+      email: bodyData.email || "",
+      phone: bodyData.phone || "",
+      pan: bodyData.pan || "",
+      din: bodyData.din || "",
+      poaRef: bodyData.poaRef || "",
+      dscType: bodyData.dscType || "Class 3 DSC (Signing & Encryption)",
+      signatureFileName: savedFileName || bodyData.signatureFileName || null,
+      signatureFileUrl: savedFileUrl || bodyData.signatureFileUrl || null,
+      signatureFileType: savedFileType || bodyData.signatureFileType || null,
+      specimenSignatureUrl: savedFileUrl || bodyData.specimenSignatureUrl || null,
+      isPrimary,
+      status: bodyData.status || "Active",
+      addedAt: new Date().toISOString(),
+    };
+
+    if (isPrimary) {
+      currentSignatories = currentSignatories.map((s) => ({ ...s, isPrimary: false }));
+      currentSignatories.unshift(newSignatory);
+    } else {
+      currentSignatories.push(newSignatory);
+    }
+
+    // Determine primary for top-level profile sync
+    const primarySigner = currentSignatories.find((s) => s.isPrimary) || newSignatory;
+
+    const updatedProfile = {
+      ...profile,
+      authorizedSignatories: currentSignatories,
+      authorizedSignatory: {
+        name: primarySigner.name,
+        designation: primarySigner.designation,
+        email: primarySigner.email,
+        phone: primarySigner.phone,
+      },
+    };
+
+    const saved = await CompanyProfileRepository.saveProfile(updatedProfile);
+    return { signatory: newSignatory, profile: saved.profile, source: saved.source };
+  }
+
+  /**
+   * Updates an Authorized Signatory with optional new PDF/image Signature upload
+   */
+  static async updateSignatory(signatoryId, file, bodyData) {
+    const { profile } = await CompanyProfileRepository.getProfile();
+    let currentSignatories = [...(profile.authorizedSignatories || [])];
+
+    const sigIndex = currentSignatories.findIndex((s) => s.id === signatoryId);
+    if (sigIndex === -1) {
+      throw new Error(`Authorized Signatory with ID "${signatoryId}" not found in MongoDB`);
+    }
+
+    const existingSig = currentSignatories[sigIndex];
+
+    let savedFileName = existingSig.signatureFileName;
+    let savedFileUrl = existingSig.signatureFileUrl;
+    let savedFileType = existingSig.signatureFileType;
+
+    if (file && file.buffer) {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      const safeName = (file.originalname || "signature.pdf").replace(/[^a-zA-Z0-9.-]/g, "_");
+      savedFileName = `signatory-${uniqueSuffix}-${safeName}`;
+      savedFileUrl = `/uploads/${savedFileName}`;
+      savedFileType = file.mimetype || "application/pdf";
+      try {
+        fs.writeFileSync(path.join(UPLOADS_DIR, savedFileName), file.buffer);
+      } catch (writeErr) {
+        console.warn("Could not save signature file to uploads dir:", writeErr.message);
+      }
+    }
+
+    const isPrimary =
+      bodyData.isPrimary !== undefined
+        ? bodyData.isPrimary === true || bodyData.isPrimary === "true"
+        : existingSig.isPrimary;
+
+    const updatedSig = {
+      ...existingSig,
+      name: bodyData.name !== undefined ? bodyData.name : existingSig.name,
+      designation: bodyData.designation !== undefined ? bodyData.designation : existingSig.designation,
+      email: bodyData.email !== undefined ? bodyData.email : existingSig.email,
+      phone: bodyData.phone !== undefined ? bodyData.phone : existingSig.phone,
+      pan: bodyData.pan !== undefined ? bodyData.pan : existingSig.pan,
+      din: bodyData.din !== undefined ? bodyData.din : existingSig.din,
+      poaRef: bodyData.poaRef !== undefined ? bodyData.poaRef : existingSig.poaRef,
+      dscType: bodyData.dscType !== undefined ? bodyData.dscType : existingSig.dscType,
+      signatureFileName: savedFileName,
+      signatureFileUrl: savedFileUrl,
+      signatureFileType: savedFileType,
+      specimenSignatureUrl: savedFileUrl,
+      isPrimary,
+      status: bodyData.status !== undefined ? bodyData.status : existingSig.status,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isPrimary) {
+      currentSignatories = currentSignatories.map((s) => ({
+        ...s,
+        isPrimary: s.id === signatoryId,
+      }));
+    }
+
+    currentSignatories[sigIndex] = updatedSig;
+
+    const primarySigner = currentSignatories.find((s) => s.isPrimary) || currentSignatories[0];
+
+    const updatedProfile = {
+      ...profile,
+      authorizedSignatories: currentSignatories,
+      authorizedSignatory: primarySigner
+        ? {
+            name: primarySigner.name,
+            designation: primarySigner.designation,
+            email: primarySigner.email,
+            phone: primarySigner.phone,
+          }
+        : profile.authorizedSignatory,
+    };
+
+    const saved = await CompanyProfileRepository.saveProfile(updatedProfile);
+    return { signatory: updatedSig, profile: saved.profile, source: saved.source };
+  }
+
+  /**
+   * Deletes an Authorized Signatory from MongoDB
+   */
+  static async deleteSignatory(signatoryId) {
+    const { profile } = await CompanyProfileRepository.getProfile();
+    let currentSignatories = [...(profile.authorizedSignatories || [])];
+
+    const sigToDelete = currentSignatories.find((s) => s.id === signatoryId);
+    if (sigToDelete?.signatureFileName) {
+      const filePath = path.join(UPLOADS_DIR, sigToDelete.signatureFileName);
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (e) {
+          console.warn("Could not remove signature file:", e.message);
+        }
+      }
+    }
+
+    currentSignatories = currentSignatories.filter((s) => s.id !== signatoryId);
+
+    // If deleted one was primary, promote the first remaining signatory
+    if (currentSignatories.length > 0 && !currentSignatories.some((s) => s.isPrimary)) {
+      currentSignatories[0].isPrimary = true;
+    }
+
+    const primarySigner = currentSignatories.find((s) => s.isPrimary);
+
+    const updatedProfile = {
+      ...profile,
+      authorizedSignatories: currentSignatories,
+      authorizedSignatory: primarySigner
+        ? {
+            name: primarySigner.name,
+            designation: primarySigner.designation,
+            email: primarySigner.email,
+            phone: primarySigner.phone,
+          }
+        : undefined,
+    };
+
+    const saved = await CompanyProfileRepository.saveProfile(updatedProfile);
+    return { success: true, profile: saved.profile, source: saved.source };
+  }
+
+  /**
+   * Sets a signatory as the primary signer
+   */
+  static async setPrimarySignatory(signatoryId) {
+    const { profile } = await CompanyProfileRepository.getProfile();
+    let currentSignatories = [...(profile.authorizedSignatories || [])];
+
+    const found = currentSignatories.find((s) => s.id === signatoryId);
+    if (!found) {
+      throw new Error(`Signatory with ID "${signatoryId}" not found`);
+    }
+
+    currentSignatories = currentSignatories.map((s) => ({
+      ...s,
+      isPrimary: s.id === signatoryId,
+    }));
+
+    const updatedProfile = {
+      ...profile,
+      authorizedSignatories: currentSignatories,
+      authorizedSignatory: {
+        name: found.name,
+        designation: found.designation,
+        email: found.email,
+        phone: found.phone,
+      },
+    };
+
+    const saved = await CompanyProfileRepository.saveProfile(updatedProfile);
+    return { success: true, profile: saved.profile, source: saved.source };
+  }
 }
